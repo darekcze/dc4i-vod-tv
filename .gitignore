@@ -1,3 +1,8 @@
 build/
+private/
+dist/
+.wrangler/
+branding/
 node_modules/
 .DS_Store
+*.log

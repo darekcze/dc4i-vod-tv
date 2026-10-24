@@ -3,36 +3,30 @@
     "page": 1,
     "count": 1,
     "maxPage": 1,
-    "itemsTotal": 1,
-    "prevUrl": null,
-    "nextUrl": null
+    "itemsTotal": 1
   },
   "packages": [
     {
-      "id": "com.boring.tvhome",
-      "title": "TheBoringTV",
-      "iconUri": "https://lg.darc.dev/icons/theboringtv.png",
-      "manifestUrl": "https://lg.darc.dev/manifests/theboringtv.manifest.json",
+      "id": "com.dc4i.boringtv",
+      "title": "DC4I BoringTV",
+      "iconUri": "https://lg-webos-repo.pages.dev/icons/dc4i-boringtv.png",
       "manifest": {
-        "id": "com.boring.tvhome",
-        "version": "0.25.0",
+        "id": "com.dc4i.boringtv",
+        "version": "1.0.0",
         "type": "web",
-        "title": "TheBoringTV (TV Home)",
-        "appDescription": "Google TV-style launcher for LG webOS. Requires your TMDB and YouTube API keys for recommendations. Root required only to replace the native LG home screen.",
-        "iconUri": "https://lg.darc.dev/icons/theboringtv.png",
+        "title": "DC4I BoringTV",
+        "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
+        "iconUri": "https://lg-webos-repo.pages.dev/icons/dc4i-boringtv.png",
         "sourceUrl": "https://github.com/theboringhumane/theboringtv-lgwebos",
         "rootRequired": false,
-        "ipkUrl": "https://lg.darc.dev/packages/com.boring.tvhome_0.25.0_all.ipk",
+        "ipkUrl": "https://lg-webos-repo.pages.dev/packages/com.dc4i.boringtv_1.0.0_all.ipk",
         "ipkHash": {
-          "sha256": "e6202f08692ca273cc233e0b119df9a3403674261ce7effc75dbc72473ad7e68"
+          "sha256": "bf68342d9a164ce18a9f79329d14503ac32fe793347a09b385df3bc848ba5475"
         },
-        "ipkSize": 2991886
+        "ipkSize": 1753100
       },
-      "pool": "main",
-      "shortDescription": "Google TV-style home screen and cross-streaming recommendations",
-      "requirements": {
-        "webosRelease": ">=6.0"
-      }
+      "shortDescription": "Filmy, seriale i oceny w jednym miejscu | Polska | TMDB skonfigurowane",
+      "fullDescriptionUrl": "https://lg-webos-repo.pages.dev/about.html"
     }
   ]
 }
