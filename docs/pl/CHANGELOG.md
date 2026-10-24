@@ -97,3 +97,11 @@ Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacj
 - Poprawiono otwieranie tytułów z wyników wyszukiwania. Pełnoekranowa wyszukiwarka nie zasłania już szczegółów filmu, a po powrocie znów się pokazuje.
 - Usunięto uruchamianie niewłaściwego Smarters Player Pro (LG Store 950615). Docelowy IPTV Smarters Player ma numer sklepu 1231221. Testujemy wyłącznie ten niepotwierdzony identyfikator, dopóki nie ustalimy właściwego ID webOS.
 - Stremio Web pozostaje działającą opcją otwierania wybranego tytułu. Deep-linki do natywnych aplikacji Stremio i IPTV Smarters nie są potwierdzone.
+
+## Aktualizacja katalogu - 25.10.2026
+
+- Dodano oficjalne Kodi 21.0 Omega dla LG webOS (org.xbmc.kodi, ARM, bez root).
+- Pakiet IPK pobierany z oficjalnego mirrora Kodi, a nie z Cloudflare Pages (limit rozmiaru pliku).
+- SHA-256: b8ac326df8ad7cf0b52e4f816ab7c39c95410254b1bc3b9b3d024035ecec58ff.
+- Kodi zainstalowano i uruchomiono na LG OLED55G42LW; Kodi 21.3 DMG dla macOS nie jest zgodne z webOS.
+- Obsługa deeplink przez natywne Stremio na LG nadal niepotwierdzona.

@@ -115,3 +115,12 @@ Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrad
 - Fixed Search cards appearing unresponsive: Search overlay now hides when opening details, and restores when returning.
 - Prevented launching the wrong product (Smarters Player Pro, LG Store #950615). The requested IPTV Smarters Player listing is #1231221; only this unverified candidate is tried until the actual internal webOS ID is obtained.
 - Stremio Web remains the confirmed working route to selected titles on the user's LG. Native Stremio and IPTV Smarters lack confirmed external title deep-link support.
+
+## [Catalog update] - 2026-10-25
+
+- Added official Kodi 21.0 Omega for LG webOS (org.xbmc.kodi, ARM, native, no root).
+- Download uses Kodi Foundation official mirror; the 92.6 MB binary is not committed to Git or copied into Cloudflare Pages (static asset limit).
+- Verified SHA-256 b8ac326df8ad7cf0b52e4f816ab7c39c95410254b1bc3b9b3d024035ecec58ff on Mac Pro and Mac mini.
+- Installed and launched Kodi on LG OLED55G42LW (192.168.1.60) using ares-install and ares-launch.
+- Kodi webOS 21.0 differs from macOS Kodi 21.3 ARM64 DMG.
+- Stremio native webOS deep-link support remains unverified despite successful app launch.
