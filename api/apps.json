@@ -1,0 +1,38 @@
+{
+  "paging": {
+    "page": 1,
+    "count": 1,
+    "maxPage": 1,
+    "itemsTotal": 1,
+    "prevUrl": null,
+    "nextUrl": null
+  },
+  "packages": [
+    {
+      "id": "com-boring-tvhome-0-25-0",
+      "title": "TheBoringTV",
+      "iconUri": "https://lg.darc.dev/icons/theboringtv.png",
+      "manifestUrl": "https://lg.darc.dev/manifests/theboringtv.manifest.json",
+      "manifest": {
+        "id": "com.boring.tvhome",
+        "version": "0.25.0",
+        "type": "web",
+        "title": "TheBoringTV (TV Home)",
+        "appDescription": "Google TV-style launcher for LG webOS. Requires your TMDB and YouTube API keys for recommendations. Root required only to replace the native LG home screen.",
+        "iconUri": "https://lg.darc.dev/icons/theboringtv.png",
+        "sourceUrl": "https://github.com/theboringhumane/theboringtv-lgwebos",
+        "rootRequired": false,
+        "ipkUrl": "https://lg.darc.dev/packages/com.boring.tvhome_0.25.0_all.ipk",
+        "ipkHash": {
+          "sha256": "e6202f08692ca273cc233e0b119df9a3403674261ce7effc75dbc72473ad7e68"
+        },
+        "ipkSize": 2991886
+      },
+      "pool": "main",
+      "shortDescription": "Google TV-style home screen and cross-streaming recommendations",
+      "requirements": {
+        "webosRelease": ">=6.0"
+      }
+    }
+  ]
+}
