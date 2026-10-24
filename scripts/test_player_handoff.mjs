@@ -6,7 +6,7 @@ const root=resolve(import.meta.dirname,'..');
 const code=readFileSync(resolve(root,'src/vod-fallback.js'),'utf8');
 function setup(options={}){
  const launches=[],logs=[],toast=[],saved={};
- const installed=options.installed===undefined?{'com.iptvsmarters.app':true,'io.strem.tv':true}:options.installed;
+ const installed=options.installed===undefined?{'com.smarterstvplayers.net':true,'io.strem.tv':true}:options.installed;
  const launchAllowed=options.launchAllowed || installed;
  const TV={
   onTV:true,S:{uiLang:'pl'},
@@ -39,9 +39,9 @@ function setup(options={}){
  return {TV,launches,logs,toast,saved};
 }
 const a=setup({hanging:['com.iptvsmarters.player','com.iptv.smarters']});
-assert.equal(await a.TV.vodPlayers.find('iptv'),'com.iptvsmarters.app');
+assert.equal(await a.TV.vodPlayers.find('iptv'),'com.smarterstvplayers.net');
 assert.equal(await a.TV.vodPlayers.open('iptv','Własny film',{type:'movie',id:101}),true);
-assert.equal(a.launches[0].id,'com.iptvsmarters.app');
+assert.equal(a.launches[0].id,'com.smarterstvplayers.net');
 assert.equal(a.launches[0].params.search,'Własny film');
 console.log('PASS: SMARTERS_CONFIRMED_APP_AND_SEARCH_HINT');
 const b=setup();
@@ -59,22 +59,22 @@ assert.equal(await d.TV.vodPlayers.openWeb('Matrix',{type:'movie',id:603},{exter
 assert.equal(d.launches[0].id,'com.webos.app.browser');
 assert.equal(d.launches[0].params.target,'https://web.stremio.com/#/detail/movie/tt0133093/tt0133093');
 console.log('PASS: STREMIO_WEB_SELECTED_TITLE_URL');
-const e=setup({installed:{},launchAllowed:{'1231221':true},deniedList:true});
+const e=setup({installed:{},launchAllowed:{'com.smarterstvplayers.net':true},deniedList:true});
 assert.equal(await e.TV.vodPlayers.find('iptv'),null);
 assert.equal(await e.TV.vodPlayers.open('iptv','Warsaw film'),true);
-assert.ok(e.launches.some(x=>x.id==='1231221'));
-assert.equal(e.saved.vodInstalledPlayerIds.iptv,'1231221');
-console.log('PASS: LG_STORE_ID_1231221_TESTED_AS_LAUNCH_FALLBACK');
+assert.ok(e.launches.some(x=>x.id==='com.smarterstvplayers.net'));
+assert.equal(e.saved.vodInstalledPlayerIds.iptv ,'com.smarterstvplayers.net');
+console.log('PASS: VERIFIED_TV_APP_ID_LAUNCH');
 const f=setup({installed:{},launchAllowed:{},deniedList:true});
 assert.equal(await f.TV.vodPlayers.open('iptv','No film'),false);
-assert.ok(f.toast.some(x=>x.includes('Nie znaleziono ID Smarters')));
+assert.ok(f.toast.some(x=>x.includes('Nie udało się uruchomić IPTVSmartersPlayer')));
 assert.ok(f.saved.vodNativeDiagnostics122.some(x=>x.phase==='launch' && x.error.includes('found')));
 console.log('PASS: UNKNOWN_APP_ID_DIAGNOSTICS_AND_TRUTHFUL_ERROR');
-const g=setup({installed:{},launchAllowed:{},launchPoints:[{title:'Smarters Player',id:'com.smarters.real'}]});
-assert.equal(await g.TV.vodPlayers.find('iptv'),'com.smarters.real');
+const g=setup({installed:{},launchAllowed:{},launchPoints:[{title:'IPTVSmartersPlayer',id:'com.smarterstvplayers.net'}]});
+assert.equal(await g.TV.vodPlayers.find('iptv') ,'com.smarterstvplayers.net');
 console.log('PASS: DISCOVERY_BY_INSTALLED_APP_TITLE');
-const h=setup({fromList:{id:'com.smarters.fromlist',title:'Smarters Player'},installed:{}});
-assert.equal(await h.TV.vodPlayers.find('iptv'),'com.smarters.fromlist');
+const h=setup({fromList:{id:'com.smarterstvplayers.net',title:'IPTVSmartersPlayer'},installed:{}});
+assert.equal(await h.TV.vodPlayers.find('iptv'),'com.smarterstvplayers.net');
 assert.equal(h.logs.length,0);
 console.log('PASS: ROOT_SERVICE_LIST_FIRST');
 const z=setup({installed:{}});
@@ -86,8 +86,8 @@ const source=readFileSync(resolve(root,'build/dc4i-vodtv/app.js'),'utf8');
 const start=source.indexOf('  function probeApps() {'),end=source.indexOf('  // Apps row order',start);
 assert.ok(start>0&&end>start);
 const simulated={
- C:{APPS:[{id:'com.iptvsmarters.app',title:'Smarters Player',playerKey:'iptv',
-    optional:true,keepTile:true,candidates:['com.iptvsmarters.app','1231221','smartersplayer']}]},
+ C:{APPS:[{id:'com.smarterstvplayers.net',title:'IPTVSmartersPlayer',playerKey:'iptv',
+    optional:true,keepTile:true,candidates:['com.smarterstvplayers.net']}]},
  apps:[],luna(){return Promise.resolve({exist:false,returnValue:true});},
  Promise,setTimeout,clearTimeout,Object
 };
@@ -99,3 +99,8 @@ assert.equal(simulated.apps[0].unverified,true);
 assert.equal(simulated.apps[0].playerKey,'iptv');
 console.log('PASS: SMARTERS_TILE_IS_NOT_HIDDEN_WHEN_UNVERIFIED');
 console.log('NATIVE_PLAYER_UNIT_PASS');
+
+const pro=setup({installed:{'com.iptvsmarters.app':true},launchAllowed:{'com.iptvsmarters.app':true},deniedList:true});
+assert.equal(await pro.TV.vodPlayers.open('iptv','Film'),false);
+assert.equal(pro.launches.some(x=>x.id==='com.iptvsmarters.app'),false);
+console.log('PASS: PRO_VARIANT_NOT_LAUNCHED');

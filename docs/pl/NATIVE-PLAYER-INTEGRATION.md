@@ -24,3 +24,6 @@ Aplikacja działa nadal bez roota i bez ręcznego podawania kluczy API na telewi
 - LG wymaga rzeczywistego ID aplikacji do jej uruchomienia, ale zwykłe aplikacje webOS mogą nie mieć dostępu do listy wszystkich zainstalowanych programów.
 - Smarters Player pozostaje widoczny na kafelku, przy braku potwierdzenia dodajemy `sprawdź`. Przy uruchamianiu automatycznie testujemy ID i zapisujemy wynik w diagnostyce lokalnej `vodNativeDiagnostics122` (bez kluczy, haseł i list).
 - Natywne Stremio może ignorować linki. Dodano alternatywny przycisk Stremio Web, który otwiera stronę wybranego tytułu w przeglądarce LG, bez udawania natywnego odtworzenia.
+
+## Wiarygodna identyfikacja z LG OLED55G42LW (1.2.4)
+Odczytałem 67 aplikacji z `listLaunchPoints` przez połączenie LGWebOSRemote: `IPTVSmartersPlayer = com.smarterstvplayers.net`, `IPTVSmartersPro = com.iptvsmarters.app`, `Stremio = io.strem.tv`, `DC4I VOD TV = com.dc4i.vodtv`. Numer LG Store `1231221` nie jest identyfikatorem aplikacji. Poprawny identyfikator jest już w kodzie. Pełna lista aplikacji i klucz parowania są przechowywane wyłącznie w prywatnym AI-Hot. LGWebOSRemote jest narzędziem terminalowym Python na Mac mini/Mac Pro, nie plikiem IPK instalowanym na telewizorze.

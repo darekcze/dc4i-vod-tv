@@ -84,6 +84,15 @@ Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacj
 ## [1.0.1] - 24.10.2026
 - Poprzednia nazwa DC4I BoringTV, pierwsza kompilacja dla Polski, YouTube jako opcjonalny bez blokowania uruchomienia.
 
+## [1.2.4] - 24.10.2026
+
+### Prawdziwy identyfikator IPTVSmartersPlayer z telewizora
+- Sparowałem LG OLED55G42LW przez [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote). Telewizor zwrócił **67 aplikacji** w `listLaunchPoints`.
+- **IPTVSmartersPlayer** ma ID `com.smarterstvplayers.net`. Osobna aplikacja **IPTVSmartersPro** ma ID `com.iptvsmarters.app`. Stremio ma ID `io.strem.tv`. Numer sklepu 1231221 nie jest właściwym ID uruchomienia.
+- Poprawiłem kafelek, wykrywanie i uruchamianie, usunąłem wcześniejsze błędne identyfikatory Smarters, usunąłem zapisane nieprawidłowe ID i zabezpieczyłem przed otwieraniem wersji Pro.
+- Pełną listę 67 aplikacji zapisałem prywatnie w AI-Hot jako JSON i CSV. LGWebOSRemote działa na komputerze, nie jest aplikacją IPK do instalacji na telewizorze.
+- Wersja 1.2.4 aktualizuje 1.2.3 bez odinstalowywania. Bezpośrednie wyszukiwanie tytułu w natywnej IPTVSmartersPlayer nie zostało potwierdzone, ponieważ producent nie udokumentował interfejsu deep-link.
+
 ## [1.2.3] - 24.10.2026
 - Poprawiono otwieranie tytułów z wyników wyszukiwania. Pełnoekranowa wyszukiwarka nie zasłania już szczegółów filmu, a po powrocie znów się pokazuje.
 - Usunięto uruchamianie niewłaściwego Smarters Player Pro (LG Store 950615). Docelowy IPTV Smarters Player ma numer sklepu 1231221. Testujemy wyłącznie ten niepotwierdzony identyfikator, dopóki nie ustalimy właściwego ID webOS.

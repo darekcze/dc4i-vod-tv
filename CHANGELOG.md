@@ -97,6 +97,20 @@ Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrad
 - [TheBoringTV LG webOS source](https://github.com/theboringhumane/theboringtv-lgwebos), pinned commit `8cdea8940355685a82aac127fcdcf113a30684f6`.
 - [DC4I approved monogram and asset rules](https://app.notion.com/p/3fb522ca403c81199c9bff92c1e84098).
 
+## [1.2.4] - 2026-10-24
+
+### Correct IPTV Smarters Player identity from a real LG TV
+- Paired with the owner's LG OLED55G42LW through [klattimer/LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote), using the authorized TV pairing popup.
+- **Evidence: 67 launch points returned** from webOS `ssap://com.webos.applicationManager/listLaunchPoints`. The real IPTVSmartersPlayer is `com.smarterstvplayers.net`. The separate IPTVSmartersPro is `com.iptvsmarters.app` and Stremio is `io.strem.tv`.
+- Replaced all tentative Smarters launcher IDs with the confirmed `com.smarterstvplayers.net`, cleared previously cached wrong launch IDs, and corrected app-tile/root discovery so the Pro variant never matches.
+- LG Store catalog number 1231221 is not an internal launch ID. Native title search in IPTVSmartersPlayer remains unverified; the external player can only open its own catalog unless it implements deep-linking.
+- Saved the full 67-entry inventory as private JSON and CSV under `private/lgremote-output`, excluded from Git. Both Mac mini and Mac Pro have the MIT-licensed desktop LGWebOSRemote tool installed on AI-Hot.
+- No additional webOS app is necessary to inspect installed programs. This is a computer-side command-line tool, not an IPK package for Homebrew Channel.
+
+### Validation
+- Unit tests exclude launching `com.iptvsmarters.app` when IPTVSmartersPlayer is selected; app-info and IPK tests; 1920x1080 Chrome simulated tests; live deployment checks pending.
+- The app ID stays `com.dc4i.vodtv` and updates v1.2.3 in-place.
+
 ## [1.2.3] - 2026-10-24
 - Fixed Search cards appearing unresponsive: Search overlay now hides when opening details, and restores when returning.
 - Prevented launching the wrong product (Smarters Player Pro, LG Store #950615). The requested IPTV Smarters Player listing is #1231221; only this unverified candidate is tried until the actual internal webOS ID is obtained.

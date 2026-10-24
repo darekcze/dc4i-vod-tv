@@ -6,7 +6,7 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I VOD TV 1.2.3
+## DC4I VOD TV 1.2.4
 
 - Identifier: com.dc4i.vodtv (new package identity, remove com.dc4i.boringtv before installing)
 - Market: Poland (PL), interface: Polish-first
@@ -15,8 +15,8 @@ Homebrew Channel expects JSON at the root URL. A browser-friendly project page i
 - Artwork: the user-approved DC4I VOD TV neon application logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
-- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.3_all.ipk
-- SHA256: 95ee86df346644da3975fc700737306f891711bfe27f13c623bbb5b0c96c2c10
+- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.4_all.ipk
+- SHA256: 831c68d77711804cf484ae49e1e65f30b52b37923150a1b46c2fd5136ad540e7
 
 Package and catalog are deployed on Cloudflare Pages. The binary is intentionally **not committed to GitHub** as it embeds a client-side TMDB key. Anyone downloading the public IPK can extract that client key, so usage must be monitored and the key rotated if misused.
 
@@ -40,13 +40,13 @@ To release changes, build the app IPK, run test_vod_tv.py, run publish_vod_tv.py
 
 ## Native Stremio and IPTV Smarters Player (1.2.1)
 
-- IPTV Smarters LG candidate app ID: `com.iptvsmarters.app` (detect on the real TV).
+- Verified LG OLED55G42LW IPTVSmartersPlayer app ID: `com.smarterstvplayers.net`; Pro is a different application.
 - Stremio: best-effort TMDB/IMDb link handoff, platform support unverified.
 - Smarters: experimental search-title hint, normal app launch if ignored.
 - [Integration details](docs/NATIVE-PLAYER-INTEGRATION.md) / [Instrukcja po polsku](docs/pl/NATIVE-PLAYER-INTEGRATION.md).
 
 ## Smarters Player and Stremio Web (v1.2.2)
 
-- LG Store catalog listing **1231221** is not a confirmed internal launch ID; the Smarters tile remains visible with a warning when unverified.
+- Verified internal LG launch ID `com.smarterstvplayers.net` from the real TV; LG Store catalog number 1231221 is not a launch ID.
 - Native Stremio and Smarters app title handoff is best-effort; Stremio Web offers a separate official browser fallback for the selected title.
 - Details: [Native Player Integration](docs/NATIVE-PLAYER-INTEGRATION.md) / [Polski](docs/pl/NATIVE-PLAYER-INTEGRATION.md).

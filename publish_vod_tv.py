@@ -6,7 +6,7 @@ from pathlib import Path
 import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.vodtv'
-VERSION='1.2.3'
+VERSION='1.2.4'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
@@ -43,7 +43,7 @@ DIST=ROOT/'dist'
 for folder in ['api','icons','packages','manifests']:
  (DIST/folder).mkdir(parents=True,exist_ok=True)
 for old_package in (DIST/'packages').glob('*.ipk'):
- if old_package.name.startswith(APP+'_') and old_package.name not in (IPK.name, 'com.dc4i.vodtv_1.2.1_all.ipk', 'com.dc4i.vodtv_1.2.0_all.ipk'): old_package.unlink()
+ if old_package.name.startswith(APP+'_') and old_package.name not in (IPK.name, 'com.dc4i.vodtv_1.2.3_all.ipk', 'com.dc4i.vodtv_1.2.1_all.ipk', 'com.dc4i.vodtv_1.2.0_all.ipk'): old_package.unlink()
 for p in [ROOT/'index.html', ROOT/'apps.json', ROOT/'api/apps.json',DIST/'index.html',DIST/'apps.json',DIST/'api/apps.json']:
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(formatted,encoding='utf-8')
 for p in [ROOT/'manifests/dc4i-vodtv.manifest.json',DIST/'manifests/dc4i-vodtv.manifest.json']:
@@ -77,12 +77,12 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <div><div class="tags"><span>LG webOS</span><span>Polska</span><span>TMDB gotowe</span></div>
 <h1>DC4I<br>VOD TV</h1>
 <p>Twoje centrum filmów, seriali i ocen. Odkrywaj nowości VOD i przechodź do aplikacji streamingowych bez szukania po wielu katalogach.</p>
-<a class="btn" href="/packages/com.dc4i.vodtv_1.2.3_all.ipk">Pobierz aplikację .IPK</a></div></section>
+<a class="btn" href="/packages/com.dc4i.vodtv_1.2.4_all.ipk">Pobierz aplikację .IPK</a></div></section>
 <div class="card"><h2>Instalacja w Homebrew Channel</h2>
 <p>Wejdź w Settings, Repositories, Add Repository i dodaj poniższy adres:</p>
 <code>https://lg.darc.dev/</code>
 <p>Repozytorium wyświetli <b>DC4I VOD TV</b>. Wybierz Install. Nie trzeba wpisywać TMDB Key na telewizorze.</p>
-<p>Wersje 1.2.x mają nowy identyfikator. Odinstaluj wcześniejsze DC4I BoringTV / DC4I VOD TV 1.1.x, a następnie zainstaluj bieżącą wersję 1.2.3.</p></div>
+<p>Wersje 1.2.x mają nowy identyfikator. Odinstaluj wcześniejsze DC4I BoringTV / DC4I VOD TV 1.1.x, a następnie zainstaluj bieżącą wersję 1.2.4.</p></div>
 <div class="card"><h2>Co działa?</h2>
 <p>Filmowe rekomendacje TMDB, polski region, personalizacja DC4I, ulubione, wyszukiwanie i otwieranie serwisów VOD. YouTube Trending jest ukryte do chwili skonfigurowania osobnego klucza YouTube Data API v3.</p>
 <p>Niektóre przyciski otwierania bezpośrednio konkretnego filmu zależą od obsługi przez daną aplikację i wersji systemu webOS.</p>
@@ -98,7 +98,7 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I VOD TV 1.2.3
+## DC4I VOD TV 1.2.4
 
 - Identifier: com.dc4i.vodtv (new package identity, remove com.dc4i.boringtv before installing)
 - Market: Poland (PL), interface: Polish-first
@@ -138,7 +138,7 @@ with (ROOT/'README.md').open('a',encoding='utf-8') as notes:
 
 with (ROOT/'README.md').open('a',encoding='utf-8') as notes:
  notes.write('\n## Native Stremio and IPTV Smarters Player (1.2.1)\n'
-  '\n- IPTV Smarters LG candidate app ID: `com.iptvsmarters.app` (detect on the real TV).\n'
+  '\n- Verified LG OLED55G42LW IPTVSmartersPlayer app ID: `com.smarterstvplayers.net`; Pro is a different application.\n'
   '- Stremio: best-effort TMDB/IMDb link handoff, platform support unverified.\n'
   '- Smarters: experimental search-title hint, normal app launch if ignored.\n'
   '- [Integration details](docs/NATIVE-PLAYER-INTEGRATION.md) '
@@ -146,6 +146,6 @@ with (ROOT/'README.md').open('a',encoding='utf-8') as notes:
 
 with (ROOT/'README.md').open('a',encoding='utf-8') as notes:
  notes.write('\n## Smarters Player and Stremio Web (v1.2.2)\n'
-  '\n- LG Store catalog listing **1231221** is not a confirmed internal launch ID; the Smarters tile remains visible with a warning when unverified.\n'
+  '\n- Verified internal LG launch ID `com.smarterstvplayers.net` from the real TV; LG Store catalog number 1231221 is not a launch ID.\n'
   '- Native Stremio and Smarters app title handoff is best-effort; Stremio Web offers a separate official browser fallback for the selected title.\n'
   '- Details: [Native Player Integration](docs/NATIVE-PLAYER-INTEGRATION.md) / [Polski](docs/pl/NATIVE-PLAYER-INTEGRATION.md).\n')

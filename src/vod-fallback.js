@@ -9,10 +9,10 @@ function say(pl,en){return TV.S.uiLang==='en'?en:pl;}
 var players={
  stremio:{name:'Stremio',ids:['io.strem.tv','io.strem.webos','com.razagr.stremio'],match:/stremio/i},
  iptv:{name:'IPTV Smarters Player',storeId:'1231221',
-  ids:['1231221'],match:/^IPTV Smarters Player$/i}
+  ids:['com.smarterstvplayers.net'],match:/^IPTVSmartersPlayer$/i}
 };
 var known=TV.store('vodInstalledPlayerIds')||{};
-if(known.iptv && known.iptv!=='1231221'){delete known.iptv;TV.store('vodInstalledPlayerIds',known);}
+if(known.iptv && known.iptv!=='com.smarterstvplayers.net'){delete known.iptv;TV.store('vodInstalledPlayerIds',known);}
 var diagnostics=TV.store('vodNativeDiagnostics122')||[];
 function log(name,phase,id,result,error){
  var row={player:name,phase:phase,id:id||'',success:!!result,
@@ -51,7 +51,7 @@ function byName(regex,name){
   .then(function(res){
    var a=res.launchPoints||res.apps||[];
    for(var i=0;i<a.length;i++){
-    var title=(a[i].title||a[i].name||'')+' '+(a[i].id||a[i].appId||'');
+    var title=a[i].title||a[i].name||'';
     if(regex.test(title))return report(name,'list',a[i].id||a[i].appId,true,'')?
       (a[i].id||a[i].appId):null;
    }
@@ -67,7 +67,7 @@ function find(name){
  var cfg=players[name];
  if(!cfg||!TV.onTV)return Promise.resolve(null);
  var actual=TV.findInstalledApp&&TV.findInstalledApp(cfg.match);
- if(actual&&actual.id&&!actual.unverified)return Promise.resolve(remember(name,actual.id));
+ if(actual&&actual.id&&!actual.unverified && cfg.ids.indexOf(actual.id)>=0)return Promise.resolve(remember(name,actual.id));
  var ids=[];
  if(known[name])ids.push(known[name]);
  cfg.ids.forEach(function(id){if(ids.indexOf(id)<0)ids.push(id);});
@@ -171,7 +171,7 @@ function open(name,title,tmdb,details){
    });
   });
   return tryLaunch('iptv',params,null).then(function(found){
-   if(!found)TV.toast(say('Nie znaleziono ID Smarters Player. Sklep LG: 1231221.','Smarters launch ID unresolved, LG store item 1231221.'));
+   if(!found)TV.toast(say('Nie udało się uruchomić IPTVSmartersPlayer (com.smarterstvplayers.net).','Cannot launch IPTVSmartersPlayer (com.smarterstvplayers.net).'));
    return !!found;
   });
  });

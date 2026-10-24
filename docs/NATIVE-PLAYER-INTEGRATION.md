@@ -33,3 +33,12 @@ No TV-side API credential entry, no additional subscription, and no rooting was 
 - Force the Smarters tile to remain visible. An unconfirmed tile is marked 'sprawdź'; first successful webOS launch is cached, negative error codes are stored on the TV under `vodNativeDiagnostics122` (no keys or playlists included).
 - Stremio native deep-link handling on LG is not established. Provide a separate browser-based alternative to the title in the official Stremio Web SPA. Browser navigation and content playback depend on login/TV support.
 - No unrestricted root/control APIs, third-party tampering, illegal content provision or streaming-account scraping.
+
+## Authoritative 2026-10-24 runtime observation (v1.2.4)
+Source: an authorized LG OLED55G42LW returned 67 `launchPoints` over WebSocket `ssap://com.webos.applicationManager/listLaunchPoints` using klattimer/LGWebOSRemote.
+- Requested application `IPTVSmartersPlayer`: exact internal ID **`com.smarterstvplayers.net`**
+- Different product `IPTVSmartersPro`: `com.iptvsmarters.app` (must NOT launch for this request)
+- `Stremio`: `io.strem.tv`
+- `DC4I VOD TV`: `com.dc4i.vodtv`
+The store catalog ID `1231221` is not the launch ID. Only the observed native ID is used in current app code. The full, sensitive device inventory (67 apps) and paired client key are saved locally under AI-Hot `private/lgremote-output/` and `private/lgremote-config/`, never in Git.
+LGWebOSRemote is a Python CLI for a computer, NOT a webOS Homebrew Channel IPK. Upstream MIT license: https://github.com/klattimer/LGWebOSRemote/blob/master/LICENSE
