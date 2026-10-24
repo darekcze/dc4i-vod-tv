@@ -62,6 +62,9 @@ try{
    ]});
    if(path==='movie/101/watch/providers')return Promise.resolve({results:{PL:{flatrate:[{provider_name:'Netflix'}]}}});
    if(path==='movie/202/watch/providers')return Promise.resolve({results:{PL:{}}});
+   if(path==='movie/101')return Promise.resolve({id:101,overview:'',credits:{cast:[]},genres:[],videos:{results:[]},
+      'watch/providers':{results:{PL:{flatrate:[{provider_name:'Netflix'}]}}},recommendations:{results:[]},
+      external_ids:{imdb_id:'tt0133093'}});
    if(path==='movie/202')return Promise.resolve({id:202,overview:'',credits:{cast:[]},genres:[],videos:{results:[]},
       'watch/providers':{results:{PL:{}}},recommendations:{results:[]}});
    return orig(path,q);
@@ -76,6 +79,13 @@ try{
  const available=await evaluate('({title:document.querySelector("#sresTitle").textContent,count:document.querySelectorAll("#sres .card").length, label:document.querySelector("#sres .vod-status").textContent})');
  assert(available.count===1&&available.label.includes('Netflix'),'streaming filter');
  console.log('E2E_STREAMING_AVAILABLE',JSON.stringify(available));
+ await evaluate('document.querySelector("#sres .card").onok()');
+ await waitFor(async()=>evaluate('document.querySelector("#details .dbtns")?.innerText.includes("Stremio")'),6000);
+ const availableActions=await evaluate('document.querySelector("#details .dbtns").innerText');
+ assert(availableActions.includes('Stremio')&&availableActions.includes('IPTV Smarters Player'),
+   'external-player actions should be available for ALL titles, including Netflix-supported titles');
+ console.log('E2E_PLAYERS_ON_AVAILABLE_TITLE',availableActions.replaceAll('\n',' | '));
+ await evaluate('window.TV.closeView()');
  await evaluate('document.querySelectorAll("#sfilters .schip")[1].onok()');
  const other=await evaluate('({count:document.querySelectorAll("#sres .card").length,label:document.querySelector("#sres .vod-status")?.textContent})');
  assert(other.count===1&&other.label.includes('Brak streamingu'),'non-PL fallback');

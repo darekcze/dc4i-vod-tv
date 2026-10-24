@@ -15,7 +15,7 @@ assert keys.exists() and re.search(r'[a-f0-9]{32}', keys.read_text(), re.I), 'TM
 if APP.exists(): shutil.rmtree(APP)
 shutil.copytree(SRC, APP, ignore=shutil.ignore_patterns('.git', '__pycache__','.DS_Store'))
 ID='com.dc4i.vodtv'
-VER='1.2.0'
+VER='1.2.1'
 def font(size, bold=True):
   paths = ['/System/Library/Fonts/Supplemental/Arial Bold.ttf' if bold else '/System/Library/Fonts/Supplemental/Arial.ttf',
            '/Library/Fonts/Arial Bold.ttf']

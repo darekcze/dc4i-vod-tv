@@ -2,6 +2,22 @@
 
 Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacje zastępowały wcześniejsze wersje.
 
+## [1.2.1] - 24.10.2026
+
+### Wykrywanie aplikacji LG i otwieranie tytułów
+- Dodano identyfikator `com.iptvsmarters.app` z dokumentacji integratorów sterowania LG (Snap One i RTI). Wcześniejsza wersja go nie sprawdzała. Wykrycie konkretnej instalacji przez telewizor nadal wymaga odbioru.
+- Poprawiono sprawdzanie aplikacji: system korzysta z pierwszego poprawnego ID i nie czeka na błędne lub zawieszone zapytania. Wspiera także dopasowanie po nazwie na liście zainstalowanych aplikacji, jeśli webOS na to pozwala.
+- Przyciski **Otwórz Stremio** oraz **Otwórz IPTV Smarters Player** są w szczegółach każdego filmu lub serialu z wyszukiwarki, także tytułów dostępnych już w polskim Netflix.
+- Stremio: pobieranie identyfikatora IMDb z TMDB i generowanie oficjalnych linków do szczegółów filmu/serialu; bez IMDb próba przekazania frazy wyszukiwania.
+- Smarters Player: eksperymentalne przekazanie nazwy tytułu do natywnej aplikacji. Producent nie udostępnił dokumentacji deep-link dla webOS, dlatego nie ma gwarancji automatycznej wyszukiwarki.
+- Zostaje identyfikator aplikacji `com.dc4i.vodtv`. Wersja 1.2.1 aktualizuje zainstalowaną 1.2.0 bez ponownej instalacji.
+
+### Testy i ograniczenia
+- Testy Node i Chrome potwierdzają wykrywanie ID w symulacji, format parametrów, przyciski dostępnych i pozostałych filmów.
+- Bez rootowania, bez zmian neonowego logo. Pozostałe 31 aplikacji pozostaje w katalogu.
+- Test natywnego uruchamiania na fizycznym LG nadal do wykonania, issues #2 i #3.
+- Dokumentacja: [integracja odtwarzaczy LG](NATIVE-PLAYER-INTEGRATION.md).
+
 ## [1.2.0] - 24.10.2026
 
 ### Nowa tożsamość aplikacji

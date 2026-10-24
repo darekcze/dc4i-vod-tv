@@ -24,9 +24,11 @@ change('config.js',
        "    {id: 'youtube.leanback.v4', title: 'YouTube',",
        """    {id: 'io.strem.tv', title: 'Stremio', color: '#6b4fb6',
       optional: true, candidates: ['io.strem.tv','io.strem.webos','com.razagr.stremio']},
-    {id: 'com.iptvsmarters.player', title: 'IPTV Smarters Player', color: '#0869b5',
-      optional: true, candidates: ['com.iptvsmarters.player','com.iptv.smarters',
-        'com.iptvsmarterspro','com.whmcs.iptvsmarters','com.iptv.smarterspro','iptvsmarters']},
+    {id: 'com.iptvsmarters.app', title: 'IPTV Smarters Player', color: '#0869b5',
+      optional: true, candidates: ['com.iptvsmarters.app','com.iptvsmarters.player',
+        'com.iptv.smarters','com.smartersplayer.app','smartersplayer',
+        'com.iptvsmarterspro','com.whmcs.iptvsmarters',
+        'com.iptv.smarterspro','iptvsmarters']},
     {id: 'youtube.leanback.v4', title: 'YouTube',""")
 
 # Probe optional apps against webOS before showing their tiles; never imply an unverified guessed ID works.
@@ -40,17 +42,24 @@ s = s[:start] + """  function probeApps() {
         return luna('com.webos.applicationManager/getAppLoadStatus',{appId:a.id})
           .then(function(r){ return r.exist ? a : null; },function(){ return a; });
       }
-      var lookups=a.candidates.map(function(id) {
-        return luna('com.webos.applicationManager/getAppLoadStatus',{appId:id})
-          .then(function(r){return r.exist===true?id:null;},function(){return null;});
+      // Resolve on the FIRST positive result; Promise.all used to wait on invalid IDs
+      // and could hide an installed player behind the 2.2s timeout.
+      return new Promise(function(resolve) {
+        var finished=false, pending=a.candidates.length;
+        var timer=setTimeout(function(){complete(null);},3600);
+        function complete(id) {
+          if(finished)return;
+          finished=true;clearTimeout(timer);
+          resolve(id ? Object.assign({},a,{id:id}):null);
+        }
+        a.candidates.forEach(function(id) {
+          luna('com.webos.applicationManager/getAppLoadStatus',{appId:id})
+            .then(function(res) {
+              if(res.exist===true)return complete(id);
+              if(--pending===0)complete(null);
+            },function(){if(--pending===0)complete(null);});
+        });
       });
-      return Promise.race([
-        Promise.all(lookups).then(function(ids){
-          var installed=ids.filter(Boolean)[0];
-          return installed ? Object.assign({},a,{id:installed}) : null;
-        }),
-        new Promise(function(resolve){setTimeout(function(){resolve(null);},2200);})
-      ]);
     })).then(function(list) {apps=list.filter(Boolean);});
   }
 """ + s[end:]
@@ -140,6 +149,18 @@ for before,after in [
 ]:
     if before not in s: raise RuntimeError('weather patch pattern missing: '+before)
     s=s.replace(before,after)
+# Export an installed-app lookup for players discovered by the rooted service or
+# listed in the normal app configuration. No manual app ID typing on the TV.
+before='    refresh: function () { buildRows(); },'
+after='''    refresh: function () { buildRows(); },
+    findInstalledApp: function(re) {
+      for(var i=0;i<apps.length;i++) {
+        if(re.test((apps[i].title||'')+' '+(apps[i].id||'')))return apps[i];
+      }
+      return null;
+    },'''
+assert s.count(before)==1, 'TV object source changed'
+s=s.replace(before,after)
 p.write_text(s,encoding='utf-8')
 
 # Smart contextual links, shown only when selected-country providers don't offer a streaming subscription.
@@ -147,17 +168,23 @@ p=APP/'features/details.js'
 s=p.read_text(encoding='utf-8')
 old="""      var tr = ((d.videos || {}).results || []).filter(function (v) { return v.site === 'YouTube' && v.type === 'Trailer'; })[0];"""
 insert="""      var subscriptions=(here.flatrate||[]).concat(here.free||[],here.ads||[]);
-      if (!subscriptions.length && TV.vodPlayers) {
+      if (TV.vodPlayers) {
         btns.appendChild(btn('▶ '+(TV.S.uiLang==='en'?'Open Stremio':'Otwórz Stremio'),
-          function(){TV.vodPlayers.open('stremio',it.title);}));
+          function(){TV.vodPlayers.open('stremio',it.title,it.tmdb,d);}));
         btns.appendChild(btn('▶ '+(TV.S.uiLang==='en'?'Open IPTV Smarters Player':'Otwórz IPTV Smarters Player'),
-          function(){TV.vodPlayers.open('iptv',it.title);}));
-        extra += (extra ? '  ·  ':'')+
+          function(){TV.vodPlayers.open('iptv',it.title,it.tmdb,d);}));
+        if (!subscriptions.length) extra += (extra ? '  ·  ':'')+
           (TV.S.uiLang==='en'?'Own legal sources are required.':'Wymagane własne, legalne źródła.');
       }
 """ + old
 assert s.count(old)==1
-p.write_text(s.replace(old,insert),encoding='utf-8')
+s=s.replace(old,insert)
+# Include IMDb metadata in the existing details request without a second HTTP call.
+extra_old="'&append_to_response=credits,videos,watch/providers,recommendations'"
+extra_new="'&append_to_response=credits,videos,watch/providers,recommendations,external_ids'"
+assert s.count(extra_old)==1
+s=s.replace(extra_old,extra_new)
+p.write_text(s,encoding='utf-8')
 
 # Dedicated TV search replaces upstream search module, with TMDB regional classification.
 shutil.copy2(SRC/'vod-search.js',APP/'features/search.js')

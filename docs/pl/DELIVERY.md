@@ -21,3 +21,10 @@ Rollback: przywróć całe poprzednie wdrożenie Cloudflare Pages (binarium i ma
 - Ikona 80/130px, splash 1920x1080, menu aplikacji oraz manifest Homebrew używają neonowej identyfikacji.
 - Stare pliki IPK pozostają jako archiwalne, w katalogu Homebrew wyświetlana jest nowa aplikacja.
 - Test na prawdziwym telewizorze LG jeszcze nie wykonany.
+
+## Wydanie 1.2.1, wykrywanie Smarters Player
+- Nowy kandydat ID: `com.iptvsmarters.app` z dokumentacji LG integratorów. Gdy telewizor potwierdzi instalację, aplikacja pojawi się obok Stremio.
+- Pierwsza poprawna odpowiedź kończy sprawdzanie. Nie czekamy na nieprawidłowe identyfikatory.
+- Przekazywanie IMDb Stremio oraz eksperymentalne przekazywanie tytułu do Smarters.
+- Przyciski do obu aplikacji są we wszystkich szczegółach filmów/seriali. E2E w Chrome i testy Node przechodzą; uruchamianie w natywnym LG do przetestowania.
+- Więcej: `docs/pl/NATIVE-PLAYER-INTEGRATION.md`.

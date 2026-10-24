@@ -6,7 +6,7 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I VOD TV 1.2.0
+## DC4I VOD TV 1.2.1
 
 - Identifier: com.dc4i.vodtv (new package identity, remove com.dc4i.boringtv before installing)
 - Market: Poland (PL), interface: Polish-first
@@ -15,8 +15,8 @@ Homebrew Channel expects JSON at the root URL. A browser-friendly project page i
 - Artwork: the user-approved DC4I VOD TV neon application logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
-- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.0_all.ipk
-- SHA256: 1f60c13d9fac72a8a0a5bbe0dd6e5cca2d69127ed674c4e32bf73e02880099f4
+- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.1_all.ipk
+- SHA256: 8de1397dbc723117d790499074e609188837a8d5a13d4aee1b5711d0abccce6c
 
 Package and catalog are deployed on Cloudflare Pages. The binary is intentionally **not committed to GitHub** as it embeds a client-side TMDB key. Anyone downloading the public IPK can extract that client key, so usage must be monitored and the key rotated if misused.
 
@@ -37,3 +37,10 @@ To release changes, build the app IPK, run test_vod_tv.py, run publish_vod_tv.py
 - [Changelog](CHANGELOG.md) and [Polish changelog](docs/pl/CHANGELOG.md)
 - [Delivery evidence](DELIVERY.md) and [Project charter](PROJECT.md)
 - Stremio and IPTV Smarters handoff needs real LG TV validation.
+
+## Native Stremio and IPTV Smarters Player (1.2.1)
+
+- IPTV Smarters LG candidate app ID: `com.iptvsmarters.app` (detect on the real TV).
+- Stremio: best-effort TMDB/IMDb link handoff, platform support unverified.
+- Smarters: experimental search-title hint, normal app launch if ignored.
+- [Integration details](docs/NATIVE-PLAYER-INTEGRATION.md) / [Instrukcja po polsku](docs/pl/NATIVE-PLAYER-INTEGRATION.md).

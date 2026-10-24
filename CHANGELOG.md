@@ -2,6 +2,23 @@
 
 Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrades).
 
+## [1.2.1] - 2026-10-24
+
+### Native LG player integration
+- Add evidence-backed LG IPTV Smarters app ID `com.iptvsmarters.app` as the first native-app candidate. Identified in Snap One and RTI LG IP-control reference lists. Positive app installation must still be confirmed by `getAppLoadStatus` on the actual TV.
+- Fix the optional player probe: it now immediately accepts the first installed ID instead of waiting for all invalid/hanging IDs to complete, which previously hid valid native Smarters installs.
+- Allow display-name-based identification from real installed app lists; try `listLaunchPoints` as an optional, permission-dependent fallback when other probes fail. No rooting required.
+- Make **Open Stremio** and **Open IPTV Smarters Player** available from every searched title's details, not just those without Polish streaming availability.
+- Stremio: resolve IMDb metadata via TMDB `external_ids`, compose official Stremio movie/series details links, fall back to a title search link. LG webOS handling of launch params is unverified.
+- Smarters: pass experimental search/title hints through LG's `applicationManager.launch` while opening the native player. The publisher does not document a webOS title/deep-link API, so searching/opening a specific film is not guaranteed.
+- Preserve the package ID `com.dc4i.vodtv` introduced in 1.2.0. This release is an in-place update for existing 1.2.0 installations.
+
+### Quality
+- New automated Node tests for Smarters discovery, stuck invalid IDs, Stremio IMDb links and search payloads. Chrome TV-sized tests cover buttons both when Poland has a streaming offer and when it does not.
+- Existing neon app branding, 32-app Homebrew catalog and 1.2.0 rollback package retained.
+- Real LG device acceptance for Smarters and Stremio remains pending, see issues #2 and #3.
+- Source and limitations: [native player integration](docs/NATIVE-PLAYER-INTEGRATION.md).
+
 ## [1.2.0] - 2026-10-24
 
 ### Breaking identity change, authorized by product owner

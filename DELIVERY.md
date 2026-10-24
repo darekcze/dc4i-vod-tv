@@ -43,3 +43,11 @@ Cloudflare Pages retains previous deployments. Current production is the source-
 - LG webOS appicon 80x80, largeIcon 130x130, splash 1920x1080 and UI header generated from the approved neon art.
 - Homebrew catalog switches to new ID and neon icon URL, retains other 31 applications. Older IPKs remain accessible by direct URL for rollback, not for in-place update.
 - Package and manifest checksums must be verified on the public domain before marking complete; real LG TV launch remains pending.
+
+## 1.2.1 native LG app detection and search handoff
+- Credible published LG IPTV Smarters ID: `com.iptvsmarters.app`; native device validation still pending.
+- Native-app probe returns the first confirmed installed ID, avoiding the earlier Promise.all timeout suppression.
+- Stremio movie/series metadata links rely on TMDB external IMDb IDs. Title handoff via webOS appManager `contentTarget` is attempted, not verified on a physical LG.
+- Smarters app launch passes best-effort title search hints only, since the vendor does not document webOS title deep-link support.
+- Search details buttons now appear for all movie/series titles, irrespective of provider availability in Poland.
+- Node mocked Luna tests + headless Chrome TV browser acceptance required; see docs/NATIVE-PLAYER-INTEGRATION.md.
