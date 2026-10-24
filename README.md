@@ -1,8 +1,8 @@
 # DC4I LG webOS Homebrew Repository
 
-Canonical TV repository: https://lg-webos-repo.pages.dev/
+Canonical TV repository: https://lg.darc.dev/
 
-Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg-webos-repo.pages.dev/about.html.
+Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
 ## DC4I BoringTV 1.0.0
 
@@ -11,7 +11,7 @@ Homebrew Channel expects JSON at the root URL. A browser-friendly project page i
 - Artwork: the official DC4I transparent company logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
-- Package (Cloudflare Pages): https://lg-webos-repo.pages.dev/packages/com.dc4i.boringtv_1.0.0_all.ipk
+- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.0_all.ipk
 - SHA256: bf68342d9a164ce18a9f79329d14503ac32fe793347a09b385df3bc848ba5475
 
 Package and catalog are deployed on Cloudflare Pages. The binary is intentionally **not committed to GitHub** as it embeds a client-side TMDB key. Anyone downloading the public IPK can extract that client key, so usage must be monitored and the key rotated if misused.

@@ -7,7 +7,7 @@ import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.boringtv'
 VERSION='1.0.0'
-BASE='https://lg-webos-repo.pages.dev'
+BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
 size=IPK.stat().st_size
@@ -72,7 +72,7 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <a class="btn" href="/packages/com.dc4i.boringtv_1.0.0_all.ipk">Pobierz aplikację .IPK</a></div></section>
 <div class="card"><h2>Instalacja w Homebrew Channel</h2>
 <p>Wejdź w Settings, Repositories, Add Repository i dodaj poniższy adres:</p>
-<code>https://lg-webos-repo.pages.dev/</code>
+<code>https://lg.darc.dev/</code>
 <p>Repozytorium wyświetli <b>DC4I BoringTV</b>. Wybierz Install. Nie trzeba wpisywać TMDB Key na telewizorze.</p>
 <p>Jeśli już masz oryginalne TheBoringTV, nowe DC4I BoringTV instaluje się jako osobna aplikacja.</p></div>
 <div class="card"><h2>Co działa?</h2>
@@ -84,9 +84,9 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 (DIST/'_headers').write_text('/\n  Content-Type: application/json; charset=utf-8\n/index.html\n  Content-Type: application/json; charset=utf-8\n/api/apps.json\n  Content-Type: application/json; charset=utf-8\n',encoding='utf-8')
 README='''# DC4I LG webOS Homebrew Repository
 
-Canonical TV repository: https://lg-webos-repo.pages.dev/
+Canonical TV repository: https://lg.darc.dev/
 
-Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg-webos-repo.pages.dev/about.html.
+Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
 ## DC4I BoringTV 1.0.0
 
