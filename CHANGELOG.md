@@ -124,3 +124,11 @@ Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrad
 - Installed and launched Kodi on LG OLED55G42LW (192.168.1.60) using ares-install and ares-launch.
 - Kodi webOS 21.0 differs from macOS Kodi 21.3 ARM64 DMG.
 - Stremio native webOS deep-link support remains unverified despite successful app launch.
+
+## [1.2.5] - 2026-10-25
+
+- Added Kodi app launcher tile (org.xbmc.kodi) and a clearly labeled Kodi launch action in movie details.
+- Added an optional Plex launcher in movie details only when Plex is detected as installed.
+- Existing YouTube trailer launch, Stremio native launch, Stremio Web title link and IPTV Smarters Player launch retained.
+- Explicit limitation: Kodi and Plex launcher actions open the apps; they do not claim direct movie navigation without Kodi JSON-RPC / Plex library identifiers.
+- Real LG tests confirmed Kodi 21.0 install and startup; Stremio native launches with webOS parameters, but native Stremio does not expose reliable deep-link confirmation.

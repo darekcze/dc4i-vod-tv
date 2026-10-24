@@ -99,3 +99,30 @@ assert old in s, 'app tile launch predicate changed'
 s=s.replace(old,new)
 p.write_text(s,encoding='utf-8')
 print('V124_PATCH_READY: verified IPTVSmartersPlayer ID com.smarterstvplayers.net; Pro excluded')
+
+# KODI_V125: Kodi is installed and verified on LG OLED55G42LW.
+# Only app launching is claimed; Kodi JSON-RPC library title navigation needs setup.
+p=A/'config.js'
+s=p.read_text(encoding='utf-8')
+anchor="    {id: 'youtube.leanback.v4'"
+assert s.count(anchor)==1
+s=s.replace(anchor,"    {id: 'org.xbmc.kodi', title: 'Kodi', color: '#159bd7', optional:true, candidates:['org.xbmc.kodi']},\n"+anchor)
+p.write_text(s,encoding='utf-8')
+p=A/'features/details.js'
+s=p.read_text(encoding='utf-8')
+anchor="        if (!subscriptions.length) extra += (extra ? '  ·  ':'')+"
+assert s.count(anchor)==1
+new="""        // Kodi is a native LG webOS app, not a generic Stremio protocol handler.
+        // Its JSON-RPC title deep links require user-enabled HTTP control and a library item ID.
+        btns.appendChild(btn('▶ '+(TV.S.uiLang==='en'?'Kodi (open app)':'Kodi (otwórz aplikację)'),
+          function(){TV.launch('org.xbmc.kodi');}));
+        // Plex native LG title deeplinks require the Plex server and ratingKey;
+        // show a simple launcher only if Plex is actually installed.
+        var plexApp=TV.findInstalledApp&&TV.findInstalledApp(/plex/i);
+        if(plexApp&&plexApp.id)btns.appendChild(btn('▶ '+(TV.S.uiLang==='en'?'Plex (open app)':'Plex (otwórz aplikację)'),
+          function(){TV.launch(plexApp.id);}));
+"""
+assert anchor in s
+s=s.replace(anchor,new+anchor)
+p.write_text(s,encoding='utf-8')
+print('KODI_V125_PATCH_READY')

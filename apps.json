@@ -12,18 +12,18 @@
       "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
       "manifest": {
         "id": "com.dc4i.vodtv",
-        "version": "1.2.4",
+        "version": "1.2.5",
         "type": "web",
         "title": "DC4I VOD TV",
         "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
         "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
         "sourceUrl": "https://github.com/darekcze/dc4i-vod-tv",
         "rootRequired": false,
-        "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.4_all.ipk",
+        "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.5_all.ipk",
         "ipkHash": {
-          "sha256": "831c68d77711804cf484ae49e1e65f30b52b37923150a1b46c2fd5136ad540e7"
+          "sha256": "6f4100335d69b6048d7d5f21cf60bb02eccb7822d233b140fe99b2a55c8719ba"
         },
-        "ipkSize": 2577282
+        "ipkSize": 2577610
       },
       "shortDescription": "Filmy, seriale i oceny w jednym miejscu | Polska | TMDB skonfigurowane",
       "fullDescriptionUrl": "https://lg.darc.dev/about.html"

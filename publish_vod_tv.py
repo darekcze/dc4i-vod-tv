@@ -6,7 +6,7 @@ from pathlib import Path
 import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.vodtv'
-VERSION='1.2.4'
+VERSION='1.2.5'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
@@ -77,7 +77,7 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <div><div class="tags"><span>LG webOS</span><span>Polska</span><span>TMDB gotowe</span></div>
 <h1>DC4I<br>VOD TV</h1>
 <p>Twoje centrum filmów, seriali i ocen. Odkrywaj nowości VOD i przechodź do aplikacji streamingowych bez szukania po wielu katalogach.</p>
-<a class="btn" href="/packages/com.dc4i.vodtv_1.2.4_all.ipk">Pobierz aplikację .IPK</a></div></section>
+<a class="btn" href="/packages/com.dc4i.vodtv_1.2.5_all.ipk">Pobierz aplikację .IPK</a></div></section>
 <div class="card"><h2>Instalacja w Homebrew Channel</h2>
 <p>Wejdź w Settings, Repositories, Add Repository i dodaj poniższy adres:</p>
 <code>https://lg.darc.dev/</code>

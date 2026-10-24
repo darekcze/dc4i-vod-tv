@@ -105,3 +105,10 @@ Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacj
 - SHA-256: b8ac326df8ad7cf0b52e4f816ab7c39c95410254b1bc3b9b3d024035ecec58ff.
 - Kodi zainstalowano i uruchomiono na LG OLED55G42LW; Kodi 21.3 DMG dla macOS nie jest zgodne z webOS.
 - Obsługa deeplink przez natywne Stremio na LG nadal niepotwierdzona.
+
+## [1.2.5] - 25.10.2026
+
+- Dodano kafelek Kodi oraz przycisk Kodi (otwórz aplikację) w szczegółach filmu.
+- Dodano przycisk Plex (otwórz aplikację), tylko jeśli Plex jest wykryty na telewizorze.
+- Zachowano YouTube (zwiastuny), Stremio, Stremio Web i IPTVSmartersPlayer.
+- Kodi i Plex: uruchomienie aplikacji, nie automatyczne otwarcie filmu. Pełne deep linki wymagają odpowiednich API i identyfikatorów biblioteki.
