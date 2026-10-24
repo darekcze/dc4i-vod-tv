@@ -50,7 +50,7 @@ for p in [ROOT/'manifests/dc4i-vodtv.manifest.json',DIST/'manifests/dc4i-vodtv.m
  p.parent.mkdir(parents=True,exist_ok=True)
  p.write_text(formatted_manifest,encoding='utf-8')
 for p in [ROOT/'packages.json',DIST/'packages.json']:
- p.write_text(json.dumps([entry],ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+ p.write_text(json.dumps(package_list,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 for p in [ROOT/'icons/dc4i-vod-tv-neon.png',DIST/'icons/dc4i-vod-tv-neon.png']:
  p.parent.mkdir(parents=True,exist_ok=True)
  shutil.copy2(ROOT/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png',p)
