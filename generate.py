@@ -6,7 +6,7 @@ version=p.name.split('_')[1]
 sha=hashlib.sha256(p.read_bytes()).hexdigest()
 base='https://lg-webos-repo.pages.dev'
 manifest={'id':'com.boring.tvhome','version':version,'type':'web','title':'TheBoringTV (TV Home)','appDescription':'Google TV-style launcher for LG webOS. Requires your TMDB and YouTube API keys for recommendations. Root required only to replace the native LG home screen.','iconUri':f'{base}/icons/theboringtv.png','sourceUrl':'https://github.com/theboringhumane/theboringtv-lgwebos','rootRequired':False,'ipkUrl':f'{base}/packages/{p.name}','ipkHash':{'sha256':sha},'ipkSize':p.stat().st_size}
-package={'id':f'com-boring-tvhome-{version.replace(".","-")}','title':'TheBoringTV','iconUri':manifest['iconUri'],'manifestUrl':f'{base}/manifests/theboringtv.manifest.json','manifest':manifest,'pool':'main','shortDescription':'Google TV-style home screen and cross-streaming recommendations','requirements':{'webosRelease':'>=6.0'}}
+package={'id':'com.boring.tvhome','title':'TheBoringTV','iconUri':manifest['iconUri'],'manifestUrl':f'{base}/manifests/theboringtv.manifest.json','manifest':manifest,'pool':'main','shortDescription':'Google TV-style home screen and cross-streaming recommendations','requirements':{'webosRelease':'>=6.0'}}
 Path('manifests/theboringtv.manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 Path('api/apps.json').write_text(json.dumps({'paging':{'page':1,'count':1,'maxPage':1,'itemsTotal':1,'prevUrl':None,'nextUrl':None},'packages':[package]},indent=2)+'\n')
 Path('apps.json').write_text(Path('api/apps.json').read_text())
