@@ -6,7 +6,7 @@ from pathlib import Path
 import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.boringtv'
-VERSION='1.0.0'
+VERSION='1.0.1'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
@@ -38,6 +38,8 @@ formatted_manifest=json.dumps(manifest,ensure_ascii=False,indent=2)+'\n'
 DIST=ROOT/'dist'
 for folder in ['api','icons','packages','manifests']:
  (DIST/folder).mkdir(parents=True,exist_ok=True)
+for old_package in (DIST/'packages').glob('*.ipk'):
+ if old_package.name != IPK.name: old_package.unlink()
 for p in [ROOT/'index.html', ROOT/'apps.json', ROOT/'api/apps.json',DIST/'index.html',DIST/'apps.json',DIST/'api/apps.json']:
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(formatted,encoding='utf-8')
 for p in [ROOT/'manifests/dc4i-boringtv.manifest.json',DIST/'manifests/dc4i-boringtv.manifest.json']:
@@ -69,7 +71,7 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <div><div class="tags"><span>LG webOS</span><span>Polska</span><span>TMDB gotowe</span></div>
 <h1>DC4I<br>BoringTV</h1>
 <p>Twoje centrum filmów, seriali i ocen. Odkrywaj nowości VOD i przechodź do aplikacji streamingowych bez szukania po wielu katalogach.</p>
-<a class="btn" href="/packages/com.dc4i.boringtv_1.0.0_all.ipk">Pobierz aplikację .IPK</a></div></section>
+<a class="btn" href="/packages/com.dc4i.boringtv_1.0.1_all.ipk">Pobierz aplikację .IPK</a></div></section>
 <div class="card"><h2>Instalacja w Homebrew Channel</h2>
 <p>Wejdź w Settings, Repositories, Add Repository i dodaj poniższy adres:</p>
 <code>https://lg.darc.dev/</code>
@@ -88,7 +90,7 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I BoringTV 1.0.0
+## DC4I BoringTV 1.0.1
 
 - Identifier: com.dc4i.boringtv (installs alongside original)
 - Market: Poland (PL), interface: Polish-first

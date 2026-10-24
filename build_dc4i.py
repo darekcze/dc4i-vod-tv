@@ -15,7 +15,7 @@ assert keys.exists() and re.search(r'[a-f0-9]{32}', keys.read_text(), re.I), 'TM
 if APP.exists(): shutil.rmtree(APP)
 shutil.copytree(SRC, APP, ignore=shutil.ignore_patterns('.git', '__pycache__','.DS_Store'))
 ID='com.dc4i.boringtv'
-VER='1.0.0'
+VER='1.0.1'
 def font(size, bold=True):
   paths = ['/System/Library/Fonts/Supplemental/Arial Bold.ttf' if bold else '/System/Library/Fonts/Supplemental/Arial.ttf',
            '/Library/Fonts/Arial Bold.ttf']
@@ -69,7 +69,89 @@ s=s.replace("'Popular on '","'Popularne w '")
 s=s.replace("'Trending on YouTube'","'Popularne na YouTube'")
 s=s.replace("'Waiting for the internet…'","'Łączenie z internetem…'")
 s=s.replace("'TV Home'","'DC4I BoringTV'")
+# Translate the most visible UI strings, settings and remote-control flows.
+app_labels={
+ "'Movie' : 'Series'": "'Film' : 'Serial'", "'Clock'": "'Zegar'", "'PL', 'Poland'": "'PL', 'Polska'",
+ "'Open in '": "'Otwórz w '",
+ "'Where to watch'": "'Gdzie obejrzeć'",
+ "'Continue watching'": "'Kontynuuj oglądanie'",
+ "'Country'": "'Kraj'",
+ "'Where to look up what’s streaming'": "'Dostępność serwisów VOD w wybranym kraju'",
+ "'Recommendation languages'": "'Języki rekomendacji'",
+ "'Pick any. None = trending in every language'": "'Wybierz języki lub pozostaw puste'",
+ "'Your streaming services'": "'Twoje serwisy streamingowe'",
+ "'Each gets a “Popular on …” row'": "'Osobny wiersz dla każdego wybranego serwisu'",
+ "'Trending on YouTube row'": "'Popularne na YouTube'",
+ "'Rotate featured titles'": "'Automatyczna zmiana polecanych filmów'",
+ "'Weather city'": "'Miasto pogody'",
+ "'Auto finds your city from your internet connection'": "'Automatycznie wykrywaj miasto'",
+ "'Hold OK on an app to move or remove it'": "'Przytrzymaj OK, aby przenieść lub ukryć aplikację'",
+ "'Show hidden apps'": "'Pokaż ukryte aplikacje'",
+ "'Clear history'": "'Wyczyść historię'",
+ "'Edit apps'": "'Edytuj aplikacje'",
+ "'Done'": "'Gotowe'",
+ "'Settings'": "'Ustawienia'",
+ "<h2>Settings</h2>": "<h2>Ustawienia</h2>",
+ "'Continue watching cleared'": "'Historia oglądania wyczyszczona'",
+ "'Could not look up where to watch'": "'Nie udało się sprawdzić dostępności'",
+ "'Hidden apps are back'": "'Przywrócono ukryte aplikacje'",
+ "'Edit mode: OK on an app to move or remove it'": "'Tryb edycji: OK, aby przenieść lub usunąć'",
+ "'On'": "'Włącz'",
+ "'Off'": "'Wyłącz'",
+ "'12-hour'": "'12 godzin'",
+ "'24-hour'": "'24 godziny'",
+ "'Open'": "'Otwórz'"
+}
+for before,after in app_labels.items(): s=s.replace(before,after)
+# Polish cities rather than the India-specific weather-city presets.
+for oldcity,newcity in [('Mumbai','Warszawa'),('Delhi','Kraków'),('Bengaluru','Wrocław'),
+ ('Hyderabad','Gdańsk'),('Chennai','Poznań'),('Kolkata','Łódź'),('Pune','Szczecin'),
+ ('Ahmedabad','Lublin'),('Jaipur','Katowice'),('Lucknow','Białystok'),
+ ('Chandigarh','Gdynia'),('Kochi','Toruń')]:
+ s=s.replace("['"+oldcity+"', '"+oldcity+"']", "['"+newcity+"', '"+newcity+"']")
+s=s.replace('  var draft, dirty;', "  if (!C.YT_KEY) SROWS = SROWS.filter(function (row) { return row.key !== 'youtube'; }); var draft, dirty;")
 js.write_text(s,encoding='utf-8')
+# Strings from the dynamically loaded search and details features.
+features_labels={
+ 'features/search.js': {
+  "'Search'": "'Szukaj'",
+  "'Search movies & shows'": "'Szukaj filmów i seriali'",
+  "'Trending searches'": "'Popularne wyszukiwania'",
+  "'Searching…'": "'Wyszukiwanie…'",
+  "'Results for “'": "'Wyniki dla „'",
+  "'No results for “'": "'Brak wyników dla „'",
+  "'Search failed, check the connection'": "'Błąd wyszukiwania, sprawdź internet'",
+  "'Checking where to watch…'": "'Sprawdzam dostępność…'",
+  "'Not streaming in '": "'Niedostępne w '",
+  "'Rent'": "'Wypożycz'",
+  "'Buy'": "'Kup'",
+  "'Space'": "'Spacja'",
+  "'Clear'": "'Wyczyść'",
+  "Search YouTube": "Szukaj w YouTube"
+ },
+ 'features/details.js': {
+  "'My watchlist'": "'Moja lista'",
+  "'Removed from your watchlist'": "'Usunięto z mojej listy'",
+  "'Added to your watchlist'": "'Dodano do mojej listy'",
+  "'✓ In watchlist'": "'✓ Na liście'",
+  "'＋ Watchlist'": "'＋ Do obejrzenia'",
+  "'Not on your services'": "'Brak w wybranych serwisach'",
+  "'Rent or buy: '": "'Wypożycz lub kup: '",
+  "'No streaming info for '": "'Brak informacji o dostępności w '",
+  "btn('Trailer',": "btn('Zwiastun',",
+  "'More like this'": "'Podobne filmy i seriale'",
+  "'Because you viewed '": "'Ponieważ oglądano '",
+  "'Could not load details'": "'Nie udało się pobrać szczegółów'",
+  "'Cast: '": "'Obsada: '",
+  "'▶ Watch on '": "'▶ Oglądaj w '",
+  "' season'": "' sezon'",
+  "' seasons'": "' sezony'"
+ }
+}
+for file,terms in features_labels.items():
+ p=APP/file; t=p.read_text()
+ for before,after in terms.items(): t=t.replace(before,after)
+ p.write_text(t,encoding='utf-8')
 # Official wordmark: use the existing company asset unchanged inside new composition.
 logo=Image.open(ART).convert('RGBA')
 def background(size):

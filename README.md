@@ -4,15 +4,15 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I BoringTV 1.0.0
+## DC4I BoringTV 1.0.1
 
 - Identifier: com.dc4i.boringtv (installs alongside original)
 - Market: Poland (PL), interface: Polish-first
 - Artwork: the official DC4I transparent company logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
-- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.0_all.ipk
-- SHA256: bf68342d9a164ce18a9f79329d14503ac32fe793347a09b385df3bc848ba5475
+- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.1_all.ipk
+- SHA256: bc18a829300f27c4730ad9e77ca50f3e4bf843bcb86b36592ec1affc39ccb5e9
 
 Package and catalog are deployed on Cloudflare Pages. The binary is intentionally **not committed to GitHub** as it embeds a client-side TMDB key. Anyone downloading the public IPK can extract that client key, so usage must be monitored and the key rotated if misused.
 

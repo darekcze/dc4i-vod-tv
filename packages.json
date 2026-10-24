@@ -5,18 +5,18 @@
     "iconUri": "https://lg.darc.dev/icons/dc4i-boringtv.png",
     "manifest": {
       "id": "com.dc4i.boringtv",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "type": "web",
       "title": "DC4I BoringTV",
       "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
       "iconUri": "https://lg.darc.dev/icons/dc4i-boringtv.png",
       "sourceUrl": "https://github.com/theboringhumane/theboringtv-lgwebos",
       "rootRequired": false,
-      "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.0_all.ipk",
+      "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.1_all.ipk",
       "ipkHash": {
-        "sha256": "bf68342d9a164ce18a9f79329d14503ac32fe793347a09b385df3bc848ba5475"
+        "sha256": "bc18a829300f27c4730ad9e77ca50f3e4bf843bcb86b36592ec1affc39ccb5e9"
       },
-      "ipkSize": 1753100
+      "ipkSize": 1753780
     },
     "shortDescription": "Filmy, seriale i oceny w jednym miejscu | Polska | TMDB skonfigurowane",
     "fullDescriptionUrl": "https://lg.darc.dev/about.html"
