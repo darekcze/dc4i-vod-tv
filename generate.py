@@ -25,4 +25,5 @@ The .ipk was built from the upstream source without including personal API keys.
 Files: `api/apps.json`, `manifests/`, `packages/`, `icons/`. Regenerate metadata with `python3 generate.py`.
 This is an unofficial third-party build. Test on your TV at your own risk.
 """)
+Path('index.html').write_text(Path('api/apps.json').read_text())
 print('MANIFEST READY',version,p.stat().st_size,sha)
