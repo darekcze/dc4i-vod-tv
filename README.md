@@ -6,7 +6,7 @@ Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I VOD TV 1.2.2
+## DC4I VOD TV 1.2.3
 
 - Identifier: com.dc4i.vodtv (new package identity, remove com.dc4i.boringtv before installing)
 - Market: Poland (PL), interface: Polish-first
@@ -15,8 +15,8 @@ Homebrew Channel expects JSON at the root URL. A browser-friendly project page i
 - Artwork: the user-approved DC4I VOD TV neon application logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
-- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.2_all.ipk
-- SHA256: 1668fb7ff0db9d167a13b8691c2825e86831684f7a17fedeb914c9c62dd1ffc0
+- Package (Cloudflare Pages): https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.3_all.ipk
+- SHA256: 95ee86df346644da3975fc700737306f891711bfe27f13c623bbb5b0c96c2c10
 
 Package and catalog are deployed on Cloudflare Pages. The binary is intentionally **not committed to GitHub** as it embeds a client-side TMDB key. Anyone downloading the public IPK can extract that client key, so usage must be monitored and the key rotated if misused.
 

@@ -83,3 +83,8 @@ Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacj
 
 ## [1.0.1] - 24.10.2026
 - Poprzednia nazwa DC4I BoringTV, pierwsza kompilacja dla Polski, YouTube jako opcjonalny bez blokowania uruchomienia.
+
+## [1.2.3] - 24.10.2026
+- Poprawiono otwieranie tytułów z wyników wyszukiwania. Pełnoekranowa wyszukiwarka nie zasłania już szczegółów filmu, a po powrocie znów się pokazuje.
+- Usunięto uruchamianie niewłaściwego Smarters Player Pro (LG Store 950615). Docelowy IPTV Smarters Player ma numer sklepu 1231221. Testujemy wyłącznie ten niepotwierdzony identyfikator, dopóki nie ustalimy właściwego ID webOS.
+- Stremio Web pozostaje działającą opcją otwierania wybranego tytułu. Deep-linki do natywnych aplikacji Stremio i IPTV Smarters nie są potwierdzone.

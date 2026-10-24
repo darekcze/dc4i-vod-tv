@@ -14,7 +14,7 @@ assert hashlib.sha256(WEBP.read_bytes()).hexdigest()==EXPECTED, 'The approved ne
 src=Image.open(ASSET).convert('RGB')
 assert src.size==(1024,1024),f'unexpected neon image shape: {src.size}'
 data=json.loads((APP/'appinfo.json').read_text(encoding='utf-8'))
-data.update({'id':'com.dc4i.vodtv','version':'1.2.2','title':'DC4I VOD TV','vendor':'DC4I'})
+data.update({'id':'com.dc4i.vodtv','version':'1.2.3','title':'DC4I VOD TV','vendor':'DC4I'})
 (APP/'appinfo.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 # Preserve the exact neon visual generated earlier in this conversation for icon and installation.
 src.resize((80,80),Image.Resampling.LANCZOS).save(APP/'icon.png',optimize=True)

@@ -8,13 +8,11 @@ var TV=window.TV;if(!TV)return;
 function say(pl,en){return TV.S.uiLang==='en'?en:pl;}
 var players={
  stremio:{name:'Stremio',ids:['io.strem.tv','io.strem.webos','com.razagr.stremio'],match:/stremio/i},
- iptv:{name:'Smarters Player',storeId:'1231221',
-  ids:['com.iptvsmarters.app','com.iptvsmarters.player','1231221',
-   'com.iptv.smarters','com.smartersplayer.app','smartersplayer',
-   'com.iptvsmarterspro','com.whmcs.iptvsmarters','com.iptv.smarterspro','iptvsmarters'],
-  match:/smarters|smarter\s*player|iptv\s*smarter/i}
+ iptv:{name:'IPTV Smarters Player',storeId:'1231221',
+  ids:['1231221'],match:/^IPTV Smarters Player$/i}
 };
 var known=TV.store('vodInstalledPlayerIds')||{};
+if(known.iptv && known.iptv!=='1231221'){delete known.iptv;TV.store('vodInstalledPlayerIds',known);}
 var diagnostics=TV.store('vodNativeDiagnostics122')||[];
 function log(name,phase,id,result,error){
  var row={player:name,phase:phase,id:id||'',success:!!result,

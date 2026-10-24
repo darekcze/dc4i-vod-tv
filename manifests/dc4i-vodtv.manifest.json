@@ -1,15 +1,15 @@
 {
   "id": "com.dc4i.vodtv",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "web",
   "title": "DC4I VOD TV",
   "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
   "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
   "sourceUrl": "https://github.com/darekcze/dc4i-vod-tv",
   "rootRequired": false,
-  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.2_all.ipk",
+  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.3_all.ipk",
   "ipkHash": {
-    "sha256": "1668fb7ff0db9d167a13b8691c2825e86831684f7a17fedeb914c9c62dd1ffc0"
+    "sha256": "95ee86df346644da3975fc700737306f891711bfe27f13c623bbb5b0c96c2c10"
   },
-  "ipkSize": 2577290
+  "ipkSize": 2577284
 }

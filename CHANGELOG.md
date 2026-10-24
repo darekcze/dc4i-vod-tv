@@ -96,3 +96,8 @@ Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrad
 ## Source attribution
 - [TheBoringTV LG webOS source](https://github.com/theboringhumane/theboringtv-lgwebos), pinned commit `8cdea8940355685a82aac127fcdcf113a30684f6`.
 - [DC4I approved monogram and asset rules](https://app.notion.com/p/3fb522ca403c81199c9bff92c1e84098).
+
+## [1.2.3] - 2026-10-24
+- Fixed Search cards appearing unresponsive: Search overlay now hides when opening details, and restores when returning.
+- Prevented launching the wrong product (Smarters Player Pro, LG Store #950615). The requested IPTV Smarters Player listing is #1231221; only this unverified candidate is tried until the actual internal webOS ID is obtained.
+- Stremio Web remains the confirmed working route to selected titles on the user's LG. Native Stremio and IPTV Smarters lack confirmed external title deep-link support.

@@ -73,4 +73,17 @@ new="esc(a.title) + (a.unverified ? ' · sprawdź' : '') + '</div>';"
 assert part.count(old)==1, 'appTile markup changed'
 s=s[:start]+part.replace(old,new)+s[end:]
 p.write_text(s,encoding='utf-8')
+replace('features/details.js',
+    "    if (prev) render(prev, d && !d.then ? d : null); else { box.hidden = true; box.innerHTML = ''; }",
+    "    if (prev) render(prev, d && !d.then ? d : null); else { box.hidden = true; box.innerHTML = ''; var search=document.getElementById('search'); if(search && document.querySelector('#sres .card'))search.hidden=false; }")
+# Do not launch the distinct Smarters Player Pro product from LG Store 950615.
+# Only trial the user's requested LG Store listing 1231221.
+p=A/'config.js';s=p.read_text(encoding='utf-8')
+start=s.index("    {id: 'com.iptvsmarters.app', title: 'Smarters Player'")
+end=s.index("    {id: 'youtube.leanback.v4'",start)
+s=s[:start]+'''    {id: '1231221', title: 'IPTV Smarters Player', color: '#0869b5',
+      playerKey:'iptv', keepTile:true, storeId:'1231221',
+      optional:true, candidates:['1231221']},
+'''+s[end:]
+p.write_text(s,encoding='utf-8')
 print('V122_PATCH_READY: store ID 1231221, persistent Smarters tile, launch diagnostics, native/web Stremio links')

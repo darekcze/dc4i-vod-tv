@@ -122,6 +122,7 @@
     list.forEach(function(r) {
       var item=TV.fromTmdb(r.item);
       var card=TV.card(item);
+      card.onok=function(){ROOT.hidden=true;TV.itemOk(item);};
       var badge=TV.el('div','swhere vod-status');
       if(r.info.unknown) badge.textContent=tr('Nie potwierdzono dostępności','Availability could not be verified');
       else if(r.info.available) badge.textContent=tr('W VOD: ','Streaming: ')+r.info.names.slice(0,3).join(' · ');
