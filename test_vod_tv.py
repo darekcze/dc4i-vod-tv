@@ -4,12 +4,12 @@ from pathlib import Path
 from PIL import Image
 import json,re,subprocess,tarfile,io,urllib.request,urllib.error,hashlib
 R=Path(__file__).resolve().parent
-A=R/'build'/'dc4i-boringtv'
-P=R/'private'/'com.dc4i.boringtv_1.1.1_all.ipk'
+A=R/'build'/'dc4i-vodtv'
+P=R/'private'/'com.dc4i.vodtv_1.2.0_all.ipk'
 meta=json.loads((A/'appinfo.json').read_text())
-assert meta['id']=='com.dc4i.boringtv'
+assert meta['id']=='com.dc4i.vodtv'
 assert meta['title']=='DC4I VOD TV'
-assert meta['version']=='1.1.1'
+assert meta['version']=='1.2.0'
 assert Image.open(A/'icon.png').size==(80,80)
 assert Image.open(A/'largeIcon.png').size==(130,130)
 assert Image.open(A/'splash.png').size==(1920,1080)
@@ -23,6 +23,13 @@ config=(A/'config.js').read_text()
 assert "REGION: 'PL'" in config and "LANG: 'pl-PL'" in config
 km=re.search(r'[a-f0-9]{32}',(A/'keys.js').read_text(),re.I)
 assert km,'TMDB is not configured'
+from PIL import ImageChops
+official=Image.open(R/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png').convert('RGB')
+actual=Image.open(A/'icon.png').convert('RGB')
+assert ImageChops.difference(official.resize((80,80),Image.Resampling.LANCZOS),actual).getbbox() is None, 'App icon is not the selected neon logo'
+assert 'neon-app-logo.png' in html and 'dc4i-neon-boot' in html, 'Startup branding must be neon'
+assert 'com.dc4i.boringtv' not in (A/'appinfo.json').read_text(), 'Legacy app ID leaked into new package'
+print('NEON_BRAND_AND_NEW_ID_OK')
 print('METADATA_AND_BRANDING_OK')
 for f in ['app.js','config.js','vod-root.js','vod-i18n.js','features/details.js','features/search.js']:
   p=subprocess.run(['node','--check',str(A/f)],capture_output=True,text=True)
@@ -31,7 +38,7 @@ print('JAVASCRIPT_SYNTAX_OK')
 data=subprocess.check_output(['ar','p',str(P),'data.tar.gz'])
 with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tf:
   names=[x.name for x in tf.getmembers()]
-  for f in ['keys.js','appinfo.json','splash.png','dc4i.css','dc4i-wordmark.png','vod-root.js','vod-i18n.js','vod-root.css']:
+  for f in ['keys.js','appinfo.json','splash.png','dc4i.css','dc4i-wordmark.png','neon-app-logo.png','vod-root.js','vod-i18n.js','vod-root.css']:
     assert any(n.endswith('/'+f) or n==f for n in names),f+' not in IPK'
 print('IPK_CONTENTS_OK',len(names),'files')
 try:

@@ -2,6 +2,22 @@
 
 Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacje zastępowały wcześniejsze wersje.
 
+## [1.2.0] - 24.10.2026
+
+### Nowa tożsamość aplikacji
+- Wersja **DC4I VOD TV 1.2.0** używa identyfikatora `com.dc4i.vodtv` zamiast starego `com.dc4i.boringtv`.
+- Zmiana jest celowo niekompatybilna ze zwykłą aktualizacją, zgodnie ze zgodą właściciela. **Odinstaluj aplikację 1.1.1 lub wcześniejszą, potem zainstaluj 1.2.0** z `https://lg.darc.dev/`.
+- Pakiet nosi nazwę `com.dc4i.vodtv_1.2.0_all.ipk`, manifest: `dc4i-vodtv.manifest.json`; stare pakiety pozostają archiwalne.
+
+### Oficjalna neonowa grafika produktu
+- Ikona w menu telewizora i ekran startowy wykorzystują piękną grafikę **Neon DC4I VOD TV**, stworzoną wcześniej w naszej rozmowie i zatwierdzoną przez użytkownika.
+- Zachowano źródłową wersję w `assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png`, wersję WebP z SHA-256 `fe7aa367fb1b4f83593a5a647f4dc4a7693ec0888c8e8a046cec02667781f840`, ikony 80/130px i nowy pasek firmowy.
+- Logo korporacyjne DC4I pozostaje odrębnym wzorcem marki.
+
+### Testy
+- Nazwa, identyfikator i wersja w appinfo oraz całym IPK; poprawne logo, składnia JavaScript, API TMDB, interfejs pilota w Chrome i dostępność pliku z manifestu.
+- Zachowane funkcje polskiego VOD, polskiej pogody i Stremio/IPTV. Test na fizycznym LG nadal otwarty.
+
 ## [1.1.1] - 24.10.2026
 
 ### Nowe funkcje

@@ -2,6 +2,24 @@
 
 Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrades).
 
+## [1.2.0] - 2026-10-24
+
+### Breaking identity change, authorized by product owner
+- New **DC4I VOD TV** LG webOS app ID: `com.dc4i.vodtv`, replacing historical `com.dc4i.boringtv`.
+- webOS treats the new ID as a separate app. **Uninstall versions 1.1.x or earlier, then install 1.2.0** from the same Homebrew Channel repository `https://lg.darc.dev/`.
+- New downloadable package name `com.dc4i.vodtv_1.2.0_all.ipk`; catalog entry and manifest renamed to `dc4i-vodtv.manifest.json`.
+- Previous builds remain archived as rollback downloads but are no longer the active Homebrew catalog entry.
+
+### Neon branding
+- Replaced the previous corporate white-background icon and splash with the exact visual of the **Neon DC4I VOD TV** graphic approved by the Chairman, retrieved from the earlier image-generation message in this conversation.
+- Versioned app artwork: `assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.webp` (SHA256 `fe7aa367fb1b4f83593a5a647f4dc4a7693ec0888c8e8a046cec02667781f840`), plus PNG source, LG 80/130px icons, splash, branded navbar.
+- Preserved DC4I corporate-logo standard separately from the product's neon icon.
+
+### Retained behavior and validation
+- Polish/English UI, Polish weather, Warszawa and European/US city picker, region-aware TMDB search, Stremio and IPTV Smarters launch candidates.
+- Updated build/test/publish scripts to new technical identity and generated build path.
+- Tests verify the new appinfo ID, neon image pixels, archive contents, browser UI, TMDB API and manifest binary hash. Hardware LG acceptance remains open.
+
 ## [1.1.1] - 2026-10-24
 
 ### Added

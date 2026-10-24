@@ -5,7 +5,7 @@ import {readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {setTimeout as sleep} from 'node:timers/promises';
 const root=resolve(import.meta.dirname,'..');
-const webroot=join(root,'build','dc4i-boringtv');
+const webroot=join(root,'build','dc4i-vodtv');
 const workspace=join(root,'private','ui-tests');
 const port=28767,debugPort=29237;
 mkdirSync(workspace,{recursive:true});

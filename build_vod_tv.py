@@ -8,13 +8,13 @@ ART=R/'assets/brand/DC4I_Official_Circuit_Profile_2026-10-24.png'
 assert ART.exists(),'Missing canonical approved logo. See DC4I-BRAND-001 in Notion.'
 assert __import__('hashlib').sha256(ART.read_bytes()).hexdigest()=='3f8624833ca1eb1609bb42013bfc703d185b59207778afab6802a0723a5e8771'
 subprocess.run([sys.executable,str(R/'build_dc4i.py')],check=True)
-APP=R/'build/dc4i-boringtv'; SRC=R/'src'
-VERSION='1.1.1'; TITLE='DC4I VOD TV'
+APP=R/'build/dc4i-vodtv'; SRC=R/'src'
+VERSION='1.2.0'; TITLE='DC4I VOD TV'
 def patch(path,before,after,required=True):
     p=APP/path;s=p.read_text(encoding='utf-8')
     if required and before not in s:raise ValueError('Pattern missing '+str(path)+' => '+before[:70])
     p.write_text(s.replace(before,after),encoding='utf-8')
-# Keep app id stable (com.dc4i.boringtv), so existing users receive an update, not another app.
+# Breaking rebrand authorized by owner: new com.dc4i.vodtv installs separately, replacing the old app manually.
 appinfo=json.loads((APP/'appinfo.json').read_text())
 appinfo.update({'title':TITLE,'version':VERSION,'vendor':'DC4I','bgColor':'#071638'})
 (APP/'appinfo.json').write_text(json.dumps(appinfo,indent=2,ensure_ascii=False)+'\n')
@@ -126,10 +126,13 @@ for f in ['vod-root.js','vod-i18n.js','vod-root.css']:shutil.copy2(SRC/f,APP/f)
 (APP/'DC4I-FORK-NOTES.md').write_text(
  '# DC4I VOD TV '+VERSION+'\nCorporate source: assets/brand/DC4I_Official_Circuit_Profile_2026-10-24.png\n'
  'Upstream: theboringhumane/theboringtv-lgwebos pinned at 8cdea8940355685a82aac127fcdcf113a30684f6.\n'
- 'App ID com.dc4i.boringtv intentionally retained for upgrades.\nUI languages PL/EN. Default PL. Root-only controls hidden for unrooted TVs.\n'
+ 'App ID com.dc4i.vodtv; uninstall legacy com.dc4i.boringtv before installing new app.\nUI languages PL/EN. Default PL. Root-only controls hidden for unrooted TVs.\n'
  'YouTube Trending requires a verified Google API integration; without one it remains optional.\n',encoding='utf-8')
 print('DC4I_VOD_TV_BUILD_READY',TITLE,VERSION,appinfo['id'],'LOGO_SHA256_OK',True)
 print('WEATHER_CITIES',len(cities)-2,'LANG_CHOICES','PL EN')
 
 # DC4I VOD TV patch layer for regional availability, weather and app launchers.
 subprocess.run([sys.executable, str(R/'scripts/patch_v111.py')], check=True)
+
+# Final user-approved neon graphics and technical app identity for the 1.2.0 release.
+subprocess.run([sys.executable,str(R/'scripts/neon_brand_v120.py')],check=True)

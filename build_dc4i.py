@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build official-brand DC4I BoringTV fork from locally checked-out upstream.
+"""Build official-brand DC4I VOD TV fork from locally checked-out upstream.
 No credentials in this build script. Its output .ipk embeds the key from ignored keys.js.
 """
 from pathlib import Path
@@ -7,15 +7,15 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import shutil, json, math, re
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT/'build'/'theboringtv'
-APP = ROOT/'build'/'dc4i-boringtv'
+APP = ROOT/'build'/'dc4i-vodtv'
 ART = ROOT/'branding'/'dc4i-transparent.png'
 assert SRC.is_dir() and ART.is_file(), 'Missing source or official branding'
 keys = SRC/'keys.js'
 assert keys.exists() and re.search(r'[a-f0-9]{32}', keys.read_text(), re.I), 'TMDB key missing'
 if APP.exists(): shutil.rmtree(APP)
 shutil.copytree(SRC, APP, ignore=shutil.ignore_patterns('.git', '__pycache__','.DS_Store'))
-ID='com.dc4i.boringtv'
-VER='1.0.1'
+ID='com.dc4i.vodtv'
+VER='1.2.0'
 def font(size, bold=True):
   paths = ['/System/Library/Fonts/Supplemental/Arial Bold.ttf' if bold else '/System/Library/Fonts/Supplemental/Arial.ttf',
            '/Library/Fonts/Arial Bold.ttf']
@@ -28,7 +28,7 @@ def replace(path, old, new, required=True):
   p.write_text(txt.replace(old, new), encoding='utf-8')
 # Change app identity through dependent files as a standalone install, preserving upstream attribution.
 meta=json.loads((APP/'appinfo.json').read_text())
-meta.update({'id':ID,'version':VER,'vendor':'DC4I','title':'DC4I BoringTV',
+meta.update({'id':ID,'version':VER,'vendor':'DC4I','title':'DC4I VOD TV',
              'appDescription':'Odkrywaj filmy i seriale ze wszystkich serwisów. Spersonalizowane dla Polski.',
              'bgColor':'#071638','iconColor':'#071638'})
 (APP/'appinfo.json').write_text(json.dumps(meta,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
@@ -68,7 +68,7 @@ s=s.replace("'Trending today'","'Trendy dnia'")
 s=s.replace("'Popular on '","'Popularne w '")
 s=s.replace("'Trending on YouTube'","'Popularne na YouTube'")
 s=s.replace("'Waiting for the internet…'","'Łączenie z internetem…'")
-s=s.replace("'TV Home'","'DC4I BoringTV'")
+s=s.replace("'TV Home'","'DC4I VOD TV'")
 # Translate the most visible UI strings, settings and remote-control flows.
 app_labels={
  "'Movie' : 'Series'": "'Film' : 'Serial'", "'Clock'": "'Zegar'", "'PL', 'Poland'": "'PL', 'Polska'",
@@ -185,28 +185,28 @@ d.line((90,361,422,361), fill=(164,244,74,230),width=3)
 write_track(d,'BORING TV',256,388,font(33), (235,245,255,255),4)
 icon.convert('RGB').resize((80,80),Image.Resampling.LANCZOS).save(APP/'icon.png',optimize=True)
 icon.convert('RGB').resize((130,130),Image.Resampling.LANCZOS).save(APP/'largeIcon.png',optimize=True)
-icon.save(ROOT/'branding'/'dc4i-boringtv-icon-preview.png')
+icon.save(ROOT/'branding'/'dc4i-vodtv-icon-preview.png')
 splash=background((1920,1080)); d=ImageDraw.Draw(splash)
 logo_paste(splash,(460,280,1000,360))
-write_track(d,'BORINGTV',960,666,font(94), (236,244,255,255),13)
+write_track(d,'VOD TV',960,666,font(94), (236,244,255,255),13)
 write_track(d,'ODKRYWAJ. OCENIAJ. OGLĄDAJ.',960,797,font(27), (164,191,229,255),4)
 d.line((755,865,1165,865),fill=(177,245,72,180),width=4)
 splash.convert('RGB').save(APP/'splash.png', optimize=True)
-splash.resize((960,540),Image.Resampling.LANCZOS).save(ROOT/'branding'/'dc4i-boringtv-splash-preview.png')
+splash.resize((960,540),Image.Resampling.LANCZOS).save(ROOT/'branding'/'dc4i-vodtv-splash-preview.png')
 wordmark=logo.copy()
 wordmark.thumbnail((480,190),Image.Resampling.LANCZOS)
 wordmark.save(APP/'dc4i-wordmark.png',optimize=True)
 # Brand navigation and boot.
 html=APP/'index.html'; s=html.read_text()
-s=s.replace('<title>TV Home</title>','<title>DC4I BoringTV</title>')
+s=s.replace('<title>TV Home</title>','<title>DC4I VOD TV</title>')
 s=s.replace('</style>\n</head>','</style>\n<link rel="stylesheet" href="dc4i.css">\n</head>')
-s=s.replace('<img src="icon.svg" alt="">','<img class="dc4i-bootlogo" src="dc4i-wordmark.png" alt="DC4I"><div class="dc4i-bootname">BORINGTV</div>')
+s=s.replace('<img src="icon.svg" alt="">','<img class="dc4i-bootlogo" src="dc4i-wordmark.png" alt="DC4I"><div class="dc4i-bootname">VOD TV</div>')
 s=s.replace('Getting your shows ready…','Przygotowujemy Twoje rekomendacje…')
-s=s.replace('<header id="top">','<header id="top">\n  <div class="dc4i-brand"><img src="dc4i-wordmark.png" alt="DC4I"><small>BORINGTV</small></div>')
-for old,new in [('For you','Dla Ciebie'),('Live</span>','Na żywo</span>'),('Apps</span>','Aplikacje</span>'),('>Open</span>','>Otwórz</span>'),('Your apps</h2>','Twoje aplikacje</h2>'),('TV Home</div>','DC4I BoringTV</div>'),('Screensaver</b>','Wygaszacz</b>'),('Audio output</b>','Wyjście audio</b>'),('Bluetooth</b>','Bluetooth</b>'),('Brightness <b','Jasność <b'),('Volume <b','Głośność <b')]:
+s=s.replace('<header id="top">','<header id="top">\n  <div class="dc4i-brand"><img src="dc4i-wordmark.png" alt="DC4I"><small>VOD TV</small></div>')
+for old,new in [('For you','Dla Ciebie'),('Live</span>','Na żywo</span>'),('Apps</span>','Aplikacje</span>'),('>Open</span>','>Otwórz</span>'),('Your apps</h2>','Twoje aplikacje</h2>'),('TV Home</div>','DC4I VOD TV</div>'),('Screensaver</b>','Wygaszacz</b>'),('Audio output</b>','Wyjście audio</b>'),('Bluetooth</b>','Bluetooth</b>'),('Brightness <b','Jasność <b'),('Volume <b','Głośność <b')]:
   s=s.replace(old,new)
 html.write_text(s,encoding='utf-8')
-brand_css="""/* DC4I BoringTV | branded UI | dedicated LG webOS app */
+brand_css="""/* DC4I VOD TV | branded UI | dedicated LG webOS app */
 html,body { background:#071638; color:#eaf2ff; }
 #boot {background:#071638;}
 #boot .sw.s1 {background:radial-gradient(circle,rgba(36,87,230,.9),rgba(36,87,230,0) 65%);}
@@ -246,7 +246,7 @@ html,body { background:#071638; color:#eaf2ff; }
 """
 (APP/'dc4i.css').write_text(brand_css,encoding='utf-8')
 (APP/'DC4I-FORK-NOTES.md').write_text(
-  "# DC4I BoringTV v1.0.0\n\nCustomized from theboringhumane/theboringtv-lgwebos (source attribution retained).\n"
+  "# DC4I VOD TV v1.0.0\n\nCustomized from theboringhumane/theboringtv-lgwebos (source attribution retained).\n"
   "Official DC4I wordmark from darekcze/dcai-website (public/brand/dc4i-transparent.png).\n"
   "Region Poland, Polish-first UI, TMDB included in packaged keys.js.\n"
   "YouTube Data API is optional and disabled if key missing.\n"

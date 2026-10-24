@@ -14,3 +14,10 @@ Rollback: przywróć całe poprzednie wdrożenie Cloudflare Pages (binarium i ma
 - Aplikacje: Stremio `io.strem.tv`, IPTV Smarters tylko po potwierdzeniu identyfikatora przez system.
 - Testy Chrome w rozdzielczości TV: PASS dla pogody, weryfikacji ofert, przycisków i ukrywania kontrolek roota. Test na fizycznym LG pozostaje otwarty.
 - Źródło zmian: `CHANGELOG.md` i `docs/pl/CHANGELOG.md`. Ograniczenia: issues #2, #3, #4 w repozytorium.
+
+## Wydanie 1.2.0 i nowe logo Neon DC4I VOD TV
+- Właściciel zatwierdził zmianę ID na `com.dc4i.vodtv`. Wymaga odinstalowania starej aplikacji `com.dc4i.boringtv` i nowej instalacji.
+- Neonowe logo pochodzi z wcześniejszego obrazu wygenerowanego w tym czacie, zapisane w `assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png`.
+- Ikona 80/130px, splash 1920x1080, menu aplikacji oraz manifest Homebrew używają neonowej identyfikacji.
+- Stare pliki IPK pozostają jako archiwalne, w katalogu Homebrew wyświetlana jest nowa aplikacja.
+- Test na prawdziwym telewizorze LG jeszcze nie wykonany.

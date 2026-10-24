@@ -5,14 +5,14 @@ Public .ipk contains a bundled TMDB client key. No key values written to git-tra
 from pathlib import Path
 import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent
-APP='com.dc4i.boringtv'
-VERSION='1.1.1'
+APP='com.dc4i.vodtv'
+VERSION='1.2.0'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
 size=IPK.stat().st_size
 sha=hashlib.sha256(IPK.read_bytes()).hexdigest()
-icon_uri=BASE+'/icons/dc4i-vod-tv.png'
+icon_uri=BASE+'/icons/dc4i-vod-tv-neon.png'
 package_uri=BASE+'/packages/'+IPK.name
 manifest={
  'id':APP,'version':VERSION,'type':'web','title':'DC4I VOD TV',
@@ -34,7 +34,7 @@ entry={
 }
 # Merge the verified DC4I VOD TV update without deleting DStore or other existing catalogue entries.
 previous=json.loads((ROOT/'api/apps.json').read_text(encoding='utf8')) if (ROOT/'api/apps.json').exists() else {}
-extras=[x for x in previous.get('packages',[]) if x.get('id')!=APP]
+extras=[x for x in previous.get('packages',[]) if x.get('id') not in (APP,'com.dc4i.boringtv')]
 package_list=[entry]+extras
 catalog={'paging':{'page':1,'count':len(package_list),'maxPage':1,'itemsTotal':len(package_list)}, 'packages':package_list}
 formatted=json.dumps(catalog,ensure_ascii=False,indent=2)+'\n'
@@ -43,15 +43,17 @@ DIST=ROOT/'dist'
 for folder in ['api','icons','packages','manifests']:
  (DIST/folder).mkdir(parents=True,exist_ok=True)
 for old_package in (DIST/'packages').glob('*.ipk'):
- if old_package.name.startswith(APP+'_') and old_package.name not in (IPK.name, 'com.dc4i.boringtv_1.1.0_all.ipk'): old_package.unlink()
+ if old_package.name.startswith(APP+'_') and old_package.name != IPK.name: old_package.unlink()
 for p in [ROOT/'index.html', ROOT/'apps.json', ROOT/'api/apps.json',DIST/'index.html',DIST/'apps.json',DIST/'api/apps.json']:
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(formatted,encoding='utf-8')
-for p in [ROOT/'manifests/dc4i-boringtv.manifest.json',DIST/'manifests/dc4i-boringtv.manifest.json']:
+for p in [ROOT/'manifests/dc4i-vodtv.manifest.json',DIST/'manifests/dc4i-vodtv.manifest.json']:
+ p.parent.mkdir(parents=True,exist_ok=True)
  p.write_text(formatted_manifest,encoding='utf-8')
 for p in [ROOT/'packages.json',DIST/'packages.json']:
  p.write_text(json.dumps([entry],ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-for p in [ROOT/'icons/dc4i-vod-tv.png',DIST/'icons/dc4i-vod-tv.png']:
- shutil.copy2(ROOT/'assets/brand/dc4i-vod-tv-icon-1024.png',p)
+for p in [ROOT/'icons/dc4i-vod-tv-neon.png',DIST/'icons/dc4i-vod-tv-neon.png']:
+ p.parent.mkdir(parents=True,exist_ok=True)
+ shutil.copy2(ROOT/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png',p)
 shutil.copy2(IPK, DIST/'packages'/IPK.name)
 # An attractive human-readable landing page lives separately from the machine-readable catalog.
 html='''<!DOCTYPE html>
@@ -71,16 +73,16 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 @media(max-width:650px){.hero{grid-template-columns:1fr;text-align:center}.hero img{max-width:210px;margin:auto}header{padding-top:18px}}
 </style></head><body>
 <header><strong>DC4I</strong><span>DRIVING COMPANIES FOR AI</span></header>
-<main><section class="hero"><img src="/icons/dc4i-vod-tv.png" alt="DC4I VOD TV">
+<main><section class="hero"><img src="/icons/dc4i-vod-tv-neon.png" alt="DC4I VOD TV Neon">
 <div><div class="tags"><span>LG webOS</span><span>Polska</span><span>TMDB gotowe</span></div>
 <h1>DC4I<br>VOD TV</h1>
 <p>Twoje centrum filmów, seriali i ocen. Odkrywaj nowości VOD i przechodź do aplikacji streamingowych bez szukania po wielu katalogach.</p>
-<a class="btn" href="/packages/com.dc4i.boringtv_1.1.1_all.ipk">Pobierz aplikację .IPK</a></div></section>
+<a class="btn" href="/packages/com.dc4i.vodtv_1.2.0_all.ipk">Pobierz aplikację .IPK</a></div></section>
 <div class="card"><h2>Instalacja w Homebrew Channel</h2>
 <p>Wejdź w Settings, Repositories, Add Repository i dodaj poniższy adres:</p>
 <code>https://lg.darc.dev/</code>
 <p>Repozytorium wyświetli <b>DC4I VOD TV</b>. Wybierz Install. Nie trzeba wpisywać TMDB Key na telewizorze.</p>
-<p>Jeśli już masz oryginalne TheBoringTV, nowe DC4I VOD TV instaluje się jako osobna aplikacja.</p></div>
+<p>Wersja 1.2.0 ma nowy identyfikator. Odinstaluj wcześniejsze DC4I BoringTV / DC4I VOD TV 1.1.x, a następnie zainstaluj nową wersję 1.2.0.</p></div>
 <div class="card"><h2>Co działa?</h2>
 <p>Filmowe rekomendacje TMDB, polski region, personalizacja DC4I, ulubione, wyszukiwanie i otwieranie serwisów VOD. YouTube Trending jest ukryte do chwili skonfigurowania osobnego klucza YouTube Data API v3.</p>
 <p>Niektóre przyciski otwierania bezpośrednio konkretnego filmu zależą od obsługi przez daną aplikację i wersji systemu webOS.</p>
@@ -90,15 +92,19 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 (DIST/'_headers').write_text('/\n  Content-Type: application/json; charset=utf-8\n/index.html\n  Content-Type: application/json; charset=utf-8\n/api/apps.json\n  Content-Type: application/json; charset=utf-8\n',encoding='utf-8')
 README='''# DC4I LG webOS Homebrew Repository
 
+![DC4I VOD TV neon icon](icons/dc4i-vod-tv-neon.png)
+
 Canonical TV repository: https://lg.darc.dev/
 
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
-## DC4I VOD TV 1.1.1
+## DC4I VOD TV 1.2.0
 
-- Identifier: com.dc4i.boringtv (installs alongside original)
+- Identifier: com.dc4i.vodtv (new package identity, remove com.dc4i.boringtv before installing)
 - Market: Poland (PL), interface: Polish-first
-- Artwork: the official DC4I transparent company logo
+- Neon artwork: generated for this product, retained in assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png
+- Migration 1.1.x to 1.2.0: uninstall old app ID com.dc4i.boringtv, then install new com.dc4i.vodtv
+- Artwork: the user-approved DC4I VOD TV neon application logo
 - TMDB v3: bundled and tested, no TV setup
 - YouTube Trending: disabled until Google YouTube Data API v3 credentials become available
 - Package (Cloudflare Pages): '''+package_uri+'''
@@ -108,7 +114,7 @@ Package and catalog are deployed on Cloudflare Pages. The binary is intentionall
 
 This personalized build is derived from the upstream project [theboringhumane/theboringtv-lgwebos](https://github.com/theboringhumane/theboringtv-lgwebos). It is not endorsed by LG or TMDB.
 
-Reproducible local preparation scripts: build_dc4i.py (base), build_vod_tv.py (branding and PL/EN), test_vod_tv.py, publish_vod_tv.py. They read a privately stored keys.js and do not write secrets to git-tracked plaintext files.
+Reproducible preparation: build_dc4i.py (base), build_vod_tv.py (PL/EN and neon), scripts/neon_brand_v120.py (product branding), test_vod_tv.py, publish_vod_tv.py. They read a privately stored keys.js and do not write secrets to git-tracked plaintext files.
 
 To release changes, build the app IPK, run test_vod_tv.py, run publish_vod_tv.py, and deploy dist via Cloudflare Pages. Test Homebrew and app startup on a real LG webOS TV before claiming end-to-end compatibility.
 '''

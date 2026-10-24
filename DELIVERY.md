@@ -36,3 +36,10 @@ Cloudflare Pages retains previous deployments. Current production is the source-
 - Automated headless Chrome E2E: PASS for PL home boot, non-root UI, available-vs-others filter, fallback details, Warsaw and Polish weather.
 - Local TMDB API: HTTP 200. webOS `.ipk` JS syntax checks and archive integrity: PASS.
 - Catalogue and IPK SHA256 are rechecked after deployment; no physical LG TV test has been claimed.
+
+## Release 1.2.0, product identity migration and neon logo
+- Owner explicitly accepted a new package ID and required uninstall/reinstall from `com.dc4i.boringtv` to `com.dc4i.vodtv`.
+- The exact earlier neon-generated DC4I VOD TV art is now source-controlled at `assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png`.
+- LG webOS appicon 80x80, largeIcon 130x130, splash 1920x1080 and UI header generated from the approved neon art.
+- Homebrew catalog switches to new ID and neon icon URL, retains other 31 applications. Older IPKs remain accessible by direct URL for rollback, not for in-place update.
+- Package and manifest checksums must be verified on the public domain before marking complete; real LG TV launch remains pending.

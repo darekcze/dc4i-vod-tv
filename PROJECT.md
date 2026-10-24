@@ -12,7 +12,7 @@
 An LG webOS television application to discover and evaluate films and series across multiple VOD providers. It displays TMDB-based recommendations and ratings, provider availability, details, trailers, watchlist and installed-app entry points. It should minimize steps on the TV.
 
 ## Identity
-The display name is **DC4I VOD TV**. The technical app id remains `com.dc4i.boringtv` **on purpose**, allowing upgrades from previously distributed DC4I BoringTV builds without duplicate installations. Current release target 1.1.0.
+The display name is **DC4I VOD TV**. Since release **1.2.0**, the technical package ID is `com.dc4i.vodtv`. The former `com.dc4i.boringtv` is legacy (1.1.1 and earlier); uninstall it before installing the new ID. This breaking change was expressly approved by the Chairman.
 
 ## Engineering and operations
 - Build/source and large temporary files live on Mac mini AI-Hot: `/Volumes/AI-Hot/Services/dc4i-vod-tv`.

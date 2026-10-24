@@ -10,3 +10,6 @@
 - App package assets: generated `build/dc4i-boringtv/icon.png` 80x80, `largeIcon.png` 130x130, `splash.png` 1920x1080.
 
 Do not regenerate the actual DC circuit/profile geometry. Only resize, recolor for dark display where shape is unchanged, add backgrounds/labels. Recheck source hashes before publication.
+
+## DC4I VOD TV neon product art (1.2.0)
+The owner explicitly selected the neon VOD TV icon previously generated in this chat on 2026-10-24. The company monogram is still governed by DC4I-BRAND-001. Source image: `assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png` (1024 px) and source WEBP SHA256 `fe7aa367fb1b4f83593a5a647f4dc4a7693ec0888c8e8a046cec02667781f840`. Build output derives 80/130px app icon, neon TV splash and horizontal header. No unrelated AI regeneration allowed.

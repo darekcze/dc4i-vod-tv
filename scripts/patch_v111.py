@@ -7,7 +7,7 @@ import shutil
 import re
 
 R = Path(__file__).resolve().parents[1]
-APP = R / 'build/dc4i-boringtv'
+APP = R / 'build/dc4i-vodtv'
 SRC = R / 'src'
 assert APP.is_dir()
 
