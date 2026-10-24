@@ -1,0 +1,1334 @@
+{
+  "source": "http://dstore.net.swtest.ru/ipk/",
+  "retrievedAt": "2026-10-24",
+  "entries": [
+    {
+      "filename": "dstore1.ipk",
+      "date": "31.12.2019",
+      "declaredSize": "7379K",
+      "description": "Неофициальный магазин приложений сервер Dstore-1 (новая версия 2026 г.)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/dstore1.ipk",
+      "verified": false
+    },
+    {
+      "filename": "dstore2.ipk",
+      "date": "17.08.2018",
+      "declaredSize": "4242K",
+      "description": "Неофициальный магазин приложений для LG  сервер Dstore-2 (новая 2026 г. версия)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/dstore2.ipk",
+      "verified": false
+    },
+    {
+      "filename": "dstorevip.ipk",
+      "date": "27.05.2019",
+      "declaredSize": "------",
+      "description": "Неофициальный магазин приложений. Если есть vip - грузите vip, если нет грузит Dstore-1 или Dstore-2 (новая версия 2026г)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/dstorevip.ipk",
+      "verified": false
+    },
+    {
+      "filename": "dstorepro.ipk",
+      "date": "12.06.2021",
+      "declaredSize": "38 066",
+      "description": "Неофициальный магазин приложений  Dstore pro (новый ID) Если есть vip - грузит vip, если нет Dstore-2",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/dstorepro.ipk",
+      "verified": false
+    },
+    {
+      "filename": "dstorevip2026.ipk",
+      "date": "20.07.2026",
+      "declaredSize": "278910",
+      "description": "Новая версия Dstore vip",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/dstorevip2026.ipk",
+      "verified": false
+    },
+    {
+      "filename": "youtube.leanback.v4_4.5.4_all.ipk",
+      "date": "19.07.2026",
+      "declaredSize": "587850",
+      "description": "Youtube без рекламы от Dstore",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/youtube.leanback.v4_4.5.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "you.ipk",
+      "date": "15.07.2026",
+      "declaredSize": "479722",
+      "description": "Youtube без рекламы от Ad-Free",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/you.ipk",
+      "verified": false
+    },
+    {
+      "filename": "youtube.leanback.v4_0.8.0_all.ipk",
+      "date": "21.07.2026",
+      "declaredSize": "",
+      "description": "Youtube без рекламы от Ad-Free v4.0.8",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/youtube.leanback.v4_0.8.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ru.reelo.app_0.16.74_all.ipk",
+      "date": "10.09.2026",
+      "declaredSize": "25M",
+      "description": "Фильмы, сериалы, мультфильмы и ТВ-шоу,HDrezka,Торрент v0.16.74",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ru.reelo.app_0.16.74_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.webosbyebyedpi.app_2.1.4_all.ipk",
+      "date": "17.10.2026",
+      "declaredSize": "8923K",
+      "description": "webOS ByeByeDPI 2.1.4. WebOS 3 и выше. Нужен root. https://atlet99.github.io/webos-byebyedpi-pub/",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.webosbyebyedpi.app_2.1.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "LG_Input_Hook_RU.ipk",
+      "date": "10.09.2026",
+      "declaredSize": "10M",
+      "description": "Переназначить кнопки пульта. Подробно https://github.com/Simon34545/lginputhook",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/LG_Input_Hook_RU.ipk",
+      "verified": false
+    },
+    {
+      "filename": "moe.exkc.accessusb_0.0.3_all.ipk",
+      "date": "10.09.2026",
+      "declaredSize": "94384",
+      "description": "AccessUSB Emulator https://webos-forums.ru/post202702.html#p202702",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/moe.exkc.accessusb_0.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "filmix.tv_1.0.1_all.ipk",
+      "date": "09.05.2025",
+      "declaredSize": "168204",
+      "description": "Фильмикс",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/filmix.tv_1.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "gets.tv_1.0.0_all.ipk",
+      "date": "22.06.2025",
+      "declaredSize": "1304K",
+      "description": "GetsTV v3.0",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/gets.tv_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.zonaplus.tv_1.0.0_all.ipk",
+      "date": "22.06.2025",
+      "declaredSize": "2422K",
+      "description": "ZONA кинотератр",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.zonaplus.tv_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.rezkatv.app_1.1.0_all.ipk",
+      "date": "19.04.2026",
+      "declaredSize": "2299K",
+      "description": "клиент для онлайн-кинотеатра Hdrezka v0",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.rezkatv.app_1.1.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.rezkatv.app_1.1.29_all_legacy.ipk",
+      "date": "19.04.2026",
+      "declaredSize": "4566K",
+      "description": "клиент для онлайн-кинотеатра Hdrezka v29",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.rezkatv.app_1.1.29_all_legacy.ipk",
+      "verified": false
+    },
+    {
+      "filename": "zimfer.app.pdd_1.0.0_all.ipk",
+      "date": "19.04.2026",
+      "declaredSize": "",
+      "description": "ПДД на ТВ",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/zimfer.app.pdd_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "colorblind.zimfer.app_4.0.0_all.ipk",
+      "date": "19.04.2026",
+      "declaredSize": "",
+      "description": "ПДД Цветной шарик",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/colorblind.zimfer.app_4.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "vizioncheck.zimfer.app_1.0.0_all.ipk",
+      "date": "19.04.2026",
+      "declaredSize": "",
+      "description": "ПДД",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/vizioncheck.zimfer.app_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "tv.strem_1.0.0_all.ipk",
+      "date": "22.06.2025",
+      "declaredSize": "63814K",
+      "description": "",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/tv.strem_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "twitch.adamffdev.v1_1.6.3_all.ipk",
+      "date": "24.03.2026",
+      "declaredSize": "320730",
+      "description": "Twich без рекламы",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/twitch.adamffdev.v1_1.6.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Atodo-Movies (LG cinema Премьеры).ipk",
+      "date": "22.06.2025",
+      "declaredSize": "1684K",
+      "description": "Приложение Atodo на кнопке LG cinema Премьеры",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Atodo-Movies%20%28LG%20cinema%20%D0%9F%D1%80%D0%B5%D0%BC%D1%8C%D0%B5%D1%80%D1%8B%29.ipk",
+      "verified": false
+    },
+    {
+      "filename": "matrix.lite_1.4.25_all.ipk",
+      "date": "22.06.2025",
+      "declaredSize": "17M",
+      "description": "Торрент",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/matrix.lite_1.4.25_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "lampa-Movies (LG cinema Премьеры).ipk",
+      "date": "22.06.2025",
+      "declaredSize": "23752",
+      "description": "Лампа на кнопке LG cinema Премьеры",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/lampa-Movies%20%28LG%20cinema%20%D0%9F%D1%80%D0%B5%D0%BC%D1%8C%D0%B5%D1%80%D1%8B%29.ipk",
+      "verified": false
+    },
+    {
+      "filename": "free.protonvpn_25.5.10_all.ipk",
+      "date": "22.06.2025",
+      "declaredSize": "2505K",
+      "description": "Free VPN",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/free.protonvpn_25.5.10_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "free.protonvpn_25.10.2_all.ipk",
+      "date": "17.10.25",
+      "declaredSize": "2567K",
+      "description": "Free VPN",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/free.protonvpn_25.10.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "proton.management_3.0.1_all.ipk",
+      "date": "17.10.25",
+      "declaredSize": "41344",
+      "description": "Менеджер VPN",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/proton.management_3.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.hola.cdndemo_1.25.530_all.ipk",
+      "date": "17.10.25",
+      "declaredSize": "27200",
+      "description": "HolaCDN demo applicatio (игра)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.hola.cdndemo_1.25.530_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.pirate.refresh_1.0.4_all.ipk",
+      "date": "23.10.2026",
+      "declaredSize": "108078",
+      "description": "Автопродление DEVMode на webOS (Новая версия).Приложение для автоматического продления режима разработчика.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.pirate.refresh_1.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "icva_v1.1.2.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "5779K",
+      "description": "IPTV player",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/icva_v1.1.2.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.screen.off_1.0.5_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "91218",
+      "description": "Screen OFF    Экономия энергии",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.screen.off_1.0.5_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "spotify-beehive_2.0.28_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "5832K",
+      "description": "Official Spotify app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/spotify-beehive_2.0.28_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.boosteroidtv.streaming_1.0.1_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "7206K",
+      "description": "Official Boosteroid Cloud Gaming app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.boosteroidtv.streaming_1.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "lgsmarttv_2.0.12_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "112650",
+      "description": "Official Zala Yasna app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/lgsmarttv_2.0.12_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.geforcenow.play_1.0.3_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "79764",
+      "description": "Official NVIDIA GeForce® NOW™ app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.geforcenow.play_1.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.tidal.tv_1.0.0_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "1062K",
+      "description": "Official TIDAL app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.tidal.tv_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "siptv_3.0.3_all.ipk",
+      "date": "22.03.2024",
+      "declaredSize": "583892",
+      "description": "Smart IPTV",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/siptv_3.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "getstv.ipk",
+      "date": "30.04.2021",
+      "declaredSize": "1 335 144",
+      "description": "Приложение GetsTV 2.0",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/getstv.ipk",
+      "verified": false
+    },
+    {
+      "filename": "jellyfin.ipk",
+      "date": "03.05.2021",
+      "declaredSize": "319 022",
+      "description": "Трансляция в лок.сети",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/jellyfin.ipk",
+      "verified": false
+    },
+    {
+      "filename": "justdance.ipk",
+      "date": "06.05.2021",
+      "declaredSize": "3 076 204",
+      "description": "Музыка",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/justdance.ipk",
+      "verified": false
+    },
+    {
+      "filename": "my.tuner.radio.ipk",
+      "date": "04.05.2021",
+      "declaredSize": "71 260",
+      "description": "Радио онлайн",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/my.tuner.radio.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ott.ipk",
+      "date": "05.10.2018",
+      "declaredSize": "18 1000",
+      "description": "Ott-play - плеер iptv",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ott.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ottplay.foss_all.ipk",
+      "date": "07.03.2023",
+      "declaredSize": "538 624",
+      "description": "Ott-play - плеер iptv v 0.0.4",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ottplay.foss_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ottplay-foss_lg_webos_v0.1.6.ipk",
+      "date": "13.05.2025",
+      "declaredSize": "110 424",
+      "description": "Плеер iptv (m3u8) v 0.1.6",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ottplay-foss_lg_webos_v0.1.6.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ovp.ipk",
+      "date": "03.04.2019",
+      "declaredSize": "224 178",
+      "description": "Кинотеатры (платно)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ovp.ipk",
+      "verified": false
+    },
+    {
+      "filename": "slither.ipk",
+      "date": "06.05.2021",
+      "declaredSize": "453 710",
+      "description": "Игра",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/slither.ipk",
+      "verified": false
+    },
+    {
+      "filename": "tytkino.ipk",
+      "date": "28.04.2021",
+      "declaredSize": "54 056",
+      "description": "кинотеатр (платно) подробно vk.com/fork_portal",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/tytkino.ipk",
+      "verified": false
+    },
+    {
+      "filename": "io.strem.tv_1.0.2_all.ipk",
+      "date": "15.04.2026",
+      "declaredSize": "5175K",
+      "description": "приложение для потокового видео - агрегатор контента с различных сервисов (фильмы, сериалы, прямые трансляции и видеоканалы).",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/io.strem.tv_1.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "xsmart.ipk",
+      "date": "04.09.2018",
+      "declaredSize": "57 386",
+      "description": "комфортный просмотр фильмов",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/xsmart.ipk",
+      "verified": false
+    },
+    {
+      "filename": "telegram.ipk",
+      "date": "15.05.2021",
+      "declaredSize": "99254",
+      "description": "Телеграм на ТВ",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/telegram.ipk",
+      "verified": false
+    },
+    {
+      "filename": "limelight.ipk",
+      "date": "12.05.2021",
+      "declaredSize": "2743K",
+      "description": "Open Source NVIDIA GameStream Client",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/limelight.ipk",
+      "verified": false
+    },
+    {
+      "filename": "torrserv.matrix.app_0.3.9_all.ipk",
+      "date": "08.03.2024",
+      "declaredSize": "19Мб",
+      "description": "Torrserver MatriX. 0.3.9 СТАБИЛЬНАЯ ВЕРСИЯ",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/torrserv.matrix.app_0.3.9_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.torrserver.app_1.2.0_all.ipk",
+      "date": "10.09.2026",
+      "declaredSize": "22Мб",
+      "description": "Torrserver. После запуска настройки, через браузер http://адрес_телевизора:8090 (например http://192.168.0.3:8090)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.torrserver.app_1.2.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "youtube.leanback.v4_0.5.3_all.ipk",
+      "date": "22.06.2026",
+      "declaredSize": "479356",
+      "description": "Youtube без рекламы (последняя версия)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/youtube.leanback.v4_0.5.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kids_old.ipk",
+      "date": "16.06.2021",
+      "declaredSize": "16242",
+      "description": "Youtube kids  (старый)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kids_old.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kids.ipk",
+      "date": "16.02.2022",
+      "declaredSize": "11M",
+      "description": "Youtube kids (новый)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kids.ipk",
+      "verified": false
+    },
+    {
+      "filename": "wikipedia.app_0.0.4_all.ipk",
+      "date": "08.03.2024",
+      "declaredSize": "302K",
+      "description": "wikipedia.app",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/wikipedia.app_0.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "lgplus.ipk",
+      "date": "16.06.2021",
+      "declaredSize": "592526",
+      "description": "LG PLUS каналы (приложение мегого), в России не работает, блокировка автора.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/lgplus.ipk",
+      "verified": false
+    },
+    {
+      "filename": "vkvideo_1.3.13_all.ipk",
+      "date": "08.03.2024",
+      "declaredSize": "2272K",
+      "description": "В контакте VKvideo",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/vkvideo_1.3.13_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.app.club.ipk",
+      "date": "25.06.2021",
+      "declaredSize": "24786",
+      "description": "webosapp.club маркет",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.app.club.ipk",
+      "verified": false
+    },
+    {
+      "filename": "devmode.timer.reset_0.1.17_all.ipk",
+      "date": "31.12.2021",
+      "declaredSize": "26676",
+      "description": "Старое, не работает. Приложение для автоматического продления режима разработчика",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/devmode.timer.reset_0.1.17_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "devmode.timer.reset_0.1.18_all.ipk",
+      "date": "15.05.2022",
+      "declaredSize": "26674",
+      "description": "Старое, не работает. Приложение для автоматического продления режима разработчика",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/devmode.timer.reset_0.1.18_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos4x-6x.expertmode.downgrade_1.0.0_all.ipk",
+      "date": "15.05.2022",
+      "declaredSize": "21K",
+      "description": "Понижение версии прошивки для webos4 - webos6",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos4x-6x.expertmode.downgrade_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "KinoPubSTV.ipk",
+      "date": "25.04.2025",
+      "declaredSize": "25372",
+      "description": "Новая версия(0.0.1) kinopub от kpstv подробно https://kpstv.net/",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/KinoPubSTV.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub.ipk",
+      "date": "30.04.2021",
+      "declaredSize": "10 298 552",
+      "description": "Новинки кино (платно)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub_webos1.ipk",
+      "date": "29.08.2021",
+      "declaredSize": "25372",
+      "description": "Платный 4К кинотеатр для webos1-3.7",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub_webos1.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub_0.4.8.ipk",
+      "date": "05.08.2021",
+      "declaredSize": "25372",
+      "description": "Платный онлайн кинотеатр с фильмами в 4K подробно https://kpstv.net",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub_0.4.8.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub.webos_v1.0.12.ipk",
+      "date": "05.08.2021",
+      "declaredSize": "10M",
+      "description": "Платный онлайн кинотеатр с фильмами в 4K (оригинальный клиент)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub.webos_v1.0.12.ipk",
+      "verified": false
+    },
+    {
+      "filename": "lampa_v1.0.2.ipk",
+      "date": "28.09.2021",
+      "declaredSize": "5681K",
+      "description": "Новое фильмовое приложение (фильмы через торрент) подрбно http://online.lampa.tilda.ws/ или https://tv-ch.ru/lampa/",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/lampa_v1.0.2.ipk",
+      "verified": false
+    },
+    {
+      "filename": "lampa_v1.3.5.ipk",
+      "date": "",
+      "declaredSize": "",
+      "description": "Обсуждение лампы https://t.me/lampa_group",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/lampa_v1.3.5.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.energy.saving_3.0.1.ipk",
+      "date": "26.10.2021",
+      "declaredSize": "72296",
+      "description": "Приложение для быстрого переключения профиля экономии энергии.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.energy.saving_3.0.1.ipk",
+      "verified": false
+    },
+    {
+      "filename": "cc.deeplex_1.1.2_all.ipk",
+      "date": "22.11.2021",
+      "declaredSize": "79832",
+      "description": "Обсуждение приложения t.me/deeplex_news",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/cc.deeplex_1.1.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "cc.deeplex_1.0.5_all.ipk",
+      "date": "30.12.2021",
+      "declaredSize": "78626",
+      "description": "Обсуждение приложения t.me/deeplex_news",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/cc.deeplex_1.0.5_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "okko_deeplex_0.0.7_all.ipk",
+      "date": "03.05.2024",
+      "declaredSize": "19060",
+      "description": "Вместо OKKO запуск Deeplex  Source: https://github.com/in1975/test",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/okko_deeplex_0.0.7_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "imboom_1.0.33_all.ipk",
+      "date": "05.12.2021",
+      "declaredSize": "350112",
+      "description": "Империя boom. Подробнее https://vk.com/imperiyboom",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/imboom_1.0.33_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "vokinotv_1.0.7_all.ipk",
+      "date": "21.12.2021",
+      "declaredSize": "52696",
+      "description": "Аналог лампы под Торсервер",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/vokinotv_1.0.7_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ottplay.foss_0.0.3_all.ipk",
+      "date": "09.09.2022",
+      "declaredSize": "1039K",
+      "description": "Ott-Play Foss 0.0.3",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ottplay.foss_0.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ott.drm-play_0.0.2_all.ipk",
+      "date": "09.09.2022",
+      "declaredSize": "1266K",
+      "description": "Ott-play DRM, в котором есть EPG на сторонних плейлистах.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ott.drm-play_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ottplay.foss_0.0.4_all.ipk",
+      "date": "09.09.2022",
+      "declaredSize": "1039K",
+      "description": "Ott-Play Foss 0.0.4",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ottplay.foss_0.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ott.drm-play_0.0.4_all.ipk",
+      "date": "09.09.2022",
+      "declaredSize": "1266K",
+      "description": "Ott-play DRM 0.0.4, в котором есть EPG на сторонних плейлистах.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ott.drm-play_0.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ott.drm_0.0.5_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "110702",
+      "description": "Ott-play DRM 0.0.5  Добавлена возможность назначения на вход непосредственно в приложении .",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ott.drm_0.0.5_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ott.drm_0.0.6_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "110704",
+      "description": "Ott-play DRM 0.0.6",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ott.drm_0.0.6_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.drm-play.com_v0.0.1.ipk",
+      "date": "11.04.2023",
+      "declaredSize": "107332",
+      "description": "Ott-play DRM НОВЫЙ ДОМЕН!",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.drm-play.com_v0.0.1.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.rutube.ru_1.0.0_all.ipk",
+      "date": "22.09.2022",
+      "declaredSize": "36844",
+      "description": "Неофициальное приложение rutube",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.rutube.ru_1.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Kuwait_udp.ovpn_23.6.2_all.ipk",
+      "date": "16.10.2024",
+      "declaredSize": "2602K",
+      "description": "Бесплатный VPN для ТВ, для установки нужен root",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Kuwait_udp.ovpn_23.6.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.openvpn.ovpn_22.7.11_all.ipk",
+      "date": "22.09.2022",
+      "declaredSize": "2597K",
+      "description": "OpenVPN клиент, возможность автостарта приложения.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.openvpn.ovpn_22.7.11_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.openvpn.ovpn_23.6.2_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "2597K",
+      "description": "OpenVPN клиент  инструкиця https://telegra.ph/WebOS-OVPN-klient-07-12",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.openvpn.ovpn_23.6.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.openvpn.zaborona_22.7.11_all.ipk",
+      "date": "22.09.2022",
+      "declaredSize": "2761K",
+      "description": "OpenVPN клиент для Украины",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.openvpn.zaborona_22.7.11_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.openvpn.antizapret_22.6.19_all.ipk",
+      "date": "22.09.2022",
+      "declaredSize": "2606K",
+      "description": "Просто.АнтиЗапрет (Для российских ip)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.openvpn.antizapret_22.6.19_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.openvpn.antizapret_22.7.11_all.ipk",
+      "date": "17.10.2025",
+      "declaredSize": "",
+      "description": "Просто.АнтиЗапрет",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.openvpn.antizapret_22.7.11_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.openspeedtest_0.0.1_all.ipk",
+      "date": "22.09.2022",
+      "declaredSize": "39622",
+      "description": "Измерение скорость Интернета",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.openspeedtest_0.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.atodo.ml_0.0.3_all.ipk",
+      "date": "08.11.2022",
+      "declaredSize": "500К",
+      "description": "Еще одина аналг лампы",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.atodo.ml_0.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ru.timich.im_0.0.1_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "617K",
+      "description": "Приложение MOOVIES   https://t.me/moviesgrut/6025",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ru.timich.im_0.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "atodo-ivi_0.0.2_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "512K",
+      "description": "Приложение  \"Atodo\" с запуском по кнопке \"ivi\"",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/atodo-ivi_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "VoKino-amazon_1.0.11_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "1907К",
+      "description": "Приложение VoKino с запуском кнопкой \"Amazon prime video\"",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/VoKino-amazon_1.0.11_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Xibo for webOS_v3_R312.ipk",
+      "date": "25.06.2025",
+      "declaredSize": "",
+      "description": "Цифровая вывеска Xibo см.xibosignage.com",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Xibo%20for%20webOS_v3_R312.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Xibo for webOS_v4_R409.ipk",
+      "date": "25.06.2025",
+      "declaredSize": "",
+      "description": "Цифровая вывеска Xibo см.xibosignage.com",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Xibo%20for%20webOS_v4_R409.ipk",
+      "verified": false
+    },
+    {
+      "filename": "games.tv_0.0.2_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "1807К",
+      "description": "набор игр",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/games.tv_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "smartgames.tv_0.0.1_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "1558К",
+      "description": "набор игр",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/smartgames.tv_0.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "smartgames.tv2_0.0.2_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "1558К",
+      "description": "набор игр",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/smartgames.tv2_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.manager.input_5.11.22_all.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "71280",
+      "description": "Менеджер входов предназначен для назначения приложений на вход.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.manager.input_5.11.22_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "netflix.OFF.ipk",
+      "date": "04.12.2022",
+      "declaredSize": "34360",
+      "description": "Отключить кнопку NetFlix",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/netflix.OFF.ipk",
+      "verified": false
+    },
+    {
+      "filename": "couchplay_0.0.2_all.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "142914",
+      "description": "TV games center",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/couchplay_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Lampa СX_(test).ipk",
+      "date": "22.12.2022",
+      "declaredSize": "116600",
+      "description": "Вариации Лампы",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Lampa%20%D0%A1X_%28test%29.ipk",
+      "verified": false
+    },
+    {
+      "filename": "LampaStram.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "260856",
+      "description": "Вариации Лампы",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/LampaStram.ipk",
+      "verified": false
+    },
+    {
+      "filename": "KinoBOOM.ipk",
+      "date": "07.03.2023",
+      "declaredSize": "578212",
+      "description": "Кинотеатр онлайн",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/KinoBOOM.ipk",
+      "verified": false
+    },
+    {
+      "filename": "opera.gametreetv_0.0.2_all.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "107016",
+      "description": "TV games",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/opera.gametreetv_0.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube - Запуск кнопкой IVI - Видимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "21510",
+      "description": "Youtube без рекламы запуск кнопкой IVI",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube%20-%20%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA%20%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9%20IVI%20-%20%D0%92%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube_Запуск_кнопкой_Amazon_Видимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "25898",
+      "description": "Youtube без рекламы запуск кнопкой Amazon",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Amazon_%D0%92%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube_Запуск_кнопкой_Amazon_Невидимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "25890",
+      "description": "Youtube без рекламы запуск кнопкой Amazon",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Amazon_%D0%9D%D0%B5%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube_Запуск_кнопкой_IVI_Невидимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "21516",
+      "description": "Youtube без рекламы запуск кнопкой IVI",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_IVI_%D0%9D%D0%B5%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Youtube_Запуск_кнопкой_Movies_LG_Cinema_Премьеры_Видимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "23738",
+      "description": "Youtube без рекламы запуск кнопкой Премьер",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Youtube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Movies_LG_Cinema_%D0%9F%D1%80%D0%B5%D0%BC%D1%8C%D0%B5%D1%80%D1%8B_%D0%92%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Youtube_Запуск_кнопкой_Movies_LG_Cinema_Премьеры_Невидимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "23728",
+      "description": "Youtube без рекламы запуск кнопкой Премьер",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Youtube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Movies_LG_Cinema_%D0%9F%D1%80%D0%B5%D0%BC%D1%8C%D0%B5%D1%80%D1%8B_%D0%9D%D0%B5%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Youtube_Запуск_кнопкой_Movies_RakutenTV_Видимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "18374",
+      "description": "Youtube без рекламы запуск кнопкой Rukuten",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Youtube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Movies_RakutenTV_%D0%92%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "Youtube_Запуск_кнопкой_Movies_RakutenTV_Невидимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "18378",
+      "description": "Youtube без рекламы запуск кнопкой Rukuten",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/Youtube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Movies_RakutenTV_%D0%9D%D0%B5%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube_Запуск_кнопкой_Netflix_Видимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "20758",
+      "description": "Youtube без рекламы запуск кнопкой NetFlix",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Netflix_%D0%92%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "YouTube_Запуск_кнопкой_Netflix_Невидимый.ipk",
+      "date": "22.12.2022",
+      "declaredSize": "20762",
+      "description": "Youtube без рекламы запуск кнопкой NetFlix",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/YouTube_%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA_%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%BE%D0%B9_Netflix_%D0%9D%D0%B5%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%8B%D0%B9.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.685631.3411_10.140.0_all.ipk",
+      "date": "07.02.2023",
+      "declaredSize": "2028K",
+      "description": "Приложение Кинопоиск",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.685631.3411_10.140.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "yota.play_22.0.0_all.ipk",
+      "date": "07.02.2023",
+      "declaredSize": "202202",
+      "description": "Приложение ОККО",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/yota.play_22.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ru.moovies.new_0.0.4_all.ipk",
+      "date": "22.02.2023",
+      "declaredSize": "1171K",
+      "description": "Кинотератр Moovies в оболочки Vokino",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ru.moovies.new_0.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.hbchannel_0.7.3_all.ipk",
+      "date": "26.02.2023",
+      "declaredSize": "1660K",
+      "description": "webOS Homebrew 0.7.3",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.hbchannel_0.7.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_stile_1.0.6_all.ipk",
+      "date": "29.03.2023",
+      "declaredSize": "15M",
+      "description": "WALS приложение стартового экрана, позволяет запускаь",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_stile_1.0.6_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_CAT_1.0.4_all.ipk",
+      "date": "29.03.2023",
+      "declaredSize": "12M",
+      "description": "ряд приложений. Ничего добавить-убрать нельзя.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_CAT_1.0.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_city_1.0.3_all.ipk",
+      "date": "29.03.2023",
+      "declaredSize": "4150K",
+      "description": "После установки WALS можно назначить на вход.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_city_1.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_2.0.3_gray_all.ipk",
+      "date": "11.04.2023",
+      "declaredSize": "620228",
+      "description": "WALS Версия апрель 23",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_2.0.3_gray_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_2.0.5_all_green-anime.ipk",
+      "date": "11.04.2023",
+      "declaredSize": "611068",
+      "description": "WALS Версия апрель 23",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_2.0.5_all_green-anime.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_2.0.3_aqua_all.ipk",
+      "date": "11.04.2023",
+      "declaredSize": "715006",
+      "description": "WALS Версия апрель 23",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_2.0.3_aqua_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "w.a.l.s_3.0.0_all.ipk",
+      "date": "09.05.2023",
+      "declaredSize": "715006",
+      "description": "WALS Версия май 23",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/w.a.l.s_3.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.huawei.app.webos.mts.tv.production_3.1.4_all.ipk",
+      "date": "17.05.2023",
+      "declaredSize": "3692434",
+      "description": "Расшифрованный КИОН от МТС",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.huawei.app.webos.mts.tv.production_3.1.4_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "multiki.msx_2.0.0_all.ipk",
+      "date": "14.09.2023",
+      "declaredSize": "255896",
+      "description": "Мультфильмы онлайн",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/multiki.msx_2.0.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.willinux.tvh.app_0.8.3_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "1671K",
+      "description": "Смотреть потоки tvh на WebOS 3, 4, 5",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.willinux.tvh.app_0.8.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.vncserver_1.0.2_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "2112K",
+      "description": "VNC-сервер.Поддерживает мышь и клавиатуру. Конфигурацию (пароль по умолчанию password), включите «Работа» и подключитесь через VNC через порт 5900.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.vncserver_1.0.2_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.streamkatze_0.1.1_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "300004",
+      "description": "проигрыватель прямых трансляций- Streaming.media.ccc.de",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.streamkatze_0.1.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "fork.ipk",
+      "date": "30.07.2018",
+      "declaredSize": "9 939 110",
+      "description": "Форкплеер  2.5 (старый, может не работать)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/fork.ipk",
+      "verified": false
+    },
+    {
+      "filename": "forkplayer.ipk",
+      "date": "30.04.2021",
+      "declaredSize": "10 426 306",
+      "description": "Форкплеер  2.57(старый, может не работать)",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/forkplayer.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.forkplayer.tv.ipk",
+      "date": "12.06.2024",
+      "declaredSize": "3220K",
+      "description": "ForkNewBeta 1.0.3",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.forkplayer.tv.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.retroarch_1.9.1_arm.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "2386K",
+      "description": "RetroArch 3D игры",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.retroarch_1.9.1_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ui30_0.0.9_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "22436",
+      "description": "Piccap Вкл./Выкл. Пульт дистанционного управления",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ui30_0.0.9_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.piccap_0.4.3_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "992K",
+      "description": "Подсветка аналог филипса. PicCap — приложение Hyperion Sender",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.piccap_0.4.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.limelight.webos_1.6.2_arm.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "1419K",
+      "description": "Высокопроизводительная потоковая передача для webOS",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.limelight.webos_1.6.2_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.inputhook_1.4.0_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "10M",
+      "description": "Позволяет переназначать кнопки  пульта",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.inputhook_1.4.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.xbmc.kodi-webos_21.0.ipk",
+      "date": "06.04.2024",
+      "declaredSize": "88,3M",
+      "description": "Медиаплеер Коди.Релиз.Полный аналог того, что Андроид",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.xbmc.kodi-webos_21.0.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.xbmc.kodi_21.90.700_arm.ipk",
+      "date": "17.10.2025",
+      "declaredSize": "",
+      "description": "Медиаплеер Коди",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.xbmc.kodi_21.90.700_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.jellyfin.webos_1.1.0_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "161428",
+      "description": "Wrapper around Jellyfin Web project",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.jellyfin.webos_1.1.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.mariotaku.ihsplay_0.2.8_arm.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "1164K",
+      "description": "клиент Steam Link Источник: https://github.com/mariotaku/ihsplay .",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.mariotaku.ihsplay_0.2.8_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.hyperion.ng.loader_0.1.10_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "26M",
+      "description": "Служба фоновой подсветки Hyperion.NG",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.hyperion.ng.loader_0.1.10_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.hyperhdr.loader_0.1.6_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "39M",
+      "description": "Служба окружающего освещения HyperHDR",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.hyperhdr.loader_0.1.6_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.safeupdate_0.1.0_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "208632",
+      "description": "Обновление каналов Homebrew Channel.",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.safeupdate_0.1.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.custom-screensaver_1.0.1_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "1450K",
+      "description": "Заставка",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.custom-screensaver_1.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.crunchyroll.webos_1.9.3_all.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "1070K",
+      "description": "Неофициальное приложение WebOS TV для Crunchyroll",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.crunchyroll.webos_1.9.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.chocolate-doom.demo_0.0.3_arm.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "3141K",
+      "description": "Аналог Doom для DOS",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.chocolate-doom.demo_0.0.3_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.github.k4zmu2a.space-cadet-pinball_0.0.3_arm.ipk",
+      "date": "29.10.2023",
+      "declaredSize": "7290K",
+      "description": "3D-пинбол",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.github.k4zmu2a.space-cadet-pinball_0.0.3_arm.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webosapp.tools_0.0.1_all.ipk",
+      "date": "03.05.2024",
+      "declaredSize": "15524",
+      "description": "Webosapp tools Source: https://github.com/in1975/test",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webosapp.tools_0.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopoisk_vokino_1.0.7_all.ipk",
+      "date": "03.05.2024",
+      "declaredSize": "13874",
+      "description": "Запуск вместо kinopoisk vokino Version 1.0.7 Source: https://github.com/in1975/test",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopoisk_vokino_1.0.7_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.hyperhdr.loader_0.1.9_all.ipk",
+      "date": "03.05.2024",
+      "declaredSize": "38M",
+      "description": "HyperHDR Version 0.1.9   Source: https://github.com/webosbrew/hyperhdr-webos-loader",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.hyperhdr.loader_0.1.9_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "tiktok.djvreditel.v1_1.1.0_all.ipk",
+      "date": "12.06.2024",
+      "declaredSize": "443676",
+      "description": "TikTok v 1.1.0",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/tiktok.djvreditel.v1_1.1.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub001.ipk",
+      "date": "12.06.2024",
+      "declaredSize": "25372",
+      "description": "KinoPub STV  version 0.0.1   https://kpstv.net/",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub001.ipk",
+      "verified": false
+    },
+    {
+      "filename": "kinopub.tv.ipk",
+      "date": "12.06.2024",
+      "declaredSize": "15966",
+      "description": "Приложение Kinopub TV 1.1.1  https://kpms.cc/chat",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/kinopub.tv.ipk",
+      "verified": false
+    },
+    {
+      "filename": "moovies.fun_1.0.1_all.ipk",
+      "date": "12.06.2024",
+      "declaredSize": "1087K",
+      "description": "MOOVIES в оболочке MSX 1.0.1",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/moovies.fun_1.0.1_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "tv.ottplayer.widget_0.0.3_all.ipk",
+      "date": "12.12.2024",
+      "declaredSize": "160244",
+      "description": "Ottplayer",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/tv.ottplayer.widget_0.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "org.webosbrew.vncserver_1.0.3_all.ipk",
+      "date": "20.01.2025",
+      "declaredSize": "2112К",
+      "description": "VNC сервер",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/org.webosbrew.vncserver_1.0.3_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "webos.dts-restore_1.1.0_all.ipk",
+      "date": "27.03.2025",
+      "declaredSize": "5602K",
+      "description": "Восстановить DTS на ТВ (нужен root). Инструкция https://www.youtube.com/watch?v=x3_qk_1uXDo",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/webos.dts-restore_1.1.0_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ottplay.app.input.ipk",
+      "date": "17.10.2025",
+      "declaredSize": "328980",
+      "description": "Автозапуск при включении плеера",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ottplay.app.input.ipk",
+      "verified": false
+    },
+    {
+      "filename": "com.ssiptv.app_1.0.612_all.ipk",
+      "date": "28.11.2025",
+      "declaredSize": "172850",
+      "description": "SSIPTV плеер m3u8 плейлистов. Трансляция любого видео с сайта на ТВ",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/com.ssiptv.app_1.0.612_all.ipk",
+      "verified": false
+    },
+    {
+      "filename": "ru.rt.video.app.tv_5.34.6_all.ipk",
+      "date": "28.11.2025",
+      "declaredSize": "326386",
+      "description": "WINK",
+      "sourceUrl": "http://dstore.net.swtest.ru/ipk/ru.rt.video.app.tv_5.34.6_all.ipk",
+      "verified": false
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06112d">
+  <meta name="description" content="DC4I webOS Hub: aplikacje do LG webOS, katalog Homebrew Channel i archiwum DStore. Szukaj, filtruj i pobieraj IPK.">
+  <meta property="og:title" content="DC4I webOS Hub | Katalog aplikacji LG">
+  <title>DC4I webOS Hub | Katalog aplikacji LG</title>
+  <link rel="icon" href="/assets/app-fallback.png">
+  <link rel="stylesheet" href="/assets/catalog.css">
+  <script src="/assets/catalog.js" defer></script>
+</head>
+<body>
+<div class="ambient ambient-one" aria-hidden="true"></div>
+<div class="ambient ambient-two" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner shell">
+    <a class="brand" href="/browse/" aria-label="DC4I webOS Hub">
+      <span class="brand-icon"><img src="/assets/dc4i-logo.png" alt="" onerror="this.style.display='none'"></span>
+      <span class="brand-copy"><strong>DC4I <span>webOS</span></strong><small>HOMEBREW APP HUB</small></span>
+    </a>
+    <nav class="topnav" aria-label="Nawigacja">
+      <a class="active" href="/browse/">Aplikacje</a>
+      <a href="/about.html">DC4I VOD TV</a>
+      <a href="/api/apps.json" target="_blank" rel="noopener">Repo API <span aria-hidden="true">↗</span></a>
+    </nav>
+    <button type="button" class="top-action js-copy"><span class="copy-symbol" aria-hidden="true">⧉</span><span>Kopiuj adres repo</span></button>
+  </div>
+</header>
+<main>
+  <section class="hero shell" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <div class="eyebrow"><span class="pulse"></span> OTWARTY KATALOG LG WEBOS <span class="divider-inline"></span> DC4I LABS</div>
+      <h1 id="hero-title">Wszystkie aplikacje.<br><span>Jeden hub.</span></h1>
+      <p>Przeglądaj aplikacje dla telewizorów LG. Instaluj sprawdzone technicznie pakiety przez Homebrew Channel albo odkrywaj pełną listę zewnętrznego katalogu DStore.</p>
+      <div class="hero-buttons">
+        <a class="btn primary" href="#katalog">Przeglądaj aplikacje <span aria-hidden="true">↗</span></a>
+        <button class="btn secondary js-copy" type="button">Dodaj do Homebrew <span aria-hidden="true">⧉</span></button>
+      </div>
+      <div class="hero-stats" aria-label="Liczba aplikacji">
+        <div><strong id="stat-homebrew">...</strong><span>Homebrew</span></div>
+        <div class="stat-divider"></div>
+        <div><strong id="stat-dstore">...</strong><span>W katalogu DStore</span></div>
+        <div class="stat-divider"></div>
+        <div><strong id="stat-verified">...</strong><span>Import DStore</span></div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="orb orb-blue"></div><div class="orb orb-violet"></div>
+      <div class="tv-stand"></div>
+      <div class="tv">
+        <div class="tv-top"><span class="tv-dots"><i></i><i></i><i></i></span><span>DC4I / WEBOS HOME</span><span class="tv-signal">● ONLINE</span></div>
+        <div class="tv-inner">
+          <div class="tv-heading"><b>Twoja biblioteka</b><small>Discover more.</small></div>
+          <div class="tv-apps">
+            <div class="tv-app first"><span>▶</span><small>VOD</small></div>
+            <div class="tv-app second"><span>♫</span><small>Music</small></div>
+            <div class="tv-app third"><span>◈</span><small>Tools</small></div>
+            <div class="tv-app fourth"><span>✦</span><small>Apps</small></div>
+          </div>
+          <div class="tv-bars"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="float-chip float-one">✧ <span>Homebrew Ready</span></div>
+      <div class="float-chip float-two">✓ <span>LG webOS</span></div>
+    </div>
+  </section>
+  <section class="shell catalogue" id="katalog" aria-labelledby="cat-heading">
+    <div class="section-top">
+      <div><div class="overline">ODKRYWAJ</div><h2 id="cat-heading">Katalog aplikacji <span id="section-count"></span></h2></div>
+      <div class="repo-inline"><span class="small-green"></span> <span>Adres źródła TV:</span> <code>lg.darc.dev</code> <button class="text-copy js-copy" type="button" aria-label="Kopiuj adres repo">⧉</button></div>
+    </div>
+    <div class="catalog-panel">
+      <div class="tabs" role="tablist" aria-label="Wybór katalogu">
+        <button id="tab-homebrew" role="tab" type="button" aria-selected="true" class="tab active" data-tab="homebrew">Do instalacji w Homebrew <span id="tab-homebrew-count">...</span></button>
+        <button id="tab-dstore" role="tab" type="button" aria-selected="false" class="tab" data-tab="dstore">Wszystkie z DStore <span id="tab-dstore-count">...</span></button>
+      </div>
+      <div class="toolbar">
+        <label class="searchbox"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Szukaj aplikacji, np. Jellyfin, IPTV, gry..." autocomplete="off" aria-label="Szukaj aplikacji"><kbd>/</kbd></label>
+        <label class="sortbox">Sortuj
+          <select id="sort" aria-label="Sortowanie"><option value="featured">Polecane</option><option value="name">Nazwa A-Z</option><option value="newest">Najnowsze w katalogu</option></select>
+        </label>
+      </div>
+      <div class="filter-scroller"><div class="filters" id="filters" aria-label="Kategorie aplikacji"><button class="filter active" data-category="All" type="button">Wszystkie</button></div></div>
+      <div class="resultsline"><div id="result-text" role="status" aria-live="polite">Ładowanie katalogu...</div><span class="source-note" id="source-note">Bezpośredni import z DStore</span></div>
+      <div id="cards" class="card-grid" aria-live="off"></div>
+      <div id="empty" class="empty-state" hidden><div class="empty-icon">⌕</div><h3>Brak wyników</h3><p>Zmień wyszukiwaną frazę lub wybierz inną kategorię.</p></div>
+      <div class="more-row"><button class="btn secondary" id="show-more" type="button" hidden>Pokaż więcej aplikacji ↓</button></div>
+    </div>
+    <div class="info-grid">
+      <div class="info-panel"><div class="info-icon">⌑</div><div><h3>Instalacja w Homebrew Channel</h3><p>Otwórz na telewizorze Homebrew Channel, następnie Settings → Repositories → Add Repository. Wklej adres źródła:</p><div class="url-copy"><code>https://lg.darc.dev/</code><button class="js-copy" type="button">Kopiuj ⧉</button></div></div></div>
+      <div class="info-panel"><div class="info-icon blue">ⓘ</div><div><h3>O pochodzeniu aplikacji</h3><p>DStore jest niezależnym źródłem. Kontrola formatu IPK i SHA-256 nie zastępuje audytu bezpieczeństwa ani potwierdzenia licencji. Niektóre pakiety mogą wymagać roota lub nie działać na nowszych webOS.</p><a href="http://dstore.net.swtest.ru/ipk/" target="_blank" rel="noopener noreferrer">Zobacz oryginalny DStore ↗</a></div></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="shell footer-inner"><div><b>DC4I <span>webOS Hub</span></b><p>Independent webOS homebrew application directory.</p></div><div><a href="/api/apps.json">JSON API</a><a href="/about.html">VOD TV</a><a href="https://github.com/darekcze/dc4i-vod-tv" target="_blank" rel="noopener noreferrer">GitHub</a></div><span>© 2026 DC4I. Niezależny projekt, niepowiązany z LG.</span></div></footer>
+<dialog id="details" aria-labelledby="details-title" class="details"><form method="dialog"><button class="dialog-close" aria-label="Zamknij" type="submit">×</button></form><div id="details-content"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>
