@@ -1,0 +1,3 @@
+# Oryginalne wymagania przewodniczącego, 24.10.2026
+
+Oficjalne logo przesłane na czacie oraz dostępne na Mac Pro w Pictures/Profile Photos. Wyszukiwać i zapisywać wiedzę w Notion, ponownie używać zatwierdzonych zasobów. Zmienić nazwę DC4I BoringTV na DC4I VOD TV, przygotować dedykowaną ikonę. Wykorzystać istniejące TMDB i nowo utworzony klucz YouTube API v3 z Google Cloud `h0st-pl` bez konfiguracji na telewizorze. Pełna polonizacja zgodna z wyborem języka, ukryć elementy działające tylko na zrootowanych TV. Lista miast: Warszawa, stolice Europy i miasta USA, usunąć azjatyckie. Uporządkować projekt i repo zgodnie ze standardami DC4I.

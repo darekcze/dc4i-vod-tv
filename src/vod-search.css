@@ -1,0 +1,14 @@
+/* DC4I VOD TV 1.1.1 streaming country filters */
+#search { background: #071638; }
+#search .sq { background: #132953; }
+#search .skey, #search .schip { background: #1b3260; }
+#sfilters { margin: 5px 0 10px; min-height: 52px; display:flex; gap: 12px; }
+#sfilters .schip { padding: 10px 20px; font-size: 19px; border: 2px solid transparent; white-space: nowrap; }
+#sfilters .schip.selected { border-color: #b4f34c; color: #b4f34c; background: #172c57; }
+#sfilters .schip.focus { background: #b4f34c; color: #071638; outline: 2px solid white; transform: scale(1.025); }
+#syt { margin: 4px 0 14px; }
+#sresTitle { font-size: 21px; margin-bottom: 13px; }
+#sres { height: 300px; }
+#sres .vod-status {white-space:normal;max-width:350px;font-size:18px;line-height:1.25;color:#d0e8ff;}
+#sres .card {vertical-align:top;}
+#sres .card:focus-visible {outline:2px solid #b4f34c;}

@@ -1,0 +1,7 @@
+/* Developer Mode safe: hide unavailable rooted-TV features by default. */
+body:not(.dc4i-rooted) [data-q="screenoff"],
+body:not(.dc4i-rooted) [data-q="picture"],
+body:not(.dc4i-rooted) [data-q="sound"]{display:none!important;}
+body:not(.dc4i-rooted) .dc4i-root-only{display:none!important;}
+#top .dc4i-brand{min-width:188px;width:188px;}
+#top .dc4i-brand img{object-fit:contain;}

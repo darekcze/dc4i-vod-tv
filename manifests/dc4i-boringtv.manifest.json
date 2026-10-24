@@ -1,15 +1,15 @@
 {
   "id": "com.dc4i.boringtv",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "type": "web",
-  "title": "DC4I BoringTV",
+  "title": "DC4I VOD TV",
   "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
-  "iconUri": "https://lg.darc.dev/icons/dc4i-boringtv.png",
-  "sourceUrl": "https://github.com/theboringhumane/theboringtv-lgwebos",
+  "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv.png",
+  "sourceUrl": "https://github.com/darekcze/dc4i-vod-tv",
   "rootRequired": false,
-  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.boringtv_1.0.1_all.ipk",
+  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.boringtv_1.1.1_all.ipk",
   "ipkHash": {
-    "sha256": "bc18a829300f27c4730ad9e77ca50f3e4bf843bcb86b36592ec1affc39ccb5e9"
+    "sha256": "e99af2d95e5a34e24efbdd3eecc69130d2f39350feb0e5844519a0312e606527"
   },
-  "ipkSize": 1753780
+  "ipkSize": 1847260
 }
