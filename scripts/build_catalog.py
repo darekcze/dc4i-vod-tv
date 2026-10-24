@@ -2,7 +2,7 @@
 """Build dual-mode webOS catalogue. The root remains Homebrew JSON."""
 from pathlib import Path
 from urllib.parse import quote
-import hashlib, json, shutil, struct, zlib
+import hashlib, json, shutil, struct, zlib, re
 
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/"dist"
@@ -32,6 +32,21 @@ def main():
     source=json.loads((DATA/"dstore-verified.json").read_text(encoding="utf8"))
     indexed=json.loads((DATA/"dstore-index.json").read_text(encoding="utf8"))
     verified=source["packages"]
+    translations=json.loads((DATA/"dstore-translations-pl.json").read_text(encoding="utf8"))
+    def translated(row):
+        original=row.get("description", "")
+        result=translations.get(row["filename"], original)
+        if re.search(r"[\u0400-\u052f]",result):
+            raise RuntimeError("Untranslated source description: "+row["filename"])
+        return result
+    def display_title(row, cur):
+        if cur: return cur["title"]
+        raw=row["filename"].removesuffix(".ipk").replace("_"," ")
+        # Keep technical download filename unchanged; localize the display label.
+        raw=re.sub(r"[\u0400-\u052f]+","",raw)
+        raw=re.sub(r"\s+"," ",raw).strip(" -()")
+        return raw if raw else "Aplikacja webOS"
+
     base=json.loads((ROOT/"api/apps.json").read_text(encoding="utf8"))
     imported_ids={x["id"] for x in verified}
     # Never overwrite or mutate locally maintained first-party packages.
@@ -50,7 +65,7 @@ def main():
             try: dst.hardlink_to(src)
             except OSError: shutil.copy2(src,dst)
         ico=BASE+"/"+(row["iconPath"] if row.get("iconPath") else "assets/app-fallback.png")
-        description="Pakiet z niezależnego katalogu DStore, bez audytu bezpieczeństwa DC4I. Sprawdź pochodzenie przed instalacją."
+        description=translated(row)+ " Pakiet z niezależnego katalogu DStore, bez audytu bezpieczeństwa DC4I."
         if row["rootRequired"]:description+=" Wymaga roota."
         manifest=dict(id=row["id"],version=row["version"],type="web",title=row["title"],
             appDescription=description,iconUri=ico,sourceUrl=source["source"],
@@ -73,9 +88,9 @@ def main():
     browser_rows=[]
     for row in indexed["entries"]:
         cur=matched.get(row["filename"])
-        name=(cur["title"] if cur else row["filename"].removesuffix(".ipk").replace("_"," "))
+        name=display_title(row,cur)
         browser_rows.append(dict(filename=row["filename"],title=name,sourceUrl=row["sourceUrl"],
-          description=row["description"],date=row["date"],declaredSize=row["declaredSize"],
+          description=translated(row),date=row["date"],declaredSize=row["declaredSize"].replace("Мб","MB").replace("МБ","MB").replace("К","K").replace("к","k"),
           verified=bool(cur),category=cur["category"] if cur else "External",
           id=cur["id"] if cur else None,iconUri=BASE+"/"+(cur["iconPath"] or "assets/app-fallback.png") if cur else BASE+"/assets/app-fallback.png"))
     write(DIST/"catalog/dstore.json",dict(source=indexed["source"],retrievedAt=indexed["retrievedAt"],
