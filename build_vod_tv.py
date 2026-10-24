@@ -9,7 +9,7 @@ assert ART.exists(),'Missing canonical approved logo. See DC4I-BRAND-001 in Noti
 assert __import__('hashlib').sha256(ART.read_bytes()).hexdigest()=='3f8624833ca1eb1609bb42013bfc703d185b59207778afab6802a0723a5e8771'
 subprocess.run([sys.executable,str(R/'build_dc4i.py')],check=True)
 APP=R/'build/dc4i-vodtv'; SRC=R/'src'
-VERSION='1.2.1'; TITLE='DC4I VOD TV'
+VERSION='1.2.2'; TITLE='DC4I VOD TV'
 def patch(path,before,after,required=True):
     p=APP/path;s=p.read_text(encoding='utf-8')
     if required and before not in s:raise ValueError('Pattern missing '+str(path)+' => '+before[:70])
@@ -136,3 +136,6 @@ subprocess.run([sys.executable, str(R/'scripts/patch_v111.py')], check=True)
 
 # Final user-approved neon graphics and technical app identity for the 1.2.0 release.
 subprocess.run([sys.executable,str(R/'scripts/neon_brand_v120.py')],check=True)
+
+# Improve Smarters detection and selected-title handoff without changing the webOS package ID.
+subprocess.run([sys.executable,str(R/'scripts/patch_v122.py')],check=True)

@@ -2,6 +2,25 @@
 
 Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrades).
 
+## [1.2.2] - 2026-10-24
+
+### Smarters Player LG Store mapping and detection
+- Added LG Store catalog listing **1231221** from the user's [Smarters Player LG page](https://us.lgappstv.com/main/tvapp/detail?appId=1231221) as a *candidate*, not an assumed internal webOS launch ID. Public store ID and internal applicationManager ID are distinct concepts; LG does not publish general installed-app enumeration to ordinary third-party apps.
+- The Smarters Player tile now stays visible in the DC4I Apps menu even if `getAppLoadStatus` is denied or all candidate IDs are unrecognized; such a tile is marked `sprawdź` (unverified), not misrepresented as an installed app.
+- On selecting the tile or a film's Smarters action, DC4I checks candidate IDs and attempts webOS Application Manager launches one by one until it receives a confirmed successful launch, including testing `1231221` as requested. It remembers successful IDs on the TV and records non-sensitive diagnostics in `localStorage` (key: `vodNativeDiagnostics122`). Failure is reported instead of silently hiding the player.
+- Installed-app title matching remains available where webOS permits it. Root not required.
+
+### Stremio selected-title navigation
+- Original button **Stremio - aplikacja** continues to attempt official Stremio movie/TV deep links with the IMDb identifier obtained from TMDB. An LG app can ignore the link even if webOS reports the launch succeeded.
+- New button **Stremio Web (otwórz tytuł)** launches the official Stremio Web app at `https://web.stremio.com/#/detail/{type}/{IMDb}` for the chosen movie/series via the native webOS browser. This is a distinct web fallback, not the installed LG Stremio app. Stremio Web loads over HTTPS but actual login/player behavior on LG is device-dependent.
+- Native Smarters Player has no publicly documented deep-link/search API. The app passes title hints but cannot force the proprietary player to search or play content.
+
+### Verification / known limits
+- Automated Node mock tests: visible Smarters tile without verified ID, successful launch via `1231221`, correct error/diagnostic when no candidate works, IMDb movie/series links, browser fallback URL, mock LG launch results.
+- Headless Chrome TV E2E: tile visible, both Stremio modes and Smarters controls, Poland streaming filters, Polish weather.
+- IPK / manifest SHA256, 32-app repository retention, legacy 1.2.1 and 1.2.0 packages retained for rollback.
+- **Real LG pairing and native-app acceptance remain unverified**, tracked in issues [#2](https://github.com/darekcze/dc4i-vod-tv/issues/2) and [#3](https://github.com/darekcze/dc4i-vod-tv/issues/3). No content sources are provided by these third-party players.
+
 ## [1.2.1] - 2026-10-24
 
 ### Native LG player integration

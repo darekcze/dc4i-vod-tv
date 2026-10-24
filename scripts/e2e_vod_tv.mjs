@@ -52,6 +52,10 @@ try{
  assert(intro.city==='Warsaw','default city Warszawa');
  assert(intro.rootOnly==='none','root-only picture button hidden');
  console.log('E2E_BOOT_PL',JSON.stringify(intro));
+ await waitFor(async()=>evaluate('Boolean(document.querySelector("#grid .app") && document.querySelector("#rows"))'),9000);
+ const smarters=await evaluate('Array.from(document.querySelectorAll("#grid .app")).filter(x=>/Smarters Player/i.test(x.innerText)).length');
+ assert(smarters===1,'Smarters tile must remain visible even when app launch ID unverified');
+ console.log('E2E_SMARTERS_TILE_VISIBLE',smarters);
  // Deterministic movie offers: TMDB search includes one title in Poland, one without subscriptions.
  const installMock=String.raw`(()=> {
   const orig=TV.tmdb;
@@ -82,7 +86,7 @@ try{
  await evaluate('document.querySelector("#sres .card").onok()');
  await waitFor(async()=>evaluate('document.querySelector("#details .dbtns")?.innerText.includes("Stremio")'),6000);
  const availableActions=await evaluate('document.querySelector("#details .dbtns").innerText');
- assert(availableActions.includes('Stremio')&&availableActions.includes('IPTV Smarters Player'),
+ assert(availableActions.includes('Stremio')&&availableActions.includes('Stremio Web')&&availableActions.includes('Smarters Player'),
    'external-player actions should be available for ALL titles, including Netflix-supported titles');
  console.log('E2E_PLAYERS_ON_AVAILABLE_TITLE',availableActions.replaceAll('\n',' | '));
  await evaluate('window.TV.closeView()');
@@ -93,7 +97,7 @@ try{
  await evaluate('document.querySelector("#sres .card").onok()');
  await waitFor(async()=>evaluate('document.querySelector("#details .dbtns")?.innerText.includes("Stremio")'),6000);
  const fallback=await evaluate('document.querySelector("#details .dbtns").innerText');
- assert(fallback.includes('Stremio')&&fallback.includes('IPTV Smarters Player'),'fallback buttons');
+ assert(fallback.includes('Stremio')&&fallback.includes('Stremio Web')&&fallback.includes('Smarters Player'),'fallback buttons');
  console.log('E2E_DETAILS_FALLBACK',fallback.replaceAll('\n',' | '));
  // Weather with deterministic mock data prevents dependency on current forecast.
  const mockWeather=String.raw`(()=> {

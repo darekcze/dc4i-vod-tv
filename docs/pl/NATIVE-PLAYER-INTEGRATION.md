@@ -18,3 +18,9 @@ Użytkownik potwierdził, że **Stremio** już pojawia się w katalogu aplikacji
 Testy automatyczne symulujące LG potwierdzają rozpoznawanie ID, brak blokowania przez niesprawdzone ID i poprawny format przekazywanych parametrów. Testy Chrome sprawdzają przyciski dla dostępnych i niedostępnych filmów. Fizyczny telewizor: weryfikacja w issues [#2](https://github.com/darekcze/dc4i-vod-tv/issues/2) i [#3](https://github.com/darekcze/dc4i-vod-tv/issues/3).
 
 Aplikacja działa nadal bez roota i bez ręcznego podawania kluczy API na telewizorze.
+
+## Uzupełnienie 1.2.2, numer LG Store i ograniczenia webOS
+- Numer **1231221** z linku użytkownika to identyfikator wpisu w sklepie LG, a nie potwierdzony identyfikator uruchomienia. Sprawdzamy go jako jeden z kandydatów.
+- LG wymaga rzeczywistego ID aplikacji do jej uruchomienia, ale zwykłe aplikacje webOS mogą nie mieć dostępu do listy wszystkich zainstalowanych programów.
+- Smarters Player pozostaje widoczny na kafelku, przy braku potwierdzenia dodajemy `sprawdź`. Przy uruchamianiu automatycznie testujemy ID i zapisujemy wynik w diagnostyce lokalnej `vodNativeDiagnostics122` (bez kluczy, haseł i list).
+- Natywne Stremio może ignorować linki. Dodano alternatywny przycisk Stremio Web, który otwiera stronę wybranego tytułu w przeglądarce LG, bez udawania natywnego odtworzenia.

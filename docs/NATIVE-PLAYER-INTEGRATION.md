@@ -26,3 +26,10 @@ The user has installed **Stremio** and **IPTV Smarters Player** on their LG TV. 
 - Real LG app ID, actual Stremio direct handoff and Smarters' response to search parameters are pending physical-TV acceptance. Track [#2](https://github.com/darekcze/dc4i-vod-tv/issues/2) and [#3](https://github.com/darekcze/dc4i-vod-tv/issues/3).
 
 No TV-side API credential entry, no additional subscription, and no rooting was introduced.
+
+## Addendum 1.2.2, LG Store listing and known platform limits
+- The user's LG Apps Store listing number **1231221** is associated with [Smarters Player](https://us.lgappstv.com/main/tvapp/detail?appId=1231221). It is not a confirmed system launcher ID. Trial as candidate only.
+- LG's [applicationManager](https://webostv.developer.lge.com/develop/references/application-manager) needs an internal app ID to launch a program. The [LG developer forum](https://forum.webostv.developer.lge.com/t/how-to-get-applist/8616) confirms that ordinary third-party TV apps cannot freely enumerate installed applications.
+- Force the Smarters tile to remain visible. An unconfirmed tile is marked 'sprawdź'; first successful webOS launch is cached, negative error codes are stored on the TV under `vodNativeDiagnostics122` (no keys or playlists included).
+- Stremio native deep-link handling on LG is not established. Provide a separate browser-based alternative to the title in the official Stremio Web SPA. Browser navigation and content playback depend on login/TV support.
+- No unrestricted root/control APIs, third-party tampering, illegal content provision or streaming-account scraping.

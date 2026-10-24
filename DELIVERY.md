@@ -51,3 +51,9 @@ Cloudflare Pages retains previous deployments. Current production is the source-
 - Smarters app launch passes best-effort title search hints only, since the vendor does not document webOS title deep-link support.
 - Search details buttons now appear for all movie/series titles, irrespective of provider availability in Poland.
 - Node mocked Luna tests + headless Chrome TV browser acceptance required; see docs/NATIVE-PLAYER-INTEGRATION.md.
+
+## 1.2.2 diagnostic player release
+- TV tile for Smarters Player persists even if getAppLoadStatus cannot confirm its internal ID. Catalog ID 1231221 is tested only as an unverified launch ID, never assumed to be the installed app's true ID.
+- Stremio native and Stremio Web controls are intentionally separate. Native may ignore contentTarget; browser can open the Stremio Web title route. The latter is not native playback.
+- Node tests: detection failures, launch ID trials, persistent diagnostics, web route, movie/TV IMDb URLs. Chrome E2E: pinned Smarters tile and all details buttons.
+- Hardware acceptance is NOT done; do not close issue #2 or #3 until confirmed by the user's LG television.

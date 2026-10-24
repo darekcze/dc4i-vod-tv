@@ -28,3 +28,8 @@ Rollback: przywróć całe poprzednie wdrożenie Cloudflare Pages (binarium i ma
 - Przekazywanie IMDb Stremio oraz eksperymentalne przekazywanie tytułu do Smarters.
 - Przyciski do obu aplikacji są we wszystkich szczegółach filmów/seriali. E2E w Chrome i testy Node przechodzą; uruchamianie w natywnym LG do przetestowania.
 - Więcej: `docs/pl/NATIVE-PLAYER-INTEGRATION.md`.
+
+## Wydanie 1.2.2: Smarters Player i Stremio Web
+- Kafelek Smarters Player zawsze widoczny, w tym przy braku dostępu do listy aplikacji. `1231221` to numer wpisu sklepowego, testowany wyłącznie jako kandydat ID uruchomienia.
+- Oddzielne akcje Stremio native i Stremio Web. Wersja internetowa otwiera wybrany tytuł w przeglądarce LG, a nie w aplikacji natywnej.
+- Testy Node i Chrome PASS. Test na fizycznym telewizorze LG nadal do wykonania, issues #2 i #3.

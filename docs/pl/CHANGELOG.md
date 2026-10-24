@@ -2,6 +2,24 @@
 
 Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacje zastępowały wcześniejsze wersje.
 
+## [1.2.2] - 24.10.2026
+
+### Smarters Player
+- Dodałem numer **1231221** z przekazanego linku do [LG Store](https://us.lgappstv.com/main/tvapp/detail?appId=1231221). To identyfikator katalogu sklepu, niepotwierdzony jako techniczny ID uruchomienia webOS.
+- **Smarters Player jest zawsze widoczny** w menu *Aplikacje*. Gdy telewizor nie potwierdził ID, kafelek otrzymuje dopisek `sprawdź`, zamiast znikać.
+- Po kliknięciu kafelka lub przycisku przy filmie aplikacja próbuje odnaleźć poprawny identyfikator i uruchomić program, włącznie z testem `1231221`. Zapisuje działający identyfikator w pamięci TV. Niepowodzenia rejestruje lokalnie bez ujawniania kluczy API.
+- Nie potrzeba roota ani ręcznego wpisywania identyfikatorów na pilocie.
+
+### Stremio i otwieranie tytułów
+- Przycisk **Stremio - aplikacja** nadal wysyła link do filmu/serialu z numerem IMDb. Wersja LG może ten link ignorować, nawet jeśli sama aplikacja się uruchomi.
+- Nowy przycisk **Stremio Web (otwórz tytuł)** otwiera odpowiednią stronę filmu/serialu w oficjalnym Stremio Web za pomocą przeglądarki LG. To osobna alternatywa od natywnego Stremio; wymaga zgodności webOS i ewentualnego zalogowania.
+- Smarters Player nie dokumentuje interfejsu wyszukiwania filmów poprzez parametry webOS. Przekazujemy nazwę tytułu, ale program może ją zignorować. Nie da się zagwarantować bezpośredniego odtworzenia.
+
+### Testy
+- Testy automatyczne Node: kafelek bez potwierdzonego ID, uruchomienie po numerze 1231221 (symulacja), błędy i diagnostyka, przekazanie IMDb do Stremio, URL filmu w Stremio Web.
+- Test Chrome: oba warianty Stremio i Smarters przy wyszukanym tytule, działający interfejs, filtry VOD i pogoda po polsku.
+- Zachowano 32 aplikacje w katalogu i pakiety 1.2.1/1.2.0 jako archiwum. **Test na fizycznym LG nadal otwarty**, issues #2 i #3.
+
 ## [1.2.1] - 24.10.2026
 
 ### Wykrywanie aplikacji LG i otwieranie tytułów
