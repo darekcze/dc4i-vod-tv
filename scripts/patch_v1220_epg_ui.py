@@ -18,9 +18,9 @@ s=s.replace(anchor,"    if(TV.epgMetadata)TV.epgMetadata.renderDetails(box.query
 anchor="          epgHost.textContent='EPG: brak dopasowania w sprawdzonych kanałach (niepełny indeks).';"
 assert s.count(anchor)==1
 s=s.replace(anchor,anchor+"\n          if(TV.epgMetadata)TV.epgMetadata.renderDetails(epgHost,it.title,[]);")
-anchor="        if(TV.view()==='details')TV.rebuild();"
+anchor="          epgHost.appendChild(row);\n        });\n        if(TV.view()==='details')TV.rebuild();"
 assert s.count(anchor)==1
-s=s.replace(anchor,"        if(TV.epgMetadata)TV.epgMetadata.renderDetails(epgHost,it.title,events);\n"+anchor)
+s=s.replace(anchor,anchor.replace("        if(TV.view()", "        if(TV.epgMetadata)TV.epgMetadata.renderDetails(epgHost,it.title,events);\n        if(TV.view()"))
 anchor="        if(stack[stack.length-1]===it)epgHost.textContent='EPG jest obecnie niedostępne.';"
 assert s.count(anchor)==1
 s=s.replace(anchor,"        if(!box.hidden && stack[stack.length-1]===it){\n"+
