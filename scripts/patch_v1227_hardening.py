@@ -32,6 +32,8 @@ s=s.replace(anchor,"""  function profileSettingsReadable() {
 anchor="      if (arguments.length > 1) localStorage[(P.prefix || '') + k] = JSON.stringify(v);";assert s.count(anchor)==1
 s=s.replace(anchor,"      if (arguments.length > 1) {if(k==='settings'&&!profileSettingsReadable())throw Error('Unreadable settings');localStorage[(P.prefix || '') + k] = JSON.stringify(v);}")
 anchor='store: store,';assert s.count(anchor)==1;s=s.replace(anchor,anchor+' readMetadataStorage: readMetadataStorage, profileSettingsReadable: profileSettingsReadable, backupRead: backupRead, backupWrite: backupWrite,')
+anchor="    if (dirty) { store('settings', draft); store('homeCache', null); location.reload(); return; }";assert s.count(anchor)==1
+s=s.replace(anchor,"    if (dirty) { store('settings', draft); if(JSON.stringify(store('settings'))!==JSON.stringify(draft)){toast(S.uiLang==='en'?'Settings not saved; retry before leaving':'Nie zapisano ustawień; ponów przed wyjściem');return;} store('homeCache', null); location.reload(); return; }")
 anchor="    if(row.key==='playbackClear')";assert s.count(anchor)==1;s=s.replace(anchor,"    if(row.key==='metadataBackup'){if(TV.metadataBackup)TV.metadataBackup.openSettings();return;}\n"+anchor);anchor='  function choose(e) {'
 if anchor not in s: anchor='  function choose(e){'
 assert s.count(anchor)==1

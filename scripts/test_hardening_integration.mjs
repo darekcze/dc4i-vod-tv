@@ -9,3 +9,6 @@ fail=true;assert.equal(c.profileSettingsReadable(),false);assert.throws(()=>c.re
 c.backupWrite('dc4iChartLinksV1','{"region":"global","category":"tv"}');P.prefix='b:';assert.equal(c.backupRead('dc4iChartLinksV1'),null);P.prefix='a:';assert.match(c.backupRead('dc4iChartLinksV1'),/global/);
 assert.equal(JSON.parse(fs.readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
 console.log('HARDENING_GENERATED_PASS strict metadata/settings reads, settings write guard, backup key boundary and profile isolation');
+
+let reloads=0,messages=[];Object.assign(c,{dirty:true,draft:{recoLearnPlayback:false},S:{uiLang:'en'},location:{reload(){reloads++;}},toast:t=>messages.push(t)});
+vm.runInNewContext(app.slice(app.indexOf('  function closeSettings()'),app.indexOf('  function choose(e)')),c);fail=true;c.closeSettings();assert.equal(reloads,0);assert.match(messages.pop(),/not saved/);fail=false;c.closeSettings();assert.equal(reloads,1);assert.equal(JSON.parse(data['a:settings']).recoLearnPlayback,false);
