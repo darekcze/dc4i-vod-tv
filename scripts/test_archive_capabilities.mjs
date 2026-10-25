@@ -34,3 +34,7 @@ let rejectSeek;player=api.create({now:()=>now,transport:{...transport,seek:()=>n
 player.offer(offer);await player.verify();await player.start();player.seek(5);player.stop();player.offer(offer);await player.verify();await player.start();
 rejectSeek(Error('private credential-bearing transport error'));await Promise.resolve();await Promise.resolve();assert.equal(player.state().status,'playing','old control rejection cannot fail new session');player.stop();
 assert.throws(()=>api.create({maxBufferBytes:67108865}),/limits/);
+
+let incompleteCalls=0;
+const incomplete=api.create({now:()=>now,transport:{verify:async()=>{incompleteCalls++;return proof;}}});
+incomplete.offer(offer);assert.equal((await incomplete.verify()).status,'unverified');assert.equal(incompleteCalls,0,'no probe without playback and cleanup contract');

@@ -50,7 +50,7 @@
   function verify(){
    if(pending)return pending;
    if(status==='playing'||status==='starting')return Promise.resolve(state());
-   if(!request||!transport||typeof transport.verify!=='function')return Promise.resolve(state());
+   if(!request||!transport||typeof transport.verify!=='function'||typeof transport.play!=='function'||typeof transport.stop!=='function')return Promise.resolve(state());
    var token=++epoch;status='verifying';reason='checking-runtime';proof=null;
    pending=call('verify').then(function(result){
     if(token!==epoch)return state();
