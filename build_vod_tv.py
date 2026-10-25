@@ -181,3 +181,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1220_epg_ui.py')],check=Tru
 
 # Draft per-profile Home rails, preserving the released version until acceptance.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1221_home_ui.py')],check=True)
+
+# Draft archive capability contract: no verified production transport yet.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1222_archive.py')],check=True)
