@@ -13,5 +13,6 @@ assert.ok(search.includes('epgResults'),'search considers program metadata');
 assert.ok(detail.includes("class=\"depg\""),'details shows EPG sources');
 assert.ok(detail.includes('TV.xtream.searchEpg'),'details requests EPG');
 assert.ok(detail.includes('Przypomnij'),'future EPG supports in-app reminder');
-assert.ok(detail.includes('CatchUp'),'archived indication surfaced');
+assert.ok(detail.includes('TV.xtream.archiveStatus(e)')&&detail.includes('hint.textContent=capability.label'),'archive capability label surfaced');
+assert.ok(!detail.includes("btn('Sprawdź CatchUp'"),'archive hint cannot expose playback control');
 console.log('EPG_INTEGRATION_ASSERTIONS_PASS');
