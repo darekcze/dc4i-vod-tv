@@ -46,3 +46,5 @@ storage[profile+':dc4iReminderPrefsV1']='invalid';assert.equal(model.tick({foreg
 assert.equal(storage[profile+':dc4iEpgRemindersV1'].length,1,'invalid preferences do not consume reminders');
 assert.equal(model.cancel(undefined).ok,false);
 profile='failed-prefs';fail=true;assert.equal(model.setPrefs({enabled:false}).ok,false);assert.equal(model.prefs().enabled,true);fail=false;
+
+for(const invalid of [{enabled:'false'},{quiet:'false'},{start:-1},{end:1440}]){let untouched=0;const strict=api.create({read:k=>k==='dc4iReminderPrefsV1'?invalid:[],write(){untouched++;}});assert.equal(strict.prefs().storageError,true);assert.equal(strict.setPrefs({enabled:true}).ok,false);assert.equal(untouched,0);}
