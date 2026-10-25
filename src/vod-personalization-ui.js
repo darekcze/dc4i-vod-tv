@@ -27,14 +27,14 @@
   function settings(){
     if(typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable())return engine.settings({enabled:false});
     return engine.settings({
-      enabled:TV.S.recoEnabled!==false,
+      enabled:typeof TV.profileFlagEnabled==='function'&&TV.profileFlagEnabled('recoEnabled'),
       favouriteGenre:TV.S.recoFavouriteGenre||'scifi',
       sciFiMin:TV.S.recoSciFiMin==null?6:TV.S.recoSciFiMin,
       horrorMin:TV.S.recoHorrorMin==null?9:TV.S.recoHorrorMin,
       otherMin:TV.S.recoOtherMin==null?7:TV.S.recoOtherMin,
       hideHorror:TV.S.recoHorrorMode==='hide'||!!(TV.P&&TV.P.extraQ),
       eveningBoost:TV.S.recoEveningBoost!==false,
-      learnHistory:TV.S.recoLearnHistory!==false,
+      learnHistory:typeof TV.profileFlagEnabled==='function'&&TV.profileFlagEnabled('recoLearnHistory'),
       hideOpened:TV.S.recoHideOpened===true
     });
   }

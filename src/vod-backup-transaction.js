@@ -20,9 +20,10 @@
     else if(typeof v!=='boolean')throw Error();out[k]=v;
    }else {var defaults=name==='home'?{active:true,order:[],enabled:[]}:name==='reminders'?{enabled:true,quiet:false,start:1320,end:480}:{region:'poland',category:'film'};defaults[k]=v;out[k]=base.section(name,defaults)[k];}
   });return out;}
+ function complete(name,value){var defaults=name==='home'?{active:true,order:['now','today','week','missedToday','missedWeek','films','series','favourite','scifi','reality','family'],enabled:['now','today','week','missedToday','missedWeek','films','series','favourite','scifi','reality','family']}:name==='reminders'?{enabled:true,quiet:false,start:1320,end:480}:{region:'poland',category:'film'};return base.section(name,Object.assign(defaults,value));}
  function readSection(port,name){var raw=port.read(keys[name]);if(raw===null)return {present:false,raw:null,value:name==='opened'||name==='playback'?[]:{}};
   if(typeof raw!=='string'||raw.length>262144)throw Error('stored size');var parsed=JSON.parse(raw);var value=name==='playback'?(object(parsed)&&parsed.schema===1?parsed.records:null):parsed;
-  return {present:true,raw:parsed,value:normalize(name,value,false)};}
+  var clean=normalize(name,value,false);if(name==='charts')base.section(name,clean);return {present:true,raw:parsed,value:clean};}
  function encode(name,current,target,present){var raw=current.raw,out;
   if(name==='opened'||name==='playback'){var old=name==='opened'?(Array.isArray(raw)?raw:[]):raw&&raw.records||[],index={};old.forEach(function(r){index[id(name,r)]=r;});
    var wanted={};target.forEach(function(r){wanted[id(name,r)]=true;});var list=old.filter(function(r){return wanted[id(name,r)];});target.forEach(function(r){if(!index[id(name,r)])list.push(Object.assign(Object.create(null),r,name==='playback'?{imported:true}:{}));});
@@ -37,10 +38,10 @@
   function loadJournal(){var raw=port.read(JOURNAL);if(raw===null)return null;if(raw.length>524288)throw Error('journal limit');var j=JSON.parse(raw);only(j,['schema','state','steps']);if(j.schema!==1||['applying','committed','rolling-back'].indexOf(j.state)<0||!Array.isArray(j.steps)||!j.steps.length||j.steps.length>6)throw Error('journal');var seen={};j.steps.forEach(function(s){only(s,['name','present','before','after']);if(!own(keys,s.name)||seen[s.name]||typeof s.present!=='boolean')throw Error('journal step');seen[s.name]=true;normalize(s.name,s.before,true);normalize(s.name,s.after,true);});return j;}
   function writeRaw(key,raw){if(port.profile()!==lockedProfile)throw Error('profile changed');port.write(key,raw);if(port.profile()!==lockedProfile||port.read(key)!==raw)throw Error('unconfirmed');}
   function journal(j){var raw=j===null?null:JSON.stringify(j);if(raw!==null&&raw.length>524288)throw Error('journal limit');writeRaw(JOURNAL,raw);}
-  function exportText(){if(loadJournal())throw Error('recovery required');var token=port.profile(),sections={};Object.keys(keys).forEach(function(n){var value=readSection(port,n);if(value.present)sections[n]=value.value;});if(port.profile()!==token||!Object.keys(sections).length)throw Error('empty or profile changed');return JSON.stringify({format:'dc4i-preferences',schema:2,sections:sections},null,2);}
+  function exportText(){if(loadJournal())throw Error('recovery required');var token=port.profile(),sections={};Object.keys(keys).forEach(function(n){var value=readSection(port,n);if(value.present)sections[n]=own(base.keys,n)?complete(n,value.value):value.value;});if(port.profile()!==token||!Object.keys(sections).length)throw Error('empty or profile changed');return JSON.stringify({format:'dc4i-preferences',schema:2,sections:sections},null,2);}
   function preview(text){pending=null;var token=port.profile();try{if(loadJournal())return {ok:false,reason:'recovery-required'};var parsed=parse(text),steps=[];Object.keys(parsed.sections).forEach(function(n){var current=readSection(port,n),target=parsed.sections[n];
     if(Array.isArray(target)){var existing={};current.value.forEach(function(r){existing[id(n,r)]=true;});target=current.value.concat(target.filter(function(r){return !existing[id(n,r)];}));if(target.length>150)throw Error('merge capacity');}
-    else target=Object.assign({},current.value,target);
+    else {target=Object.assign({},current.value,target);if(own(base.keys,n))target=complete(n,target);normalize(n,target,true);}
     steps.push({name:n,present:current.present,before:current.value,after:target});});
    if(port.profile()!==token)throw Error('profile changed');pending={profile:token,steps:copy(steps),token:++revision};return {ok:true,token:pending.token,migratedFrom:parsed.migratedFrom,changes:steps.map(function(s){return {section:s.name,before:s.before,after:s.after};})};
   }catch(e){return {ok:false,reason:'invalid-or-unreadable'};}}

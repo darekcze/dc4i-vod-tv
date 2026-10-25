@@ -24,7 +24,15 @@ for name,args in [('readReminderStorage','k'),('readChartStorage',''),('readPlay
     s=s.replace(anchor,anchor+"\n    if(metadataRestorePending())throw Error('Restore recovery required');")
 anchor='    try {\n      if (arguments.length > 1)';assert s.count(anchor)==1
 s=s.replace(anchor,"    try {\n      if(metadataRestorePending()&&['settings','homeRailsLayoutV1','dc4iReminderPrefsV1','dc4iChartLinksV1','recommendationOpensV1','playbackLearningV1'].indexOf(k)>=0)throw Error('Restore recovery required');\n      if (arguments.length > 1)")
-anchor='store: store,';assert s.count(anchor)==1;s=s.replace(anchor,anchor+' restoreRead: restoreRead, restoreWrite: restoreWrite, metadataRestorePending: metadataRestorePending,')
+anchor='  function profileSettingsReadable() {';assert s.count(anchor)==1
+s=s.replace(anchor,"""  function profileFlagEnabled(k) {
+    if(['recoLearnPlayback','recoLearnHistory','recoEnabled'].indexOf(k)<0||!profileSettingsReadable())return false;
+    try{var raw=localStorage.getItem((P.prefix || '')+'settings'),persisted=raw===null?{}:JSON.parse(raw);
+      return S[k]!==false&&persisted[k]!==false;
+    }catch(e){return false;}
+  }
+"""+anchor)
+anchor='store: store,';assert s.count(anchor)==1;s=s.replace(anchor,anchor+' restoreRead: restoreRead, restoreWrite: restoreWrite, metadataRestorePending: metadataRestorePending, profileFlagEnabled: profileFlagEnabled,')
 anchor='if(!profileSettingsReadable()){toast';assert s.count(anchor)==1
 s=s.replace(anchor,"if(!profileSettingsReadable()&&(!SROWS[+e.dataset.r]||SROWS[+e.dataset.r].key!=='metadataBackup')){toast")
 anchor='  function openSettings() {';assert s.count(anchor)==1

@@ -5,6 +5,7 @@ const win=new Events();win.TV=TV;const doc=new Events();Object.defineProperty(do
 const rows=[];TV.addRow=fn=>rows.push(fn);TV.homeCandidates=()=>[{tmdb:{id:1,type:'movie'},title:'Synthetic',genre_ids:[878],vote_average:8}];TV.itemOk=()=>{};TV.openItem=()=>{};TV.refresh=()=>{};
 TV.readMetadataStorage=k=>TV.store(k);
 TV.profileSettingsReadable=()=>true;
+TV.profileFlagEnabled=k=>TV.S[k]!==false&&(TV.store('settings')||{})[k]!==false;
 const context={window:win,document:doc,Date:class extends Date{static now(){return now;}},WeakMap,Set,Math};
 for(const f of ['vod-recommendations.js','vod-personalization-ui.js','vod-playback-learning.js','vod-playback-ui.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),context);
 const media=new Events();media.currentTime=0;media.duration=100;media.audioTracks=[{language:'en'}];media.textTracks=[{language:'pl',kind:'subtitles'}];

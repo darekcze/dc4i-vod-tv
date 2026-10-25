@@ -21,6 +21,7 @@ const tv={
 };
 tv.readMetadataStorage=k=>tv.store(k);
 tv.profileSettingsReadable=()=>true;
+tv.profileFlagEnabled=k=>tv.S[k]!==false&&(tv.store('settings')||{})[k]!==false;
 const window={TV:tv};
 const ctx=vm.createContext({window,Date,Number,Math,String,Object,Array});
 vm.runInContext(readFileSync('src/vod-recommendations.js','utf8'),ctx);
