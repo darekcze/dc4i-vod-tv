@@ -8,7 +8,7 @@ let forwarded,opened=0;const TV={reminders:{add:e=>{forwarded=e;return true;},op
 const context={TV,SROWS:[{key:'reminderSettings',opts:[['edit','Configure']]}],draft:{}};
 const helper=xt.slice(xt.indexOf('function remindEpg(event){'),xt.indexOf('function chosenEpgChannels(){'));
 vm.runInNewContext(helper,context);const event={channelId:'1',time:{start:1}};assert.equal(context.remindEpg(event),true);assert.equal(forwarded,event);
-const choose=app.slice(app.indexOf('  function choose(e)'),app.indexOf('  // ---------- quick settings'));vm.runInNewContext(choose,context);
+const choose=app.slice(app.indexOf('  function choose(e)'),app.indexOf('  // ---------- quick settings'));context.profileSettingsReadable=()=>true;vm.runInNewContext(choose,context);
 context.choose({dataset:{r:'0',i:'0'}});assert.equal(opened,1);
 assert.ok(xt.includes("if(entry.state==='future')return remindEpg(entry);"),'future archive dispatcher preserves reminder entrypoint');
 assert.ok(readFileSync('build/dc4i-vodtv/features/details.js','utf8').includes('TV.xtream.remindEpg(e)'));

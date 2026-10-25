@@ -3,6 +3,8 @@ class Events{constructor(){this.events={};}addEventListener(k,f){(this.events[k]
 let now=100000,visible=true,fail=false;const records={},TV={P:{prefix:'a:'},S:{uiLang:'en'},store(k,v){if(arguments.length===2&&!fail)records[this.P.prefix+k]=JSON.stringify(v);return JSON.parse(records[this.P.prefix+k]||'null');},readPlaybackStorage(){const v=records[this.P.prefix+'playbackLearningV1'];return v===undefined?null:JSON.parse(v);},addSetting(){},toast(){},personalized:{history:()=>[]}};
 const win=new Events();win.TV=TV;const doc=new Events();Object.defineProperty(doc,'visibilityState',{get:()=>visible?'visible':'hidden'});doc.hasFocus=()=>visible;
 const rows=[];TV.addRow=fn=>rows.push(fn);TV.homeCandidates=()=>[{tmdb:{id:1,type:'movie'},title:'Synthetic',genre_ids:[878],vote_average:8}];TV.itemOk=()=>{};TV.openItem=()=>{};TV.refresh=()=>{};
+TV.readMetadataStorage=k=>TV.store(k);
+TV.profileSettingsReadable=()=>true;
 const context={window:win,document:doc,Date:class extends Date{static now(){return now;}},WeakMap,Set,Math};
 for(const f of ['vod-recommendations.js','vod-personalization-ui.js','vod-playback-learning.js','vod-playback-ui.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),context);
 const media=new Events();media.currentTime=0;media.duration=100;media.audioTracks=[{language:'en'}];media.textTracks=[{language:'pl',kind:'subtitles'}];

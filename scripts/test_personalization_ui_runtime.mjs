@@ -19,6 +19,8 @@ const tv={
  openItem(x){opened.push(['open',x.title]);},
  toast(){},refresh(){refreshCount++;}
 };
+tv.readMetadataStorage=k=>tv.store(k);
+tv.profileSettingsReadable=()=>true;
 const window={TV:tv};
 const ctx=vm.createContext({window,Date,Number,Math,String,Object,Array});
 vm.runInContext(readFileSync('src/vod-recommendations.js','utf8'),ctx);
@@ -47,3 +49,4 @@ assert.equal(refreshCount,1,'clear refreshes recommendations');
 tv.P.extraQ='&certification_country=US';tv.S.recoHorrorMode='high';row=rows[0]();
 assert.ok(!row.items.some(x=>x.title==='Horror'),'kids profile must hide horror even when enabled');
 console.log('PERSONALIZATION_UI_RUNTIME_PASS',row.items.map(x=>({title:x.title,score:x.recoScore})));
+const beforeCorrupt=JSON.stringify(histories);tv.readMetadataStorage=()=>{throw Error('corrupt');};tv.openItem(titles[0]);assert.equal(JSON.stringify(histories),beforeCorrupt,'unreadable opened history preserved');

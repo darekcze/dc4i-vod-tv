@@ -1,0 +1,6 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+const c={window:{},Set};for(const f of ['vod-recommendations.js','vod-home-rails.js','vod-playback-learning.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),c);
+const h=c.window.DC4IHomeRails,now=1792929600000;const items=Array.from({length:2000},(_,i)=>({title:'Synthetic '+i,tmdb:{id:i+1,type:'movie'},vote_average:8,genre_ids:[878]}));const events=Array.from({length:20000},(_,i)=>({title:'Synthetic '+i,channelId:'1',start:now+i*1000,end:now+i*1000+60000,provenance:{source:'synthetic'}}));
+const start=performance.now();for(let n=0;n<5;n++){const rows=h.build({now,candidates:items,events,pref:{},config:{}});assert.ok(rows.every(r=>r.items.length<=20));assert.ok(rows.length<=11);}const elapsed=performance.now()-start;
+assert.equal(h.build({now,candidates:items.concat(items),events:[],pref:{},config:{}}).length,0);let stored=null;const cache=h.createCache({read:()=>stored,write:v=>{stored=v;},now:()=>now});cache.put(items);assert.equal(JSON.parse(stored).items.length,300);stored='x'.repeat(1000001);assert.equal(cache.get().status,'missing');
+console.log('HARDENING_LIMITS_PASS 5x2000 titles/20000 events, 20 cards/row, oversize rejection, cache cap; measured ms='+Math.round(elapsed)+' (Node only, not TV performance)');

@@ -42,16 +42,18 @@
   '</div>');
  root.id='dc4i-guide';root.setAttribute('translate','no');root.hidden=true;document.body.appendChild(root);
  var $=function(id){return root.querySelector('#gd-'+id);};
- var fav=TV.store('guideFavoritesV1')||[];
- if(!Array.isArray(fav))fav=[];
- fav=fav.map(String);
- var groupId=TV.store('guideSelectedGroupV1')||'all';
- var lastChannel=String(TV.store('guideLastChannelV1')||'');
+ var fav=[],groupId='all',lastChannel='',storageBlocked={};
+ function readPreference(k,fallback){try{var value=TV.readMetadataStorage(k);if(value===null)return fallback;
+  if(k==='guideFavoritesV1'){if(!Array.isArray(value)||value.length>5000||value.some(function(x){return typeof x!=='string'||x.length>200;}))throw Error();}
+  else if(typeof value!=='string'||value.length>200)throw Error();return value;
+ }catch(e){storageBlocked[k]=true;return fallback;}}
+ function loadPreferences(){storageBlocked={};fav=readPreference('guideFavoritesV1',[]);groupId=readPreference('guideSelectedGroupV1','all');lastChannel=readPreference('guideLastChannelV1','');}
+ loadPreferences();
  var model=modelAPI.group([],[],fav),page=0,pageSize=48;
  var selected=null,pane='groups',groupIndex=0,channelIndex=0,actionIndex=0;
  var generation=0,epgEpoch=0,epgTimer=null,events=[],providerState='empty';
  var timelineVisible=false,timelineDay=0,timelineIndex=0;
- function storeValue(k,v){try{TV.store(k,v);}catch(e){TV.toast(tr('Nie można zapisać ustawienia','Cannot save preference'));}}
+ function storeValue(k,v){try{if(storageBlocked[k])throw Error();TV.readMetadataStorage(k);TV.store(k,v);if(JSON.stringify(TV.readMetadataStorage(k))!==JSON.stringify(v))throw Error();return true;}catch(e){TV.toast(tr('Nie można zapisać ustawienia','Cannot save preference'));return false;}}
  function focusRows(){
   return [
     [ $('back'),$('config') ],
@@ -242,10 +244,9 @@
  }
  function toggleFavorite(){
   if(!selected)return;
-  var id=selected.id,index=fav.indexOf(id);
-  if(index>=0)fav.splice(index,1);
-  else fav.push(id);
-  storeValue('guideFavoritesV1',fav.slice());
+  var id=selected.id,next=fav.slice(),index=next.indexOf(id);
+  if(index>=0)next.splice(index,1);else next.push(id);
+  if(!storeValue('guideFavoritesV1',next))return;fav=next;
   var oldGroup=groupId,oldChannel=selected.id;
   model=modelAPI.group(model.channels,TV.xtream.getLiveCategories(),fav);
   groupId=groupForId(oldGroup).id;
@@ -279,7 +280,7 @@
   pane='groups';chooseFocus();
  }
  function show(){
-  root.hidden=false;
+  loadPreferences();root.hidden=false;
   var accountList=TV.xtream.getAccounts();
   $('provider').textContent=accountList.length?
     tr('Playlista: ','Playlist: ')+accountList[0].label:

@@ -12,6 +12,6 @@ TV.dvr.explain();assert.match(messages.pop(),/DVR unavailable/);TV.S.uiLang='pl'
 const app=readFileSync('build/dc4i-vodtv/app.js','utf8'),html=readFileSync('build/dc4i-vodtv/index.html','utf8');
 assert.ok(html.indexOf('vod-dvr-scheduler.js')<html.indexOf('vod-dvr-ui.js'));
 const choose=app.slice(app.indexOf('  function choose(e)'),app.indexOf('  // ---------- quick settings'));
-Object.assign(ctx,{SROWS:settings,draft:{}});vm.runInNewContext(choose,ctx);ctx.choose({dataset:{r:'0',i:'0'}});assert.match(messages.pop(),/DVR niedostępne/);
+Object.assign(ctx,{SROWS:settings,draft:{}});ctx.profileSettingsReadable=()=>true;vm.runInNewContext(choose,ctx);ctx.choose({dataset:{r:'0',i:'0'}});assert.match(messages.pop(),/DVR niedostępne/);
 assert.equal(JSON.parse(readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
 console.log('DVR_INTEGRATION_PASS no backend/record action; PL/EN informational settings; version unchanged');

@@ -11,14 +11,14 @@
  function clear(){epoch++;try{if(!write([]))throw Error();TV.toast(tr('Wyczyszczono obserwacje odtwarzania profilu','Profile playback observations cleared'));}catch(e){TV.toast(tr('Nie usunięto obserwacji','Observations were not cleared'));}}
  function begin(media,item){if(!media||typeof media.addEventListener!=='function')return false;if(bound.has(media))bound.get(media)();
   evidence=null;evidenceProfile=null;var token=profile(),startedEpoch=epoch,ready=false,id=Date.now().toString(36)+'-'+(++counter)+'-'+Math.random().toString(36).slice(2,10),model=api.create({now:Date.now,save:function(record){
-   if(profile()!==token||startedEpoch!==epoch||TV.S.recoLearnPlayback===false)return false;
+   if(profile()!==token||startedEpoch!==epoch||(TV.S.recoLearnPlayback===false||typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable()))return false;
    try{var records=read();if(records.some(function(r){return !valid(r);}))return false;
     var value={session:record.session,action:record.action,seconds:record.seconds,at:record.at,genres:record.genres,duration:record.duration};
     records=records.filter(function(r){return r.session!==id;});records.push(value);return write(records.slice(-150));
    }catch(e){return false;}}});
   model.start({session:id,profile:token,genres:item&&item.learning&&item.learning.genre_ids});
   function event(type){if(type==='loadedmetadata'){ready=true;return;}if(!ready||startedEpoch!==epoch)return;var foreground=document.visibilityState==='visible'&&typeof document.hasFocus==='function'&&document.hasFocus();
-   if(TV.S.recoLearnPlayback===false)foreground=false;
+   if((TV.S.recoLearnPlayback===false||typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable()))foreground=false;
    if(profile()!==token){evidence=null;evidenceProfile=null;}
    if(foreground&&profile()===token){evidence=api.tracks(media);evidenceProfile=token;}
    model.event(type,{profile:profile(),foreground:foreground,time:media.currentTime,duration:media.duration});}
@@ -32,6 +32,6 @@
  }
  TV.addSetting({key:'recoLearnPlayback',title:tr('Polecane: ucz się z odtwarzania lokalnego','Recommendations: learn from local playback'),hint:tr('Tylko zaobserwowany postęp; bez historii zewnętrznych aplikacji','Observed progression only; no external app history'),opts:[[true,tr('Tak','Yes')],[false,tr('Nie','No')]]},true);
  TV.addSetting({key:'playbackClear',title:tr('Obserwacje odtwarzania profilu','Profile playback observations'),hint:tr('Nie usuwa historii otwarć ani kont','Does not remove opened history or accounts'),opts:[['clear',tr('Wyczyść','Clear')]]},'');
- var old=TV.personalized&&TV.personalized.history;if(old)TV.personalized.history=function(){return old().concat(TV.S.recoLearnPlayback===false?[]:history());};
+ var old=TV.personalized&&TV.personalized.history;if(old)TV.personalized.history=function(){return old().concat((TV.S.recoLearnPlayback===false||typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable())?[]:history());};
  TV.playbackLearning={begin:begin,stop:function(media){if(bound.has(media))bound.get(media)();},history:history,clear:clear,trackEvidence:function(){return evidenceProfile===profile()?evidence:null;},languageMatch:api.languageMatch};
 })();
