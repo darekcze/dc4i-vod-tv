@@ -4,7 +4,7 @@ import vm from 'node:vm';
 const app=readFileSync('build/dc4i-vodtv/app.js','utf8'),html=readFileSync('build/dc4i-vodtv/index.html','utf8');
 assert.ok(html.indexOf('vod-personalization-ui.js')<html.indexOf('vod-home-ui.js'));
 const storeCode=app.slice(app.indexOf('  function store('),app.indexOf('  // ---------- settings'));
-const context={P:{prefix:'a:'},localStorage:{},JSON};vm.createContext(context);vm.runInContext(storeCode,context);
+const context={P:{prefix:'a:'},localStorage:{getItem(k){return Object.hasOwn(this,k)?this[k]:null;}},JSON};vm.createContext(context);vm.runInContext(storeCode,context);
 context.store('homeRailsLayoutV1',{order:['series'],enabled:['series']});
 context.P.prefix='b:';assert.equal(context.store('homeRailsLayoutV1'),null);
 context.store('homeRailsLayoutV1',{enabled:[]});
@@ -54,7 +54,7 @@ vm.runInContext('var actualCandidates='+candidatesFunction,context);
 const element=()=>({children:[],setAttribute(){},appendChild(x){this.children.push(x);return x;}});
 context.document={body:element(),createElement:element,querySelector:()=>null,querySelectorAll:()=>[]};
 context.setInterval=()=>{};
-context.window={TV:{S:{uiLang:'en'},store:context.store,homeCandidates:context.actualCandidates,homeCandidatesStamp:context.actualStamp,
+context.window={TV:{S:{uiLang:'en'},store:context.store,readMetadataStorage:context.readMetadataStorage,homeCandidates:context.actualCandidates,homeCandidatesStamp:context.actualStamp,
  el:element,addView(){},addSetting(){},refresh(){},view:()=>'home'}};
 for(const name of ['vod-recommendations.js','vod-home-rails.js','vod-home-ui.js'])vm.runInContext(readFileSync('build/dc4i-vodtv/'+name,'utf8'),context);
 const liveRows=context.window.TV.homeRails.rows();
