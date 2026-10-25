@@ -44,7 +44,8 @@ p=A/'dc4i.css' ;p.write_text(p.read_text()+'''
 .metadata-backup[hidden]{display:none!important;}
 .backup-control{padding:10px;margin:4px;background:#152d50;font-size:22px;}
 .backup-control.focus,.backup-text.focus{outline:4px solid #b4f34c;}
-.backup-preview{white-space:pre-wrap;overflow-wrap:anywhere;}
+.backup-preview{white-space:pre-wrap;overflow-wrap:anywhere;max-height:40vh;overflow-y:auto;min-height:48px;scroll-margin:24px;}
+.backup-preview.focus{outline:4px solid #b4f34c;}
 .backup-text{width:90%;height:180px;color:#eef5ff;background:#152d50;font-size:18px;}
 ''')
 print('HARDENING_READY scoped strict readers; metadata-only preview/import/undo')
