@@ -13,9 +13,9 @@ root = args.fixture_root.resolve()
 assert (root / 'OFFLINE_FIXTURE_ONLY.txt').is_file(), 'Not an offline fixture'
 app = root / 'build/dc4i-vodtv'
 metadata = json.loads((app / 'appinfo.json').read_text())
-assert metadata['id'] == 'com.dc4i.vodtv'
+assert metadata['id'] == 'com.dc4i.vodtv.offlinefixture'
 assert metadata['version'] == '1.2.19'
-assert metadata['title'] == 'DC4I VOD TV'
+assert metadata['title'] == 'DC4I VOD TV OFFLINE FIXTURE'
 for name, size in [('icon.png', (80, 80)), ('largeIcon.png', (130, 130)), ('splash.png', (1920, 1080))]:
     assert Image.open(app / name).size == size, name
 official = Image.open(root / 'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png').convert('RGB')
@@ -28,6 +28,10 @@ keys = (app / 'keys.js').read_text()
 assert "TMDB_KEY: '', YT_KEY: ''" in keys and 'OFFLINE REGRESSION FIXTURE ONLY' in keys
 assert 'Offline fixture: network disabled' in keys
 assert "typeof PalmSystem !== 'undefined'" in keys
+assert html.index('Content-Security-Policy') < html.index('src="keys.js"')
+assert "connect-src 'none'" in html and "default-src 'none'" in html
+assert 'script-src \'nonce-' in html
+assert json.loads((root / 'fixture-provenance.json').read_text())['inputPolicy'] == 'committed-tree-only'
 paths = sorted(app.rglob('*.js'))
 for path in paths:
     subprocess.run(['node', '--check', str(path)], check=True, capture_output=True)
