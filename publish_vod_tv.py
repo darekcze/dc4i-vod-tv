@@ -6,11 +6,15 @@ from pathlib import Path
 import json,hashlib,shutil
 from datetime import datetime
 from zoneinfo import ZoneInfo
-ROOT=Path(__file__).resolve().parent
-APP='com.dc4i.vodtv'
-VERSION='1.2.19'
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent/'scripts'))
+from release_contract import candidate,options
+args=options(Path(__file__).resolve().parent,publishing=True)
+SOURCE=args.root
+ROOT=args.output_root
+APP,VERSION=candidate(args.app_dir,args.release_version)
 BASE='https://lg.darc.dev'
-IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
+IPK=SOURCE/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
 size=IPK.stat().st_size
 sha=hashlib.sha256(IPK.read_bytes()).hexdigest()
@@ -38,7 +42,7 @@ entry={
  'fullDescriptionUrl':BASE+'/about.html'
 }
 # Merge the verified DC4I VOD TV update without deleting DStore or other existing catalogue entries.
-previous=json.loads((ROOT/'api/apps.json').read_text(encoding='utf8')) if (ROOT/'api/apps.json').exists() else {}
+previous=json.loads((SOURCE/'api/apps.json').read_text(encoding='utf8')) if (SOURCE/'api/apps.json').exists() else {}
 extras=[x for x in previous.get('packages',[]) if x.get('id') not in (APP,'com.dc4i.boringtv')]
 package_list=[entry]+extras
 catalog={'paging':{'page':1,'count':len(package_list),'maxPage':1,'itemsTotal':len(package_list)}, 'packages':package_list}
@@ -58,7 +62,7 @@ for p in [ROOT/'packages.json',DIST/'packages.json']:
  p.write_text(json.dumps(package_list,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 for p in [ROOT/'icons/dc4i-vod-tv-neon.png',DIST/'icons/dc4i-vod-tv-neon.png']:
  p.parent.mkdir(parents=True,exist_ok=True)
- shutil.copy2(ROOT/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png',p)
+ shutil.copy2(SOURCE/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png',p)
 shutil.copy2(IPK, DIST/'packages'/IPK.name)
 # An attractive human-readable landing page lives separately from the machine-readable catalog.
 html='''<!DOCTYPE html>
