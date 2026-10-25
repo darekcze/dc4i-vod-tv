@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+class Events{constructor(){this.events={};}addEventListener(k,f){(this.events[k]??=new Set()).add(f);}removeEventListener(k,f){this.events[k]?.delete(f);}emit(k){for(const f of this.events[k]||[])f();}}
+let now=100000,visible=true,fail=false;const records={},TV={P:{prefix:'a:'},S:{uiLang:'en'},store(k,v){if(arguments.length===2&&!fail)records[this.P.prefix+k]=JSON.stringify(v);return JSON.parse(records[this.P.prefix+k]||'null');},readPlaybackStorage(){const v=records[this.P.prefix+'playbackLearningV1'];return v===undefined?null:JSON.parse(v);},addSetting(){},toast(){},personalized:{history:()=>[]}};
+const win=new Events();win.TV=TV;const doc=new Events();Object.defineProperty(doc,'visibilityState',{get:()=>visible?'visible':'hidden'});doc.hasFocus=()=>visible;
+const context={window:win,document:doc,Date:class extends Date{static now(){return now;}},WeakMap,Set,Math};
+for(const f of ['vod-playback-learning.js','vod-playback-ui.js','vod-recommendations.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),context);
+const media=new Events();media.currentTime=0;media.duration=100;media.audioTracks=[{language:'en'}];media.textTracks=[{language:'pl',kind:'subtitles'}];
+const start=()=>{TV.playbackLearning.begin(media,{learning:{genre_ids:[878]},url:'SECRET'});media.emit('loadedmetadata');media.emit('playing');media.currentTime=0;media.emit('timeupdate');};
+const advance=()=>{for(let t=5;t<=40;t+=5){now+=5000;media.currentTime=t;media.emit('timeupdate');}};
+start();advance();media.emit('pause');assert.equal(TV.playbackLearning.history().length,1);assert.equal(TV.playbackLearning.history()[0].seconds,40);assert.ok(!JSON.stringify(records).includes('SECRET'));assert.equal(TV.playbackLearning.languageMatch(TV.playbackLearning.trackEvidence(),'en-pl-subs'),'match');
+TV.playbackLearning.begin(media,{});assert.equal(media.events.timeupdate.size,1,'rebinding removes old listener');assert.equal(doc.events.visibilitychange.size,1);TV.playbackLearning.stop(media);assert.equal(media.events.timeupdate.size,0);
+start();advance();TV.P.prefix='b:';media.emit('pause');assert.equal(TV.playbackLearning.history().length,0,'no write into switched profile');TV.playbackLearning.stop(media);
+TV.P.prefix='a:';start();advance();fail=true;media.emit('pause');assert.equal(TV.playbackLearning.history().length,1,'failed write not claimed');fail=false;TV.playbackLearning.stop(media);
+start();advance();TV.playbackLearning.clear();media.emit('pause');assert.equal(TV.playbackLearning.history().length,0,'clear invalidates active session writes');TV.playbackLearning.stop(media);
+records['a:playbackLearningV1']='{';start();advance();media.emit('pause');assert.equal(records['a:playbackLearningV1'],'{','corrupt history preserved');TV.playbackLearning.stop(media);
+const engine=win.DC4IRecommender,item={id:1,genre_ids:[878],vote_average:8};const pref={favouriteGenre:'auto'};let base=engine.score(item,pref,[],now).score;
+assert.ok(engine.score(item,pref,[{action:'observed-partial',provenance:'native-media-progression',seconds:40,genres:[878],at:now}],now).score>base);assert.equal(engine.score(item,pref,[{action:'observed-partial',seconds:40,genres:[878],at:now}],now).score,base);
+console.log('PLAYBACK_UI_PASS listener cleanup, profile/write/corruption/clear boundaries, no URLs, real-track adapter, observed ranking signals');
