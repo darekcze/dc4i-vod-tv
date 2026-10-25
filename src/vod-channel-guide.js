@@ -182,9 +182,9 @@
   $('timeline-toggle').textContent=timelineVisible?tr('Teraz / następnie','Now / next'):tr('Program 10 dni','10-day schedule');
   var host=$('airings');host.innerHTML='';
   if(!timelineVisible||!TV.epgMetadata)return;
-  var view=TV.epgMetadata.timeline(selected,timelineDay);
+  var view=TV.epgMetadata.timeline(selected,timelineDay,events,providerState);
   $('metadata').textContent=view.label;
-  status(view.events.length?tr('Lokalne metadane XMLTV','Local XMLTV metadata'):tr('Brak lokalnych danych w tym okresie','No local data in this period'));
+  status(view.status);
   if(pane==='timeline'&&!view.events.length)pane='actions';
   function date(t){return new Date(t).toLocaleString(TV.S.uiLang==='en'?'en-GB':'pl-PL',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
   $('range').textContent=date(view.from)+' — '+date(view.to)+' · '+(timelineDay+6)+'/10';
@@ -195,7 +195,7 @@
    host.appendChild(el);
   });
   if(view.events.length>200){var limit=TV.el('div','gd-empty');limit.textContent=tr('Pokazano pierwsze 200 emisji','Showing first 200 airings');host.appendChild(limit);}
-  if(!view.events.length){var empty=TV.el('div','gd-empty');empty.textContent=tr('Brak lokalnych danych w tym okresie','No local data in this period');host.appendChild(empty);}
+  if(!view.events.length){var empty=TV.el('div','gd-empty');empty.textContent=view.status;host.appendChild(empty);}
   timelineIndex=Math.max(0,Math.min(timelineIndex,Math.min(200,view.events.length)-1));
  }
  function shiftDay(delta){timelineDay=Math.max(-5,Math.min(4,timelineDay+delta));timelineIndex=0;showPrograms();chooseFocus();}
