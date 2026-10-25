@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const root=new URL('../build/dc4i-vodtv/',import.meta.url);
+const html=readFileSync(new URL('index.html',root),'utf8');
+const app=readFileSync(new URL('vod-xtream.js',root),'utf8');
+const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(x=>x[1]);
+const model=scripts.indexOf('vod-guide-model.js');
+const epg=scripts.indexOf('vod-guide-epg.js');
+const xt=scripts.indexOf('vod-xtream.js');
+assert.ok(model>=0 && epg>=0 && xt>=0);
+assert.ok(model<xt && epg<xt,'model loaded before Xtream module');
+assert.ok(app.includes('guideEpg:guideEpg'));
+assert.ok(app.includes('ensureCatalog:ensureGuideCatalog'));
+assert.ok(app.includes('guideWatch:guideWatch'));
+assert.ok(app.includes("'get_short_epg'"),'use provider-owned on-demand guide EPG');
+assert.ok(app.includes('returnToGuide') && app.includes('TV.guide.resume()'),'player Back returns to guide');
+assert.ok(!app.includes('/Volumes/AI-Hot'));
+console.log('GUIDE_BRIDGE_TEST_PASS');
