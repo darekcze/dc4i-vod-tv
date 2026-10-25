@@ -48,7 +48,7 @@
    if(j.state==='committed'){journal(null);return {ok:true,state:'committed'};}
    j.state='rolling-back';journal(j);
    for(var i=j.steps.length-1;i>=0;i--){if(port.profile()!==token)return {ok:false,reason:'profile-changed'};var s=j.steps[i],current=readSection(port,s.name);
-    if(equal(current.value,s.before))continue;if(!equal(current.value,s.after))return {ok:false,reason:'conflict'};
+    if(equal(current.value,s.before)&&current.present===s.present)continue;if(!equal(current.value,s.after))return {ok:false,reason:'conflict'};
     writeRaw(keys[s.name],encode(s.name,current,s.before,s.present));}
    if(port.profile()!==token)return {ok:false,reason:'profile-changed'};journal(null);return {ok:true,state:'rolled-back'};
   }catch(e){return {ok:false,reason:'recovery-required'};}}
