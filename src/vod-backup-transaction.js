@@ -33,7 +33,7 @@
   out=Object.assign(Object.create(null),raw||{});prefFields[name].forEach(function(k){delete out[k];});Object.keys(target).forEach(function(k){out[k]=target[k];});return !present&&!Object.keys(out).length?null:JSON.stringify(out);}
  function parse(text){if(typeof text!=='string'||text.length>262144)throw Error('size');var v=JSON.parse(text);only(v,['format','schema','sections']);
   if(v.format!=='dc4i-preferences'||[1,2].indexOf(v.schema)<0)throw Error('schema');only(v.sections,Object.keys(keys));if(!Object.keys(v.sections).length)throw Error('empty');var sections={};Object.keys(v.sections).forEach(function(name){if(v.schema===1&&!own(base.keys,name))throw Error('migration scope');sections[name]=normalize(name,v.sections[name],true);});return {schema:2,migratedFrom:v.schema,sections:sections};}
- function create(port){var pending=null,lockedProfile=null;
+ function create(port){var pending=null,lockedProfile=null,revision=0;
   function loadJournal(){var raw=port.read(JOURNAL);if(raw===null)return null;if(raw.length>524288)throw Error('journal limit');var j=JSON.parse(raw);only(j,['schema','state','steps']);if(j.schema!==1||['applying','committed','rolling-back'].indexOf(j.state)<0||!Array.isArray(j.steps)||!j.steps.length||j.steps.length>6)throw Error('journal');var seen={};j.steps.forEach(function(s){only(s,['name','present','before','after']);if(!own(keys,s.name)||seen[s.name]||typeof s.present!=='boolean')throw Error('journal step');seen[s.name]=true;normalize(s.name,s.before,true);normalize(s.name,s.after,true);});return j;}
   function writeRaw(key,raw){if(port.profile()!==lockedProfile)throw Error('profile changed');port.write(key,raw);if(port.profile()!==lockedProfile||port.read(key)!==raw)throw Error('unconfirmed');}
   function journal(j){var raw=j===null?null:JSON.stringify(j);if(raw!==null&&raw.length>524288)throw Error('journal limit');writeRaw(JOURNAL,raw);}
@@ -42,7 +42,7 @@
     if(Array.isArray(target)){var existing={};current.value.forEach(function(r){existing[id(n,r)]=true;});target=current.value.concat(target.filter(function(r){return !existing[id(n,r)];}));if(target.length>150)throw Error('merge capacity');}
     else target=Object.assign({},current.value,target);
     steps.push({name:n,present:current.present,before:current.value,after:target});});
-   if(port.profile()!==token)throw Error('profile changed');pending={profile:token,steps:copy(steps)};return {ok:true,migratedFrom:parsed.migratedFrom,changes:steps.map(function(s){return {section:s.name,before:s.before,after:s.after};})};
+   if(port.profile()!==token)throw Error('profile changed');pending={profile:token,steps:copy(steps),token:++revision};return {ok:true,token:pending.token,migratedFrom:parsed.migratedFrom,changes:steps.map(function(s){return {section:s.name,before:s.before,after:s.after};})};
   }catch(e){return {ok:false,reason:'invalid-or-unreadable'};}}
   function recover(){pending=null;var token=port.profile();lockedProfile=token;try{var j=loadJournal();if(!j)return {ok:true,state:'idle'};
    if(j.state==='committed'){journal(null);return {ok:true,state:'committed'};}
@@ -52,7 +52,7 @@
     writeRaw(keys[s.name],encode(s.name,current,s.before,s.present));}
    if(port.profile()!==token)return {ok:false,reason:'profile-changed'};journal(null);return {ok:true,state:'rolled-back'};
   }catch(e){return {ok:false,reason:'recovery-required'};}}
-  function apply(){var p=pending;pending=null;if(!p)return {ok:false,reason:'preview-required'};lockedProfile=p.profile;try{if(port.profile()!==p.profile||loadJournal())return {ok:false,reason:'conflict'};
+  function apply(expectedToken){var p=pending;if(!p||(expectedToken!==undefined&&p.token!==expectedToken))return {ok:false,reason:'preview-required'};pending=null;lockedProfile=p.profile;try{if(port.profile()!==p.profile||loadJournal())return {ok:false,reason:'conflict'};
    for(var i=0;i<p.steps.length;i++){var current=readSection(port,p.steps[i].name);if(current.present!==p.steps[i].present||!equal(current.value,p.steps[i].before))return {ok:false,reason:'conflict'};}
    var j={schema:1,state:'applying',steps:p.steps};journal(j);
    for(var x=0;x<j.steps.length;x++){if(port.profile()!==p.profile)return {ok:false,reason:'profile-changed'};var step=j.steps[x],now=readSection(port,step.name);if(!equal(now.value,step.before))return {ok:false,reason:'recovery-required'};writeRaw(keys[step.name],encode(step.name,now,step.after,true));}
