@@ -1,0 +1,49 @@
+/* Full-HD guide. Fixed three-pane TV layout inspired by modern IPTV players. */
+#dc4i-guide[hidden],#dc4i-guide [hidden]{display:none!important}
+#dc4i-guide {position:fixed;inset:110px 0 0;z-index:10;box-sizing:border-box;padding:20px 37px 30px;
+ background:linear-gradient(145deg,#071638 0%,#0c2250 58%,#060e25 100%);
+ color:#eef5ff;font-family:Roboto,Arial,sans-serif;font-size:21px;overflow:hidden}
+#dc4i-guide *{box-sizing:border-box}
+#dc4i-guide .gd-head{height:76px;display:flex;align-items:center;gap:14px;margin:0 2px 14px}
+#dc4i-guide .gd-head>div{flex:1}
+#dc4i-guide h1{font-size:39px;font-weight:700;line-height:1.15;margin:0}
+#dc4i-guide h2{font-size:26px;line-height:1.25;margin:0 0 12px;white-space:nowrap}
+#dc4i-guide .gd-provider{color:#a8cae8;font-size:17px;margin-top:5px}
+#dc4i-guide .gd-layout{height:calc(100% - 90px);display:grid;grid-template-columns:minmax(270px,345px) minmax(390px,580px) minmax(470px,1fr);gap:16px}
+#dc4i-guide .gd-pane{min-height:0;min-width:0;padding:21px 19px;border:1px solid rgba(115,168,236,.23);
+ border-radius:17px;background:rgba(14,32,69,.76);display:flex;flex-direction:column;overflow:hidden}
+#dc4i-guide .gd-groups,#dc4i-guide .gd-channels{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:3px 5px 6px 1px;scrollbar-width:thin;scrollbar-color:#4e77aa #10244c}
+#dc4i-guide .gd-group,#dc4i-guide .gd-channel{display:flex;align-items:center;width:100%;cursor:pointer;border-radius:11px;border:1px solid transparent;
+ color:#e5efff;background:transparent;min-height:50px;padding:12px 13px;margin:3px 0;gap:8px;text-align:left;user-select:none}
+#dc4i-guide .gd-group{justify-content:space-between;gap:9px}
+#dc4i-guide .gd-group-name{font-size:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#dc4i-guide .gd-group-count{font-size:16px;color:#a6c3e5;min-width:32px;text-align:right}
+#dc4i-guide .gd-channel{min-height:68px;padding:9px 12px;gap:13px}
+#dc4i-guide .gd-channel-icon{width:65px;height:48px;flex:0 0 65px;display:flex;align-items:center;justify-content:center;
+ border-radius:9px;background:#20375d;font-size:20px;font-weight:650;color:#8fb9e7}
+#dc4i-guide .gd-channel-icon img{width:100%;height:100%;object-fit:contain}
+#dc4i-guide .gd-channel-info{min-width:0;display:flex;flex-direction:column;gap:3px;flex:1}
+#dc4i-guide .gd-channel-name{font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dc4i-guide .gd-channel-sub{font-size:16px;color:#b3c7e2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dc4i-guide .gd-star{color:#f5d17c;font-size:25px}
+#dc4i-guide .gd-selected{background:rgba(36,86,153,.38);border-color:rgba(139,179,232,.3)}
+#dc4i-guide .f.focus{outline:4px solid #b4f34c;outline-offset:1px;background:#245180;color:#fff}
+#dc4i-guide .gd-page-label{font-size:17px;color:#bbd1eb;min-height:27px}
+#dc4i-guide .gd-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 17px;
+ border:1px solid #4e78ae;border-radius:12px;background:#1b3a6d;color:#f2f7ff;cursor:pointer;font-size:19px;white-space:nowrap}
+#dc4i-guide .gd-primary{background:#245fb9;font-weight:700}
+#dc4i-guide .gd-disabled{opacity:.35}
+#dc4i-guide .gd-current-channel{font-size:30px;font-weight:750;min-height:44px;line-height:1.2;margin:4px 0}
+#dc4i-guide .gd-status{font-size:18px;color:#a9c7e9;min-height:25px}
+#dc4i-guide .gd-detail{padding:24px 24px}
+#dc4i-guide .gd-program{border-radius:16px;padding:21px 22px;margin:15px 0 0;border:1px solid rgba(114,168,236,.2);background:rgba(24,53,98,.67)}
+#dc4i-guide .gd-next{background:rgba(12,38,77,.55)}
+#dc4i-guide .gd-eyebrow{color:#9fd9f3;font-size:19px;font-weight:700;margin:0 0 9px}
+#dc4i-guide .gd-title{font-size:27px;font-weight:680;line-height:1.25;min-height:36px}
+#dc4i-guide .gd-next .gd-title{font-size:24px}
+#dc4i-guide .gd-time{font-size:19px;color:#bdd4ee;margin-top:9px}
+#dc4i-guide .gd-bar{height:9px;margin:18px 0 12px;border-radius:8px;background:#253d60;overflow:hidden}
+#dc4i-guide .gd-bar span{display:block;height:100%;width:0;background:#b4f34c;border-radius:8px}
+#dc4i-guide .gd-description{font-size:18px;line-height:1.45;margin:10px 0 0;color:#d7e7f8;max-height:116px;overflow:auto}
+#dc4i-guide .gd-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto;padding-top:16px}
+@media(max-width:1450px){#dc4i-guide{padding:15px 23px}#dc4i-guide .gd-layout{grid-template-columns:minmax(235px,290px) minmax(310px,460px) minmax(395px,1fr);gap:12px}#dc4i-guide .gd-btn{font-size:17px;padding:9px 11px}#dc4i-guide .gd-program{padding:15px}}

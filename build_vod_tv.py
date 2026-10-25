@@ -167,5 +167,8 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1217_identity.py')],check=T
 subprocess.run([sys.executable,str(R/'scripts/patch_v1217_details.py')],check=True)
 subprocess.run([sys.executable,str(R/'scripts/patch_v1217_epg.py')],check=True)
 
-# Personalized per-profile settings, explainable TMDB recommendations.
+# Per-profile recommendation preferences and ranked Home row.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1218_personalization.py')],check=True)
+
+# Dedicated three-pane channel guide and provider EPG after personalization.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1219_guide.py')],check=True)
