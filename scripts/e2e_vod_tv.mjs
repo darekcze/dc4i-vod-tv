@@ -82,6 +82,17 @@ try{
  const providersInSearch=await evaluate(`Array.from(document.querySelectorAll("#syt .vx-engine")).map(x=>x.textContent.trim())`);
  assert(providersInSearch.join('|')==='YouTube|Kodi|Plex|Stremio|Smarters Player','search has exactly five external services');
  console.log('E2E_SEARCH_PROVIDERS',providersInSearch.join('|'));
+ const tabs=await evaluate(`Array.from(document.querySelectorAll('#top .dc4i-top-navigation .tab')).map(x=>x.textContent.trim())`);
+ assert(tabs.join('|')==='VOD|TV|IPTV|Filmy|Seriale|Szukaj|Aplikacje','ordered Polish menu');
+ const filters=await evaluate(`Array.from(document.querySelectorAll('#sfilters .vod-filter')).map(x=>x.textContent.trim())`);
+ assert(filters.join('|')==='Wszystkie|VOD|TV|IPTV|Filmy|Seriale','six filter names');
+ const languages=await evaluate(`Array.from(document.querySelectorAll('#slangs .language-filter')).map(x=>x.textContent.trim())`);
+ assert(languages.join('|')==='Polskie|Angielskie|Wszystkie języki','language options');
+ console.log('E2E_TOP_NAVIGATION',tabs.join('|'),'FILTERS',filters.join('|'),'LANGUAGES',languages.join('|'));
+ const g=await evaluate(`Array.from(document.querySelectorAll('#top .dc4i-top-navigation .tab')).map(x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};})`);
+ assert(g.length===7&&g.every((x,i)=>x.left>=0&&x.right<=1920&&x.bottom<=1080&&(i===0||x.left>=g[i-1].right-4)),'seven tabs fit viewport without overlap');
+ console.log('E2E_MENU_GEOMETRY',JSON.stringify(g));
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[1].onok()`);
  await waitFor(async()=>evaluate('document.querySelectorAll("#sres .card").length===1 && document.querySelector("#sres").innerText.includes("Netflix")'),8000);
  const available=await evaluate('({title:document.querySelector("#sresTitle").textContent,count:document.querySelectorAll("#sres .card").length, label:document.querySelector("#sres .vod-status").textContent})');
  assert(available.count===1&&available.label.includes('Netflix'),'streaming filter');
@@ -100,16 +111,37 @@ try{
  const detailSnap=await cdp('Page.captureScreenshot',{format:'png'});
  writeFileSync(join(workspace,'details-v1213.png'),Buffer.from(detailSnap.data,'base64'));
  await evaluate('window.TV.closeView()');
- await evaluate('document.querySelectorAll("#sfilters .schip")[1].onok()');
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[0].onok()`);
  const other=await evaluate('({count:document.querySelectorAll("#sres .card").length,label:document.querySelector("#sres .vod-status")?.textContent})');
- assert(other.count===1&&other.label.includes('Brak w wybranych serwisach'),'unavailable in selected services');
+ assert(other.count===2&&other.label.includes('Netflix'),'all categories include unavailable titles');
  console.log('E2E_OTHERS',JSON.stringify(other));
- await evaluate('document.querySelector("#sres .card").onok()');
+ await evaluate(`document.querySelectorAll('#sres .card')[1].onok()`);
  await waitFor(async()=>evaluate(`document.querySelectorAll("#details .dexternal .vx-engine").length===5`),6000);
  const fallback=await evaluate('document.querySelector("#details .dexternal").innerText');
  assert(await evaluate(`document.querySelector("#details .dbtns").innerText.includes("Brak w wybranych serwisach")`), "missing VOD shows exact message");
  assert(['YouTube','Kodi','Plex','Stremio','Smarters Player'].every(x=>fallback.includes(x)),'fallback buttons');
  console.log('E2E_DETAILS_FALLBACK',fallback.replaceAll('\n',' | '));
+ // Provider catalog mock validates local Xtream filters without disclosing credentials.
+ await evaluate('window.TV.closeView()');
+ await evaluate(`(()=>{window.TV.xtream.getAccounts=()=>[{id:'mock'}];
+ window.TV.xtream.searchCatalog=async()=>[
+   {type:'live',id:'301',title:'[PL] MATRIX TV',group:'[PL] TV',icon:''},
+   {type:'movie',id:'302',title:'[PL] MATRIX Film',group:'[PL] Filmy',icon:''},
+   {type:'series',id:'303',title:'[PL] MATRIX Serial',group:'[PL] Seriale',icon:''},
+   {type:'series',id:'304',title:'[EN] MATRIX Series',group:'[EN] Series',icon:''}
+ ];return true})()`);
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[0].onok()`);
+ await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .xtream-result').length===3`),6000);
+ console.log('E2E_XTREAM_ALL',await evaluate(`Array.from(document.querySelectorAll('#sres .xtream-result .ttl')).map(x=>x.textContent).join('|')`));
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[4].onok()`);
+ await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .xtream-result').length===1`),6000);
+ console.log('E2E_XTREAME_MOVIES',await evaluate(`document.querySelector('#sres .xtream-result .ttl').textContent`));
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[5].onok()`);
+ await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .xtream-result').length===1`),6000);
+ console.log('E2E_XTREAME_SERIES_PL',await evaluate(`document.querySelector('#sres .xtream-result .ttl').textContent`));
+ await evaluate(`document.querySelectorAll('#slangs .language-filter')[1].onok()`);
+ await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .xtream-result').length===1`),6000);
+ console.log('E2E_XTREAME_SERIES_EN',await evaluate(`document.querySelector('#sres .xtream-result .ttl').textContent`));
  // Weather with deterministic mock data prevents dependency on current forecast.
  const mockWeather=String.raw`(()=> {
   const original=window.fetch;

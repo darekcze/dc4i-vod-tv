@@ -13,6 +13,20 @@ Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates
 - Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
 - System-wide LG Search integration remains unverified and is not advertised.
 
+## [1.2.16] - 2026-10-25
+
+### Owner-approved navigation and playlist-based discovery
+- Main menu is exactly **VOD | TV | IPTV | Filmy | Seriale | Szukaj | Aplikacje**. TV keeps the native LG live-TV route; IPTV/Filmy/Seriale open the corresponding categories of the owner's Xtream playlist.
+- Search filters: **Wszystkie, VOD, TV, IPTV, Filmy, Seriale**, with an independent **Polskie / Angielskie / Wszystkie języki** toggle (default PL). Xtream language detection uses provider category/title tags, including `[PL]`, `[POL]`, `[EN]`, `[ENG]`, `[UK]`, `[US]`, and `[AU]`.
+- Combine TMDB streaming results in the selected region with locally configured Xtream TV, movies and series. Merge matching title cards on TMDB ID or matching title/type when unambiguous. Content without a selected-provider VOD offer remains labeled as unavailable, not as playable on an unrelated app. TV channel full-text EPG is still outside this initial search index.
+- Preserve Xtream account records in the existing per-profile localStorage key and a separate same-origin backup key. IndexedDB provides device-local catalog caching, which avoids a full provider re-download on every app launch and supports use of cached results if the provider is temporarily unreachable. Application ID remains `com.dc4i.vodtv` and upgrade is strictly in-place. Deleting app data/uninstalling can still remove its private storage.
+- No provider usernames, credentials, playback links or cached catalog records are embedded in the public package.
+
+### Verification
+- Chromium 1920×1080 E2E tested all seven tabs, six search filters, language selection, synthetic Xtream live/movie/series results, standard VOD offers, and all five external player-search actions.
+- IPK/package tests passed. Public Homebrew catalog contains 33 apps, 32 unchanged, and the 1.2.16 public SHA-256 matches the deployed IPK.
+- Installed and launched 1.2.16 on LG OLED55G42LW without uninstalling 1.2.15. TV file inspection confirmed version, all seven menu labels and both account storage keys. Provider-specific actual search/EPG and physical playback still require hands-on acceptance.
+
 ## [1.2.13] - 2026-10-25
 
 ### Unified provider search and dedicated Labs links

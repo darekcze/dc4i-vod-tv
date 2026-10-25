@@ -38,6 +38,12 @@ YouTube key is available privately at `private/youtube_api_key.txt` and was crea
 - E2E Chromium 1920x1080 smoke tested Search and Details with a mocked TMDB provider/offers response; static and unit tests verified actions. Not all third-party apps guarantee search/deep-link support, especially Smarters.
 - IPK SHA-256: `27cfd23565fe1f2671f804610f8cf8d71ea773e58fbee99c959dc19741352ee4` (matched production download). Previous production deployment is available for rollback.
 
+## 1.2.16 owner navigation release (2026-10-25)
+- Published to lg.darc.dev and installed in-place on LG OLED55G42LW, application ID `com.dc4i.vodtv` unchanged.
+- Seven TV top tabs, six unified search categories, three title-language filters, Xtream catalog persistence in origin-scoped localStorage and IndexedDB.
+- Homebrew remains 33 entries, 32 others unchanged. SHA-256: `887b110b2d938a8cb87df9f8fca2385280754c70076fbae1e114684b68bf2d9f`.
+- Confirmed installed version 1.2.16 and TV-side access to the matching public manifest. The app was updated in place, not uninstalled. Full EPG program matching, provider playback and physical TV visual QA are not asserted.
+
 ## Rollback
 Cloudflare Pages retains previous deployments. Current production is the source-of-truth. To revert, redeploy the previously verified Pages deployment and its matching manifest and binary, do not merely change version numbers. Local packages are kept under `private/` on AI-Hot.
 

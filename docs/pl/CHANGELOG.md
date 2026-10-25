@@ -11,6 +11,18 @@ Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.bor
 - Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
 - Systemowe LG Search nadal wymaga osobnych testów.
 
+## [1.2.16] - 25.10.2026
+
+### Nawigacja, połączone wyszukiwanie i zachowanie playlist
+- Menu główne: **VOD | TV | IPTV | Filmy | Seriale | Szukaj | Aplikacje**. TV prowadzi do natywnej telewizji LG, a IPTV/Filmy/Seriale do odpowiednich katalogów Xtream.
+- Filtry w Szukaj: **Wszystkie, VOD, TV, IPTV, Filmy, Seriale**. Przełącznik języka: **Polskie, Angielskie, Wszystkie języki**, z domyślnym PL. Rozpoznawanie polskich wersji z `[PL]` albo `[POL]` w nazwie i grupie dostawcy.
+- Wyniki TMDB z serwisów streamingowych w kraju użytkownika łączą się z wyszukiwaniem w lokalnej playliście Xtream. Rozpoznane duplikaty łączą się, pozostałe wyniki wskazują rodzaj i źródło. Pełne indeksowanie programu EPG pozostaje osobnym zadaniem.
+- Konta Xtream pozostają ustawieniami danego profilu TV i są zapisywane do dotychczasowego klucza oraz klucza zapasowego; katalog lokalny zapisuje IndexedDB. Uaktualnienie tej samej aplikacji nie wykonuje odinstalowania. Usunięcie danych aplikacji lub odinstalowanie może usunąć te ustawienia.
+- Dane dostępowe Xtream nie znajdują się w publicznym pakiecie.
+
+### Testy
+- Przeszły testy 1920×1080: siedem zakładek, sześć filtrów, języki PL/EN, wyniki TV/filmów/seriali Xtream oraz oferty VOD. Pakiet 1.2.16 został opublikowany i zainstalowany na LG, potwierdzono wersję w katalogu Homebrew i na TV.
+
 ## [1.2.13] - 25.10.2026
 
 ### Jednolite wyszukiwanie w zewnętrznych serwisach

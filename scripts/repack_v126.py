@@ -3,10 +3,10 @@
 from pathlib import Path
 import subprocess,tarfile,io,json,os,hashlib,shutil,tempfile
 R=Path(__file__).resolve().parents[1]
-BASE=R/'private/com.dc4i.vodtv_1.2.12_all.ipk'
-DEST=R/'private/com.dc4i.vodtv_1.2.13_all.ipk'
+BASE=R/'private/com.dc4i.vodtv_1.2.15_all.ipk'
+DEST=R/'private/com.dc4i.vodtv_1.2.16_all.ipk'
 SRC=R/'build/dc4i-vodtv'
-assert BASE.exists() and json.loads((SRC/'appinfo.json').read_text())['version']=='1.2.13'
+assert BASE.exists() and json.loads((SRC/'appinfo.json').read_text())['version']=='1.2.16'
 def read_ar(entry):return subprocess.check_output(['ar','p',str(BASE),entry])
 control=read_ar('control.tar.gz');data=read_ar('data.tar.gz')
 def make_tar(original,overlay):
@@ -28,18 +28,18 @@ def make_tar(original,overlay):
  inp.close()
  return out.getvalue()
 app='usr/palm/applications/com.dc4i.vodtv/'
-new_files=['appinfo.json','index.html','features/details.js','vod-handoff.js','DC4I-FORK-NOTES.md','app.js','dc4i.css','vod-version-check.js','vod-external-search.js','vod-external-search.css','features/search.js']
+new_files=['appinfo.json','index.html','features/details.js','vod-handoff.js','DC4I-FORK-NOTES.md','app.js','dc4i.css','vod-version-check.js','vod-external-search.js','vod-external-search.css','features/search.js','vod-xtream.js','vod-xtream.css']
 replace={app+f:(SRC/f).read_bytes() for f in new_files}
 old_pkg='usr/palm/packages/com.dc4i.vodtv/packageinfo.json'
 with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tf:
  meta=json.load(tf.extractfile(old_pkg))
-meta['version']='1.2.13'
+meta['version']='1.2.16'
 replace[old_pkg]=(json.dumps(meta,ensure_ascii=False,indent=2)+'\n').encode()
 new_data=make_tar(data,replace)
 with tarfile.open(fileobj=io.BytesIO(control),mode='r:gz') as tf:
  cm=tf.extractfile('control').read().decode()
-assert 'Version: 1.2.12' in cm
-cm=cm.replace('Version: 1.2.12','Version: 1.2.13',1)
+assert 'Version: 1.2.15' in cm
+cm=cm.replace('Version: 1.2.15','Version: 1.2.16',1)
 new_control=make_tar(control,{'control':cm.encode()})
 # Write the System V ar container directly: Apple ar only accepts object libraries.
 parts=[('debian-binary',read_ar('debian-binary')),('control.tar.gz',new_control),('data.tar.gz',new_data)]
@@ -56,7 +56,7 @@ with tarfile.open(fileobj=io.BytesIO(subprocess.check_output(['ar','p',str(DEST)
  js=tf.extractfile(app+'vod-handoff.js').read()
  html=tf.extractfile(app+'index.html').read()
  details=tf.extractfile(app+'features/details.js').read()
- assert d['version']=='1.2.13'
+ assert d['version']=='1.2.16'
  assert b'vod-handoff.js' in html and b'vod-external-search.js' in html
  assert b'vodExternalSearch.render' in details
  search=tf.extractfile(app+'features/search.js').read()

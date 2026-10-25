@@ -158,3 +158,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1214_xtream.py')],check=Tru
 
 # Focusable Xtream configuration fields for d-pad remote navigation.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1215_navigation.py')],check=True)
+
+# User-selected 7 tabs, unified VOD+Xtream search, and persistent playlist backup.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1216_catalog.py')],check=True)
