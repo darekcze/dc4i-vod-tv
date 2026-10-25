@@ -2,14 +2,18 @@
 
 Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.boringtv` jest archiwalny.
 
-## [1.2.15] - 25.10.2026
+## [1.2.19] - 25.10.2026
 
-### Playlisty Xtream bezpośrednio na LG
-- Nowa zakładka **IPTV**: dodawanie, edycja, usuwanie i test kont Xtream, pobieranie katalogu bez pośrednika oraz wyszukiwanie kanałów, grup, filmów i seriali.
-- Wbudowany odtwarzacz HTML5 i lista sezonów/odcinków. Aplikacja nie wymaga Mac Pro, Mac mini, Kodi ani Smarters.
-- Obsługa formularzy pilotem kierunkowym i Magic Remote. Dane użytkownika nie są zapisane w publicznym IPK.
-- Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
-- Systemowe LG Search nadal wymaga osobnych testów.
+### Przewodnik IPTV
+- W IPTV dodano trzy kolumny: grupy, kanały z logo i szczegóły audycji Teraz/Następnie, godzinę oraz pasek postępu.
+- Dodano Ulubione per profil, zapamiętywanie grupy i kanału, Oglądaj z dotychczasowym odtwarzaczem oraz powrót z konfiguracji playlist.
+- Zapytania EPG dostawcy na żądanie, z kolejką pojedynczych zapytań, opóźnieniem 320 ms i cache 5 minut.
+- Zachowano rekomendacje 1.2.18, biblioteki TMDB i ustawienia Xtream. Całodobowy EPG.ovh, CatchUp, timeshift, DVR i powiadomienia systemowe będą przedmiotem kolejnych wydań.
+
+### Testy
+- Zaliczone testy Node i Chromium Full HD: grupy, logotypy, Teraz/Następnie, nawigacja pilotem, Ulubione, powrót, regresja wcześniejszych funkcji.
+- Pakiet IPK instalowany jako aktualizacja bez zmiany identyfikatora. Zgodnie z prośbą bez uruchamiania i testów na LG.
+- Szczegóły: `docs/pl/releases/1.2.19.md`.
 
 ## [1.2.18] - 25.10.2026
 
@@ -46,6 +50,15 @@ Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.bor
 
 ### Testy
 - Przeszły testy 1920×1080: siedem zakładek, sześć filtrów, języki PL/EN, wyniki TV/filmów/seriali Xtream oraz oferty VOD. Pakiet 1.2.16 został opublikowany i zainstalowany na LG, potwierdzono wersję w katalogu Homebrew i na TV.
+
+## [1.2.15] - 25.10.2026
+
+### Playlisty Xtream bezpośrednio na LG
+- Nowa zakładka **IPTV**: dodawanie, edycja, usuwanie i test kont Xtream, pobieranie katalogu bez pośrednika oraz wyszukiwanie kanałów, grup, filmów i seriali.
+- Wbudowany odtwarzacz HTML5 i lista sezonów/odcinków. Aplikacja nie wymaga Mac Pro, Mac mini, Kodi ani Smarters.
+- Obsługa formularzy pilotem kierunkowym i Magic Remote. Dane użytkownika nie są zapisane w publicznym IPK.
+- Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
+- Systemowe LG Search nadal wymaga osobnych testów.
 
 ## [1.2.13] - 25.10.2026
 

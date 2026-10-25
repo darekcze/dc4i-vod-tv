@@ -5,7 +5,7 @@ const html=readFileSync(base+'index.html','utf8');
 const app=readFileSync(base+'app.js','utf8');
 const metadata=JSON.parse(readFileSync(base+'appinfo.json','utf8'));
 assert.equal(metadata.id,'com.dc4i.vodtv');
-assert.equal(metadata.version,'1.2.18');
+assert.equal(metadata.version,'1.2.19');
 assert.ok(html.includes('<script src="vod-recommendations.js"></script>'));
 assert.ok(html.includes('<script src="vod-personalization-ui.js"></script>'));
 assert.ok(html.indexOf('vod-recommendations.js')<html.indexOf('vod-personalization-ui.js'));

@@ -172,3 +172,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1218_personalization.py')],
 
 # Dedicated three-pane channel guide and provider EPG after personalization.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1219_guide.py')],check=True)
+
+# Final 1.2.19 version and browser update metadata.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1219_release.py')],check=True)

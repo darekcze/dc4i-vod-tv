@@ -2,16 +2,19 @@
 
 Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates). Earlier `com.dc4i.boringtv` releases are legacy builds.
 
-## [1.2.15] - 2026-10-25
+## [1.2.19] - 2026-10-25
 
-### Native Xtream IPTV on LG webOS
-- New **IPTV** tab: local user playlists, Xtream account add/edit/delete, connection test, direct channel/movie/series metadata sync and search filters.
-- Built-in webOS media player and per-series season/episode selection. No Mac Pro, Mac mini or Kodi dependency.
-- Focusable fields for LG D-pad and OK, in addition to Magic Remote pointer.
-- Private account credentials are never embedded in the public IPK. User settings stay in the TV app storage, which LG may clear after some updates.
-- Direct provider CORS header accepted and TV synced 145,699 catalog entries. TV playback was hardware-confirmed for HD live channel, 4K movie and HD series episode.
-- Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
-- System-wide LG Search integration remains unverified and is not advertised.
+### IPTV guide and channel navigation
+- Replaced generic IPTV channel browsing with a remote-first, three-pane guide: groups, channels with source logos, Now/Next programs, description, timeline and progress bar.
+- Added All Channels, per-profile Favorites, stored last group/channel, direct Watch using the existing Xtream player and safe return from playlist configuration.
+- EPG fetched on demand using provider `get_short_epg` with a one-request-at-a-time queue, 320ms navigation debounce and 5-minute cache.
+- Preserved the VOD personalization of 1.2.18, TMDB-powered film details, and local Xtream user settings.
+- Full timeline, EPG.ovh, CatchUp, timeshift, recording and OS notifications require later independently tested releases.
+
+### Quality and distribution
+- Node and Chromium full-HD guide tests passed for groups, logos, Now/Next, favorites, focus and return to guide; personalization and existing VOD regressions passed.
+- In-place IPK release with same app ID and 33 Homebrew catalog entries, preserving 32 other apps. No app launch or hardware test on LG per user request.
+- More detail: `docs/releases/1.2.19.md` and `docs/pl/releases/1.2.19.md`.
 
 ## [1.2.18] - 2026-10-25
 
@@ -51,6 +54,17 @@ Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates
 - Chromium 1920×1080 E2E tested all seven tabs, six search filters, language selection, synthetic Xtream live/movie/series results, standard VOD offers, and all five external player-search actions.
 - IPK/package tests passed. Public Homebrew catalog contains 33 apps, 32 unchanged, and the 1.2.16 public SHA-256 matches the deployed IPK.
 - Installed and launched 1.2.16 on LG OLED55G42LW without uninstalling 1.2.15. TV file inspection confirmed version, all seven menu labels and both account storage keys. Provider-specific actual search/EPG and physical playback still require hands-on acceptance.
+
+## [1.2.15] - 2026-10-25
+
+### Native Xtream IPTV on LG webOS
+- New **IPTV** tab: local user playlists, Xtream account add/edit/delete, connection test, direct channel/movie/series metadata sync and search filters.
+- Built-in webOS media player and per-series season/episode selection. No Mac Pro, Mac mini or Kodi dependency.
+- Focusable fields for LG D-pad and OK, in addition to Magic Remote pointer.
+- Private account credentials are never embedded in the public IPK. User settings stay in the TV app storage, which LG may clear after some updates.
+- Direct provider CORS header accepted and TV synced 145,699 catalog entries. TV playback was hardware-confirmed for HD live channel, 4K movie and HD series episode.
+- Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
+- System-wide LG Search integration remains unverified and is not advertised.
 
 ## [1.2.13] - 2026-10-25
 

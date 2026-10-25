@@ -102,9 +102,9 @@ shutil.copy2(R/'src/vod-channel-guide.css',A/'vod-channel-guide.css')
 p=A/'index.html';t=p.read_text(encoding='utf-8')
 anchor='<script src="vod-xtream.js"></script>'
 assert t.count(anchor)==1
-t=t.replace(anchor,anchor+'\\n<script src="vod-channel-guide.js"></script>')
+t=t.replace(anchor,anchor+'\n<script src="vod-channel-guide.js"></script>')
 css='<link rel="stylesheet" href="vod-xtream.css">'
 assert t.count(css)==1
-t=t.replace(css,css+'\\n<link rel="stylesheet" href="vod-channel-guide.css">')
+t=t.replace(css,css+'\n<link rel="stylesheet" href="vod-channel-guide.css">')
 p.write_text(t,encoding='utf-8')
 print('GUIDE_EPG_BRIDGE_PATCH_READY')

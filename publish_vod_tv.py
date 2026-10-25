@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.vodtv'
-VERSION='1.2.18'
+VERSION='1.2.19'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
