@@ -1,5 +1,17 @@
 # Delivery and Evidence | DC4I VOD TV
 
+## Current release status (2026-10-25)
+
+- **Latest published:** DC4I VOD TV **1.2.19**, GitHub `main` commit `69906b9`.
+- **Previous published:** 1.2.18, GitHub merge commit `d524f38`.
+- 1.2.18 IPK public SHA-256: `7c776f40f05740df6c09f31634708f0d349c945371ce714b8f4ddd3875fa37f3`.
+- 1.2.19 IPK public SHA-256: `56bd89f3444524e4b08566a8e17128314286da9d2d432d8f6e928f8b7dfc8e0a`.
+- Both releases: Cloudflare Pages `lg-webos-repo`, 33 Homebrew entries, 32 unrelated entries preserved. Verified each public IPK against its manifest.
+- **LG package update:** the official `ares-install` CLI reported **Success** for 1.2.18 and then 1.2.19. Both were in-place updates to the same ID `com.dc4i.vodtv`; there was no uninstall or user-data reset.
+- **Physical TV tests intentionally skipped at user request:** the TV was in use, and **no launch, SSH, screenshots, remote-navigation or playback tests** were performed for either release. This is not a claim that all playback functions are physically validated.
+- Deferred QA is recorded in [issue #29](https://github.com/darekcze/dc4i-vod-tv/issues/29); perform only when the owner explicitly permits access to LG.
+- Release Notes PL: [1.2.18](docs/pl/releases/1.2.18.md), [1.2.19](docs/pl/releases/1.2.19.md); EN: [1.2.18](docs/releases/1.2.18.md), [1.2.19](docs/releases/1.2.19.md).
+
 ## Release channels
 - Canonical TV source: https://lg.darc.dev/
 - Installer catalogue: https://lg.darc.dev/api/apps.json
