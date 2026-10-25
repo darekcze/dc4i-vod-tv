@@ -87,3 +87,7 @@ nobody:nogroup4755, NoNewPrivs1/seccomp/single UID map. Official Playwright1.62
 Chromium Headless Shell151 rev1234 download was denied HTTP403 Domain forbidden
 at cdn.playwright.dev, no browser payload installed. Do not retry elsewhere or
 change security settings. Approved runtime/network or authorized desktop is needed.
+
+Large-catalogue synthetic coverage now also runs10x150000 mixed records through
+the guide, bounded to200000 inputs/20000 EPG events with field-size and dictionary
+guards. Schema1/schema2 synthetic migration fixtures are committed under scripts/fixtures.
