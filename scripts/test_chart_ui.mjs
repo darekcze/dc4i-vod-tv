@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 
 class El{constructor(){this.children=[];this.dataset={};}appendChild(x){this.children.push(x);}set innerHTML(v){this.children=[];}scrollIntoView(){}}
 let view='home',profile='a',fail=false,launchResult={returnValue:true},launchMode='success',rebuild=-1;const data={},views={},messages=[],calls=[],listeners={},timers=new Map();let n=0;
 const TV={S:{uiLang:'en'},store(k,v){let key=profile+':'+k;if(arguments.length===2&&!fail)data[key]=JSON.stringify(v);return JSON.parse(data[key]||'null');},el:()=>new El(),addSetting(){},addView(k,v){views[k]=v;},openView(k){view=k;views[k].show();},view:()=>view,closeView(){views[view].hide();view='home';},rebuild(r){rebuild=r;},toast:t=>messages.push(t),luna(uri,args){calls.push({uri,args});if(launchMode==='throw')throw Error('private detail');if(launchMode==='reject')return Promise.reject(Error('private detail'));if(launchMode==='pending')return new Promise(()=>{});return Promise.resolve(launchResult);}};
+TV.readChartStorage=()=>TV.store('dc4iChartLinksV1');
 const c={window:{TV,addEventListener(k,fn){listeners[k]=fn;}},document:{body:new El()},setTimeout(fn){timers.set(++n,fn);return n;},clearTimeout(id){timers.delete(id);},Promise};
 for(const f of ['vod-chart-links.js','vod-chart-ui.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),c);
 const flush=async()=>{await Promise.resolve();await Promise.resolve();};const nav=()=>views['chart-links'].nav();const click=k=>{const el=nav().find(r=>r[0].dataset.key===k)[0];views['chart-links'].onFocus(el);el.onok();};
@@ -15,3 +16,5 @@ profile='b';TV.chartLinks.openSettings();assert.match(nav()[1][0].textContent,/P
 data['b:dc4iChartLinksV1']=JSON.stringify({region:'us',category:'film'});TV.chartLinks.openSettings();count=calls.length;click('open');assert.match(messages.pop(),/Unsupported/);assert.equal(calls.length,count);click('category');assert.match(nav()[1][0].textContent,/Poland/);
 TV.S.uiLang='pl';TV.chartLinks.openSettings();assert.match(nav()[1][0].textContent,/Polska/);assert.equal(TV.chartLinks.feedEnabled,false);assert.equal(TV.chartLinks.rightsStatus,'unverified');assert.ok(messages.every(t=>!t.includes('private detail')));
 console.log('CHART_UI_PASS profile choices, failed writes, unsupported/throw/reject/timeout, no late feedback, return focus and PL/EN');
+
+TV.readChartStorage=()=>{throw Error('storage unavailable');};TV.chartLinks.openSettings();count=calls.length;click('open');assert.equal(calls.length,count);assert.match(messages.pop(),/Nieobsługiwany/);

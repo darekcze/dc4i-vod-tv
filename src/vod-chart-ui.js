@@ -3,7 +3,7 @@
  var key='dc4iChartLinksV1',panel=TV.el('main','chart-links'),controls=[],selected='back',generation=0,pending=false,timer=null;
  panel.hidden=true;document.body.appendChild(panel);
  function tr(pl,en){return TV.S.uiLang==='en'?en:pl;}
- function prefs(){try{var p=TV.store(key);return p===null||p===undefined?{region:'poland',category:'film'}:api.resolve(p)?{region:p.region,category:p.category}:null;}catch(e){return null;}}
+ function prefs(){try{if(typeof TV.readChartStorage!=='function')throw Error();var p=TV.readChartStorage();return p===null||p===undefined?{region:'poland',category:'film'}:api.resolve(p)?{region:p.region,category:p.category}:null;}catch(e){return null;}}
  function focus(){if(TV.view()==='chart-links')TV.rebuild(Math.max(0,controls.findIndex(function(r){return r[0].dataset.key===selected;})),0);}
  function save(p){try{TV.store(key,p);var value=prefs();if(!value||value.region!==p.region||value.category!==p.category)throw Error();}catch(e){TV.toast(tr('Nie zapisano wyboru','Selection not saved'));}render();focus();}
  function stop(){generation++;pending=false;if(timer!==null)clearTimeout(timer);timer=null;}
