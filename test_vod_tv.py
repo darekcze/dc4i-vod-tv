@@ -5,11 +5,11 @@ from PIL import Image
 import json,re,subprocess,tarfile,io,urllib.request,urllib.error,hashlib
 R=Path(__file__).resolve().parent
 A=R/'build'/'dc4i-vodtv'
-P=R/'private'/'com.dc4i.vodtv_1.2.13_all.ipk'
+P=R/'private'/'com.dc4i.vodtv_1.2.15_all.ipk'
 meta=json.loads((A/'appinfo.json').read_text())
 assert meta['id']=='com.dc4i.vodtv'
 assert meta['title']=='DC4I VOD TV'
-assert meta['version']=='1.2.13'
+assert meta['version']=='1.2.15'
 assert Image.open(A/'icon.png').size==(80,80)
 assert Image.open(A/'largeIcon.png').size==(130,130)
 assert Image.open(A/'splash.png').size==(1920,1080)
@@ -32,15 +32,18 @@ assert 'neon-app-logo.png' in html and 'dc4i-neon-boot' in html, 'Startup brandi
 assert 'com.dc4i.boringtv' not in (A/'appinfo.json').read_text(), 'Legacy app ID leaked into new package'
 print('NEON_BRAND_AND_NEW_ID_OK')
 print('METADATA_AND_BRANDING_OK')
-for f in ['app.js','config.js','vod-root.js','vod-i18n.js','features/details.js','features/search.js']:
+for f in ['app.js','config.js','vod-root.js','vod-i18n.js','features/details.js','features/search.js','vod-xtream.js']:
   p=subprocess.run(['node','--check',str(A/f)],capture_output=True,text=True)
   assert p.returncode==0,p.stderr
 print('JAVASCRIPT_SYNTAX_OK')
 data=subprocess.check_output(['ar','p',str(P),'data.tar.gz'])
 with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tf:
   names=[x.name for x in tf.getmembers()]
-  for f in ['keys.js','appinfo.json','splash.png','dc4i.css','dc4i-wordmark.png','neon-app-logo.png','vod-root.js','vod-i18n.js','vod-root.css']:
+  for f in ['keys.js','appinfo.json','splash.png','dc4i.css','dc4i-wordmark.png','neon-app-logo.png','vod-root.js','vod-i18n.js','vod-root.css','vod-xtream.js','vod-xtream.css']:
     assert any(n.endswith('/'+f) or n==f for n in names),f+' not in IPK'
+assert 'vod-xtream.js' in html and 'vod-xtream.css' in html
+assert 'dc4iXtreamPlaylistsV1' in (A/'vod-xtream.js').read_text()
+assert '192.168.1.11' not in (A/'vod-xtream.js').read_text(), 'Unwanted LAN proxy dependency'
 print('IPK_CONTENTS_OK',len(names),'files')
 try:
   u='https://api.themoviedb.org/3/configuration?api_key='+km.group(0)

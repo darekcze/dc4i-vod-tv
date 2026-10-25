@@ -9,7 +9,7 @@ assert ART.exists(),'Missing canonical approved logo. See DC4I-BRAND-001 in Noti
 assert __import__('hashlib').sha256(ART.read_bytes()).hexdigest()=='3f8624833ca1eb1609bb42013bfc703d185b59207778afab6802a0723a5e8771'
 subprocess.run([sys.executable,str(R/'build_dc4i.py')],check=True)
 APP=R/'build/dc4i-vodtv'; SRC=R/'src'
-VERSION='1.2.13'; TITLE='DC4I VOD TV'
+VERSION='1.2.13'; TITLE='DC4I VOD TV'  # Base layer; final 1.2.15 metadata is set by patch_v1215_navigation.py
 def patch(path,before,after,required=True):
     p=APP/path;s=p.read_text(encoding='utf-8')
     if required and before not in s:raise ValueError('Pattern missing '+str(path)+' => '+before[:70])
@@ -152,3 +152,9 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1212_updates.py')],check=Tr
 
 # Five-service search and player handoff shared by Search and Details.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1213_search.py')],check=True)
+
+# Native Xtream playlist settings, direct provider catalog and on-device player.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1214_xtream.py')],check=True)
+
+# Focusable Xtream configuration fields for d-pad remote navigation.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1215_navigation.py')],check=True)

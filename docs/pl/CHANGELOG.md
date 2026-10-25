@@ -2,6 +2,15 @@
 
 Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.boringtv` jest archiwalny.
 
+## [1.2.15] - 25.10.2026
+
+### Playlisty Xtream bezpośrednio na LG
+- Nowa zakładka **IPTV**: dodawanie, edycja, usuwanie i test kont Xtream, pobieranie katalogu bez pośrednika oraz wyszukiwanie kanałów, grup, filmów i seriali.
+- Wbudowany odtwarzacz HTML5 i lista sezonów/odcinków. Aplikacja nie wymaga Mac Pro, Mac mini, Kodi ani Smarters.
+- Obsługa formularzy pilotem kierunkowym i Magic Remote. Dane użytkownika nie są zapisane w publicznym IPK.
+- Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
+- Systemowe LG Search nadal wymaga osobnych testów.
+
 ## [1.2.13] - 25.10.2026
 
 ### Jednolite wyszukiwanie w zewnętrznych serwisach

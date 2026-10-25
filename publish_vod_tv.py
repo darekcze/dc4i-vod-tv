@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.vodtv'
-VERSION='1.2.13'
+VERSION='1.2.15'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
@@ -20,7 +20,7 @@ icon_uri=BASE+'/icons/dc4i-vod-tv-neon.png'
 package_uri=BASE+'/packages/'+IPK.name
 manifest={
  'id':APP,'version':VERSION,'type':'web','title':'DC4I VOD TV',
- 'appDescription':'Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.',
+ 'appDescription':'Katalog VOD z ocenami TMDB i prywatnymi playlistami Xtream Codes: kanały TV, grupy, filmy, seriale, wyszukiwanie i odtwarzacz. Konto użytkownik konfiguruje na telewizorze.',
  'iconUri':icon_uri,
  'sourceUrl':'https://github.com/darekcze/dc4i-vod-tv',
  'releaseDate':RELEASE_DATE,'published_at':PUBLISHED.isoformat(timespec='seconds'),
@@ -34,7 +34,7 @@ entry={
  'title':'DC4I VOD TV',
  'iconUri':icon_uri,
  'manifest':manifest,
- 'shortDescription':'Filmy, seriale i oceny w jednym miejscu | Polska | TMDB skonfigurowane',
+ 'shortDescription':'VOD + Xtream IPTV | kanały, filmy i seriale | samodzielnie na LG webOS',
  'fullDescriptionUrl':BASE+'/about.html'
 }
 # Merge the verified DC4I VOD TV update without deleting DStore or other existing catalogue entries.
@@ -89,7 +89,7 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <p>Repozytorium wyświetli <b>DC4I VOD TV</b>. Wybierz Install. Nie trzeba wpisywać TMDB Key na telewizorze.</p>
 <p>Wersje 1.2.x mają nowy identyfikator. Odinstaluj wcześniejsze DC4I BoringTV / DC4I VOD TV 1.1.x, a następnie zainstaluj bieżącą wersję 1.2.4.</p></div>
 <div class="card"><h2>Co działa?</h2>
-<p>Filmowe rekomendacje TMDB, polski region, personalizacja DC4I, ulubione, wyszukiwanie i otwieranie serwisów VOD. YouTube Trending jest ukryte do chwili skonfigurowania osobnego klucza YouTube Data API v3.</p>
+<p>Filmowe rekomendacje TMDB, polski region, personalizacja DC4I, ulubione, wyszukiwanie i otwieranie serwisów VOD. Nowa zakładka IPTV pozwala samodzielnie skonfigurować playlistę Xtream Codes na telewizorze oraz wyszukiwać i odtwarzać kanały, filmy i odcinki seriali. Żadne konto Xtream nie jest dołączone do pliku instalacyjnego. YouTube Trending jest ukryte do chwili skonfigurowania osobnego klucza YouTube Data API v3.</p>
 <p>Niektóre przyciski otwierania bezpośrednio konkretnego filmu zależą od obsługi przez daną aplikację i wersji systemu webOS.</p>
 </div></main><footer>DC4I VOD TV jest spersonalizowanym wariantem społecznościowej aplikacji TheBoringTV. Źródło: <a href="https://github.com/theboringhumane/theboringtv-lgwebos">theboringhumane/theboringtv-lgwebos</a>. Informacje o filmach: TMDB (projekt nie jest z nim powiązany).</footer></body></html>'''
 html=html.replace('com.dc4i.vodtv_1.2.5_all.ipk',IPK.name).replace('bieżącą wersję 1.2.4','bieżącą wersję '+VERSION)

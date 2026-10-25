@@ -5,23 +5,45 @@
     "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
     "manifest": {
       "id": "com.dc4i.vodtv",
-      "version": "1.2.13",
+      "version": "1.2.15",
       "type": "web",
       "title": "DC4I VOD TV",
-      "appDescription": "Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.",
+      "appDescription": "Katalog VOD z ocenami TMDB i prywatnymi playlistami Xtream Codes: kanały TV, grupy, filmy, seriale, wyszukiwanie i odtwarzacz. Konto użytkownik konfiguruje na telewizorze.",
       "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
       "sourceUrl": "https://github.com/darekcze/dc4i-vod-tv",
       "releaseDate": "2026-10-25",
-      "published_at": "2026-10-25T10:40:45+01:00",
+      "published_at": "2026-10-25T11:22:01+01:00",
       "rootRequired": false,
-      "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.13_all.ipk",
+      "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.15_all.ipk",
       "ipkHash": {
-        "sha256": "27cfd23565fe1f2671f804610f8cf8d71ea773e58fbee99c959dc19741352ee4"
+        "sha256": "66f64d73469eabd1a7d6934b28ae35147f7d365300ddbfba39f5ded55cab496d"
       },
-      "ipkSize": 2582518
+      "ipkSize": 2590428
     },
-    "shortDescription": "Filmy, seriale i oceny w jednym miejscu | Polska | TMDB skonfigurowane",
+    "shortDescription": "VOD + Xtream IPTV | kanały, filmy i seriale | samodzielnie na LG webOS",
     "fullDescriptionUrl": "https://lg.darc.dev/about.html"
+  },
+  {
+    "id": "org.xbmc.kodi",
+    "title": "Kodi",
+    "iconUri": "https://lg.darc.dev/icons/kodi-icon.png",
+    "manifest": {
+      "id": "org.xbmc.kodi",
+      "version": "21.0.0",
+      "type": "native",
+      "title": "Kodi",
+      "appDescription": "Oficjalne Kodi 21.0 Omega dla LG webOS. Bez root, webOS 4+ (z wyjątkiem K5LP).",
+      "iconUri": "https://lg.darc.dev/icons/kodi-icon.png",
+      "sourceUrl": "https://kodi.tv/download/webos/",
+      "rootRequired": false,
+      "ipkUrl": "https://mirrors.kodi.tv/releases/webos/org.xbmc.kodi-webos_21.0.ipk?https=1",
+      "ipkHash": {
+        "sha256": "b8ac326df8ad7cf0b52e4f816ab7c39c95410254b1bc3b9b3d024035ecec58ff"
+      },
+      "ipkSize": 92633392
+    },
+    "shortDescription": "Kodi 21.0 Omega | Oficjalny pakiet webOS | Native",
+    "fullDescriptionUrl": "https://kodi.wiki/view/HOW-TO:Install_Kodi_for_webOS"
   },
   {
     "id": "com.github.k4zmu2a.space-cadet-pinball",
@@ -704,27 +726,5 @@
     },
     "shortDescription": "DStore | Video | zewnętrzna aplikacja",
     "fullDescriptionUrl": "https://lg.darc.dev/browse/?q=TikTok"
-  },
-  {
-    "id": "org.xbmc.kodi",
-    "title": "Kodi",
-    "iconUri": "https://lg.darc.dev/icons/kodi-icon.png",
-    "manifest": {
-      "id": "org.xbmc.kodi",
-      "version": "21.0.0",
-      "type": "native",
-      "title": "Kodi",
-      "appDescription": "Oficjalne Kodi 21.0 Omega dla LG webOS. Bez root, webOS 4+ (z wyjątkiem K5LP).",
-      "iconUri": "https://lg.darc.dev/icons/kodi-icon.png",
-      "sourceUrl": "https://kodi.tv/download/webos/",
-      "rootRequired": false,
-      "ipkUrl": "https://mirrors.kodi.tv/releases/webos/org.xbmc.kodi-webos_21.0.ipk?https=1",
-      "ipkHash": {
-        "sha256": "b8ac326df8ad7cf0b52e4f816ab7c39c95410254b1bc3b9b3d024035ecec58ff"
-      },
-      "ipkSize": 92633392
-    },
-    "shortDescription": "Kodi 21.0 Omega | Oficjalny pakiet webOS | Native",
-    "fullDescriptionUrl": "https://kodi.wiki/view/HOW-TO:Install_Kodi_for_webOS"
   }
 ]

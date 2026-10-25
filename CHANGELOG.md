@@ -2,6 +2,17 @@
 
 Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates). Earlier `com.dc4i.boringtv` releases are legacy builds.
 
+## [1.2.15] - 2026-10-25
+
+### Native Xtream IPTV on LG webOS
+- New **IPTV** tab: local user playlists, Xtream account add/edit/delete, connection test, direct channel/movie/series metadata sync and search filters.
+- Built-in webOS media player and per-series season/episode selection. No Mac Pro, Mac mini or Kodi dependency.
+- Focusable fields for LG D-pad and OK, in addition to Magic Remote pointer.
+- Private account credentials are never embedded in the public IPK. User settings stay in the TV app storage, which LG may clear after some updates.
+- Direct provider CORS header accepted and TV synced 145,699 catalog entries. TV playback was hardware-confirmed for HD live channel, 4K movie and HD series episode.
+- Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
+- System-wide LG Search integration remains unverified and is not advertised.
+
 ## [1.2.13] - 2026-10-25
 
 ### Unified provider search and dedicated Labs links

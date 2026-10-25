@@ -75,3 +75,11 @@ Cloudflare Pages retains previous deployments. Current production is the source-
 - Stremio native and Stremio Web controls are intentionally separate. Native may ignore contentTarget; browser can open the Stremio Web title route. The latter is not native playback.
 - Node tests: detection failures, launch ID trials, persistent diagnostics, web route, movie/TV IMDb URLs. Chrome E2E: pinned Smarters tile and all details buttons.
 - Hardware acceptance is NOT done; do not close issue #2 or #3 until confirmed by the user's LG television.
+
+## 1.2.15 native IPTV verification (2026-10-25)
+- IPK built and hashed, existing TMDB and external search unchanged. Playlists configured on TV, not embedded in IPK.
+- Xtream CORS verified. 145,699 live/VOD/series records loaded on actual LG G4. HD TVP Info, one 4K film and one HD series episode played through native video element.
+- Mac Pro local proxy on TCP 18774 disabled, and TV resynced the provider directly after app page reload.
+- LG D-pad input-focus regression added in 1.2.15 after successful hardware v1.2.14 playback.
+- Known limitation: packaged webOS app storage may be cleared by updates or app removal. No cloud backup of personal Xtream credentials.
+- Systemwide LG Search indexing was not verified.
