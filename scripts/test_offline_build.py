@@ -24,6 +24,14 @@ assert ImageChops.difference(official.resize((80, 80), Image.Resampling.LANCZOS)
 html = (app / 'index.html').read_text()
 assert html.index('keys.js') < html.index('config.js') < html.index('app.js')
 assert html.index('vod-xtream.js') < html.index('vod-channel-guide.js')
+from html.parser import HTMLParser
+class Styles(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        attrs=dict(attrs)
+        if tag=='link' and attrs.get('rel')=='stylesheet':
+            assert 'onload' not in attrs
+            assert attrs.get('media','all')=='all'
+Styles().feed(html)
 keys = (app / 'keys.js').read_text()
 assert "TMDB_KEY: '', YT_KEY: ''" in keys and 'OFFLINE REGRESSION FIXTURE ONLY' in keys
 assert 'Offline fixture: network disabled' in keys
