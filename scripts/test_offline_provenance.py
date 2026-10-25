@@ -9,6 +9,17 @@ spec=importlib.util.spec_from_file_location('fixture',Path(__file__).with_name('
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 
 class ProvenanceTests(unittest.TestCase):
+    def test_deferred_local_styles_are_active_without_inline_handlers(self):
+        from html.parser import HTMLParser
+        class Links(HTMLParser):
+            def handle_starttag(self, tag, attrs):
+                if tag == 'link': self.links.append(dict(attrs))
+        original = '<link rel="stylesheet" href="style.css" media="print" onload="this.media=\'all\'">'
+        parser=Links();parser.links=[];parser.feed(module.activate_fixture_styles(original))
+        self.assertEqual(parser.links,[{'rel':'stylesheet','href':'style.css','media':'all'}])
+        with self.assertRaises(ValueError):
+            module.activate_fixture_styles(original.replace('style.css','https://example.invalid/style.css'))
+
     def test_dirty_working_copy_is_not_used_and_exact_commit_is_recorded(self):
         self.assertTrue(hasattr(module,'snapshot_project'),'snapshot_project must pin and record project inputs')
         with tempfile.TemporaryDirectory() as directory:

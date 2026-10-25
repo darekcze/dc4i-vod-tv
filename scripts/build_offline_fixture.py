@@ -9,6 +9,8 @@ import argparse
 import io
 import json
 import secrets
+import re
+from html.parser import HTMLParser
 from pathlib import Path
 import shutil
 import subprocess
@@ -50,6 +52,21 @@ document.addEventListener('DOMContentLoaded',function(){
  });},Promise.resolve()).catch(function(){document.body.textContent='Offline fixture script load failed.';});
 });
 })();"""
+
+def activate_fixture_styles(html):
+    """Activate pinned local deferred CSS without CSP-blocked inline handlers."""
+    allowed = {'style.css', 'features/details.css', 'features/search.css',
+               'features/ambient.css', 'features/profiles.css'}
+    def replace(match):
+        class Link(HTMLParser):
+            def handle_starttag(self, tag, attrs): self.attrs = dict(attrs)
+        parser = Link(); parser.feed(match.group(0)); attrs = parser.attrs
+        if 'onload' not in attrs: return match.group(0)
+        if (attrs.get('rel') != 'stylesheet' or attrs.get('href') not in allowed or
+                attrs.get('media') != 'print' or attrs['onload'] != "this.media='all'"):
+            raise ValueError('Unexpected deferred stylesheet: review required')
+        return '<link rel="stylesheet" href="' + attrs['href'] + '" media="all">'
+    return re.sub(r'<link\b[^>]*>', replace, html, flags=re.I)
 
 def archive(repo, revision, destination):
     data = subprocess.check_output(['git', '-C', str(repo), 'archive', revision])
@@ -107,7 +124,7 @@ def main():
               "style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
               "connect-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'")
     index = app / 'index.html'
-    html = index.read_text()
+    html = activate_fixture_styles(index.read_text())
     assert html.count('<head>') == 1
     html = html.replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="' + policy + '">'
                         + '<script nonce="' + nonce + '">' + BOOTSTRAP + '</script>', 1)
