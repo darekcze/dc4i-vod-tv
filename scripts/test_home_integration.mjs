@@ -20,3 +20,8 @@ assert.ok(app.includes("if(row.key==='homeRailsLayout')"));
 assert.ok(app.includes('if(it.homeRail && TV.homeRails)return TV.homeRails.card(it);'));
 assert.equal(JSON.parse(readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
 console.log('HOME_INTEGRATION_PASS actual profile store, async namespace boundary, cold rendering, focus hooks, version preserved');
+
+const step=app.slice(app.indexOf('  function stepHero('),app.indexOf('  var idleSince ='));
+const heroContext={heroItems:[],heroIdx:0,showHero(){}};vm.createContext(heroContext);vm.runInContext(step+';stepHero(1);',heroContext);
+assert.equal(heroContext.heroIdx,0,'empty cold-start autoplay cannot poison hero index');
+heroContext.heroItems=[{},{}];vm.runInContext('stepHero(1)',heroContext);assert.equal(heroContext.heroIdx,1);

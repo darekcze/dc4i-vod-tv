@@ -23,6 +23,7 @@ replace("store('homeCache', {hero: heroItems, base: base});", "store('homeCache'
 replace("nav = [top, [$('heroBtn')]].concat", "nav = [top].concat(heroItems.length?[[$('heroBtn')]]:[]).concat")
 replace("onHero = view === 'home' && pos.r === 1", "onHero = view === 'home' && heroItems.length>0 && pos.r === 1")
 replace("if (view === 'home' && pos.r === 1) stepHero", "if (view === 'home' && heroItems.length>0 && pos.r === 1) stepHero")
+replace('function stepHero(d) { heroIdx', 'function stepHero(d) { if(!heroItems.length)return; heroIdx')
 p.write_text(s)
 p=A/'dc4i.css';p.write_text(p.read_text()+'''
 /* Existing Home card rhythm; metadata cache has no invented artwork. */
