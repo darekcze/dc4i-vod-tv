@@ -93,3 +93,16 @@ never distribute fixture output as a production app.
 - [ ] Authorized production inputs, matching package/catalog checks and rollback
   evidence; TV acceptance remains prohibited until separately authorized.
 - [ ] No claim of full#20–27 completion based on offline checks alone.
+
+## Draft #20 Xtream timeline fallback carried onto #27 stack
+
+Integration candidate based on PR38 exact `e307dbceddd9f5ca49a96a2bf87dec0e3461b1c1` and draft PR40
+`e832b3908f018226b2ac6c69784dc3d112fabe6e`. It adds the 1.2.20 provider-timeline metadata fallback
+without rewriting PR31-38 or granting playback/recording permissions.
+New source-only Node scripts: `scripts/test_epg_provider_fallback.mjs` and
+`scripts/test_epg_provider_guide_runtime.mjs`.
+Historical 55 green commands apply **only to the original PR38 head**.
+Projected inventory here: 51 non-browser Node suites and 57 commands,
+but do not claim PASS without running on the exact new clean head.
+Run actual Node/fixture/browser QA, real provider/rights checks and
+applicable release gates. This is a draft review candidate, not a release.
