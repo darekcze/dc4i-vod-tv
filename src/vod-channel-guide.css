@@ -47,3 +47,11 @@
 #dc4i-guide .gd-description{font-size:18px;line-height:1.45;margin:10px 0 0;color:#d7e7f8;max-height:116px;overflow:auto}
 #dc4i-guide .gd-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto;padding-top:16px}
 @media(max-width:1450px){#dc4i-guide{padding:15px 23px}#dc4i-guide .gd-layout{grid-template-columns:minmax(235px,290px) minmax(310px,460px) minmax(395px,1fr);gap:12px}#dc4i-guide .gd-btn{font-size:17px;padding:9px 11px}#dc4i-guide .gd-program{padding:15px}}
+
+.gd-metadata{font-size:16px;line-height:1.3;color:#a9bfdc;overflow-wrap:anywhere;}
+
+.gd-timeline{min-height:0;flex:1;overflow:auto;font-size:18px;line-height:1.4;}
+.gd-airing{padding:10px;margin:6px 0;background:#152d50;overflow-wrap:anywhere;}
+.gd-airing.focus{outline:3px solid #69caff;}
+.gd-actions{flex-wrap:wrap;}
+#dc4i-guide [hidden]{display:none!important;}

@@ -175,3 +175,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1219_guide.py')],check=True
 
 # Final 1.2.19 version and browser update metadata.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1219_release.py')],check=True)
+
+# Draft metadata UI boundary: no public loader, credentials or release version change.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1220_epg_ui.py')],check=True)

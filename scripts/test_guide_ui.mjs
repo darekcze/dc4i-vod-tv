@@ -21,3 +21,11 @@ assert.ok(css.includes('grid-template-columns'),'three-column guide layout');
 assert.ok(css.includes('#dc4i-guide'),'scoped styling');
 assert.ok(!guide.includes('password') && !guide.includes('username'),'no Xtream secrets in guide');
 console.log('GUIDE_UI_STATIC_TEST_PASS');
+
+assert.ok(scripts.indexOf('vod-rich-epg.js')<scripts.indexOf('vod-epg-metadata-ui.js'));
+assert.ok(scripts.indexOf('vod-epg-metadata-ui.js')<scripts.indexOf('vod-channel-guide.js'));
+assert.ok(guide.includes('TV.epgMetadata.guide(selected,events,providerState)'));
+assert.ok(guide.includes("$('metadata').textContent=rich.label"));
+const details=readFileSync(new URL('features/details.js',root),'utf8');
+assert.ok(details.includes('TV.epgMetadata.renderDetails(epgHost,it.title,events)'));
+assert.ok(details.includes('TV.epgMetadata.renderDetails(epgHost,it.title,[])'));

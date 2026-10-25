@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Entirely synthetic. No provider account, real schedule or external artwork. -->
+<tv>
+  <channel id="synthetic.one"><display-name>Żółć TV HD</display-name></channel>
+  <channel id="synthetic.two"><display-name>Example Two</display-name></channel>
+  <programme channel="synthetic.one" start="20261025023000 +0200" stop="20261025025000 +0200">
+    <title lang="pl">Pierwsza godzina</title><desc>Fixture &amp; provenance</desc>
+    <date>2026</date><category>Science fiction</category><orig-language>English</orig-language>
+    <language>Polish</language><subtitles type="teletext"><language>Polish</language></subtitles>
+    <rating system="local-age"><value>12</value></rating><star-rating system="editorial"><value>4/5</value></star-rating>
+  </programme>
+  <programme channel="synthetic.one" start="20261025023000 +0100" stop="20261025030000 +0100"><title>Druga godzina</title></programme>
+  <programme channel="synthetic.two" start="20261025040000" stop="20261025050000"><title>UTC default</title></programme>
+  <programme channel="synthetic.one" start="20261025060000 +0100"><title>Unknown end</title></programme>
+</tv>
