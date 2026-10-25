@@ -36,3 +36,8 @@ host=new Element();ui.renderDetails(host,'<b>Example</b>',[]);assert.equal(host.
 assert.equal(ui.acceptLocal({...snapshot,source:'https://user:password@example.invalid'}).accepted,false);
 ui.clear();assert.equal(ui.guide({epgId:'a'},[]).label,'');
 console.log('EPG_METADATA_UI_PASS PL/EN, exact mapping, freshness, expiry, partial, text-only details, no playback grants');
+
+for(const state of ['loading','success','empty','error']){
+ const adapter=TV.epgMetadata.create({now:()=>snapshot.fetchedAt});adapter.acceptLocal(snapshot);
+ assert.equal(adapter.guide({epgId:'a'},state==='success'?provider:[],state).status,'Lokalne metadane XMLTV');
+}

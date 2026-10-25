@@ -28,8 +28,12 @@
     '<div class="gd-program gd-next" id="gd-next"><div class="gd-eyebrow">'+tr('NASTĘPNIE','NEXT')+'</div>'+
      '<div class="gd-title" id="gd-next-title"></div>'+
      '<div class="gd-time" id="gd-next-time"></div></div>'+
+    '<div id="gd-timeline" class="gd-timeline" hidden><div id="gd-range"></div><div id="gd-airings"></div></div>'+
     '<div class="gd-actions">'+
      '<span class="f gd-btn gd-primary" id="gd-watch">'+tr('▶ Oglądaj','▶ Watch')+'</span>'+
+     '<span class="f gd-btn" id="gd-timeline-toggle">'+tr('Program 10 dni','10-day schedule')+'</span>'+
+     '<span class="f gd-btn" id="gd-day-prev">'+tr('◀ Dzień','◀ Day')+'</span>'+
+     '<span class="f gd-btn" id="gd-day-next">'+tr('Dzień ▶','Day ▶')+'</span>'+
      '<span class="f gd-btn" id="gd-favorite">'+tr('☆ Ulubione','☆ Favorite')+'</span>'+
      '<span class="f gd-btn" id="gd-page-prev">'+tr('◀ Poprzednia','◀ Previous')+'</span>'+
      '<span class="f gd-btn" id="gd-page-next">'+tr('Następna ▶','Next ▶')+'</span>'+
@@ -45,20 +49,22 @@
  var lastChannel=String(TV.store('guideLastChannelV1')||'');
  var model=modelAPI.group([],[],fav),page=0,pageSize=48;
  var selected=null,pane='groups',groupIndex=0,channelIndex=0,actionIndex=0;
- var generation=0,epgEpoch=0,epgTimer=null,events=[];
+ var generation=0,epgEpoch=0,epgTimer=null,events=[],providerState='empty';
+ var timelineVisible=false,timelineDay=0,timelineIndex=0;
  function storeValue(k,v){try{TV.store(k,v);}catch(e){TV.toast(tr('Nie można zapisać ustawienia','Cannot save preference'));}}
  function focusRows(){
   return [
     [ $('back'),$('config') ],
     [].slice.call($('groups').querySelectorAll('.gd-group.f')),
     [].slice.call($('channels').querySelectorAll('.gd-channel.f')),
-    [ $('watch'),$('favorite'),$('page-prev'),$('page-next') ]
+    [].slice.call($('airings').querySelectorAll('.gd-airing.f')),
+    [ $('watch'),$('favorite'),$('timeline-toggle'),$('day-prev'),$('day-next'),$('page-prev'),$('page-next') ].filter(function(el){return !el.hidden;})
   ];
  }
  function nav(){return focusRows();}
- function row(){return ({header:0,groups:1,channels:2,actions:3})[pane];}
+ function row(){return ({header:0,groups:1,channels:2,timeline:3,actions:4})[pane];}
  function index(){
-  return pane==='header'?0:pane==='groups'?groupIndex:pane==='channels'?channelIndex:actionIndex;
+  return pane==='header'?0:pane==='groups'?groupIndex:pane==='channels'?channelIndex:pane==='timeline'?timelineIndex:actionIndex;
  }
  function chooseFocus(){
   if(TV.view()!=='guide'||root.hidden)return;
@@ -158,18 +164,42 @@
     timeLabel(event.time.start)+' - '+timeLabel(event.time.end):'';
  }
  function showPrograms(){
-  var rich=TV.epgMetadata?TV.epgMetadata.guide(selected,events):{events:events,label:''};
+  var rich=TV.epgMetadata?TV.epgMetadata.guide(selected,events,providerState):{events:events,label:''};
   $('metadata').textContent=rich.label;
+  if(selected && rich.status)status(rich.status);
+  showTimeline();
   var current=modelAPI.nowNext(rich.events,Date.now());
   showEvent($('now'),'now-title','now-time',current.now);
   showEvent($('next'),'next-title','next-time',current.next);
   $('progress').style.width=modelAPI.progress(current.now,Date.now())+'%';
   $('description').textContent=current.now&&current.now.description||'';
  }
+ function showTimeline(){
+  $('timeline').hidden=!timelineVisible;$('now').hidden=timelineVisible;$('next').hidden=timelineVisible;
+  $('day-prev').hidden=!timelineVisible;$('day-next').hidden=!timelineVisible;
+  $('timeline-toggle').textContent=timelineVisible?tr('Teraz / następnie','Now / next'):tr('Program 10 dni','10-day schedule');
+  var host=$('airings');host.innerHTML='';
+  if(!timelineVisible||!TV.epgMetadata)return;
+  var view=TV.epgMetadata.timeline(selected,timelineDay);
+  $('metadata').textContent=view.label;
+  status(view.events.length?tr('Lokalne metadane XMLTV','Local XMLTV metadata'):tr('Brak lokalnych danych w tym okresie','No local data in this period'));
+  if(pane==='timeline'&&!view.events.length)pane='actions';
+  function date(t){return new Date(t).toLocaleString(TV.S.uiLang==='en'?'en-GB':'pl-PL',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
+  $('range').textContent=date(view.from)+' — '+date(view.to)+' · '+(timelineDay+6)+'/10';
+  view.events.forEach(function(e){
+   var el=TV.el('div','f gd-airing');el.setAttribute('tabindex','0');
+   el.textContent=date(e.start)+' — '+date(e.end)+' · '+e.title+' · '+TV.epgMetadata.describe(e);
+   // Metadata rows have no playback or reminder action.
+   host.appendChild(el);
+  });
+  if(!view.events.length){var empty=TV.el('div','gd-empty');empty.textContent=tr('Brak lokalnych danych w tym okresie','No local data in this period');host.appendChild(empty);}
+  timelineIndex=Math.max(0,Math.min(timelineIndex,view.events.length-1));
+ }
+ function shiftDay(delta){timelineDay=Math.max(-5,Math.min(4,timelineDay+delta));timelineIndex=0;showPrograms();chooseFocus();}
  function showSelected(){
   ++epgEpoch;
   clearTimeout(epgTimer);
-  events=[];
+  events=[];providerState='loading';timelineIndex=0;
   if(!selected){
     $('current-channel').textContent=tr('Wybierz kanał','Select a channel');
     status(tr('Brak dostępnego kanału','No channel available'));
@@ -184,13 +214,13 @@
   epgTimer=setTimeout(function(){
     TV.xtream.guideEpg(ch).then(function(list){
       if(token!==epgEpoch || root.hidden)return;
-      events=Array.isArray(list)?list:[];
+      events=Array.isArray(list)?list:[];providerState='success';
       status(events.length ? tr('Dane EPG dostawcy','Provider EPG') :
         tr('EPG niedostępne dla tego kanału','EPG not available for this channel'));
       showPrograms();
     },function(){
       if(token!==epgEpoch || root.hidden)return;
-      events=[];status(tr('Nie można pobrać EPG','Could not load EPG'));showPrograms();
+      events=[];providerState='error';status(tr('Nie można pobrać EPG','Could not load EPG'));showPrograms();
     });
   },320);
  }
@@ -271,7 +301,7 @@
  }
  function suspend(){root.hidden=true;}
  function navigate(k){
-  var order=['header','groups','channels','actions'];
+  var order=timelineVisible&&$('airings').querySelectorAll('.gd-airing.f').length?['header','groups','channels','timeline','actions']:['header','groups','channels','actions'];
   if(k===37||k===39){
     var n=order.indexOf(pane)+(k===39?1:-1);
     pane=order[Math.max(0,Math.min(order.length-1,n))];
@@ -284,6 +314,7 @@
     var next=Math.max(0,Math.min(count-1,index()+(k===40?1:-1)));
     if(pane==='groups')groupIndex=next;
     else if(pane==='channels')channelIndex=next;
+    else if(pane==='timeline')timelineIndex=next;
     else actionIndex=next;
     chooseFocus();return true;
   }
@@ -305,6 +336,8 @@
    btnFavorite=$('favorite'),btnPrev=$('page-prev'),btnNext=$('page-next');
  back.onok=function(){TV.closeView();};
  config.onok=openConfig;btnWatch.onok=watch;btnFavorite.onok=toggleFavorite;
+ $('timeline-toggle').onok=function(){timelineVisible=!timelineVisible;showPrograms();chooseFocus();};
+ $('day-prev').onok=function(){shiftDay(-1);};$('day-next').onok=function(){shiftDay(1);};
  btnPrev.onok=function(){nextPage(-1);};btnNext.onok=function(){nextPage(1);};
  TV.addView('guide',{
   nav:nav,show:show,hide:hide,
@@ -330,5 +363,5 @@
  TV.guide={resume:resume,suspend:suspend,refresh:function(){
   if(TV.view()==='guide')show();
  },key:navigate,model:function(){return model;}};
- setInterval(function(){if(TV.view()==='guide' && !root.hidden)showPrograms();},60000);
+ setInterval(function(){if(TV.view()==='guide' && !root.hidden){showPrograms();if(pane==='timeline')chooseFocus();}},60000);
 })();

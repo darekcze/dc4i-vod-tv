@@ -24,7 +24,7 @@ console.log('GUIDE_UI_STATIC_TEST_PASS');
 
 assert.ok(scripts.indexOf('vod-rich-epg.js')<scripts.indexOf('vod-epg-metadata-ui.js'));
 assert.ok(scripts.indexOf('vod-epg-metadata-ui.js')<scripts.indexOf('vod-channel-guide.js'));
-assert.ok(guide.includes('TV.epgMetadata.guide(selected,events)'));
+assert.ok(guide.includes('TV.epgMetadata.guide(selected,events,providerState)'));
 assert.ok(guide.includes("$('metadata').textContent=rich.label"));
 const details=readFileSync(new URL('features/details.js',root),'utf8');
 assert.ok(details.includes('TV.epgMetadata.renderDetails(epgHost,it.title,events)'));
