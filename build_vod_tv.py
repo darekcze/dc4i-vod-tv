@@ -190,3 +190,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1223_dvr.py')],check=True)
 
 # Foreground-only reminders using the existing profile key and future-programme action.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1224_reminders.py')],check=True)
+
+# Official chart links only; no feed ingestion.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1225_chart_links.py')],check=True)
