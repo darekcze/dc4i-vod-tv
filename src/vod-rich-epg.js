@@ -27,7 +27,9 @@ function sanitize(snapshot){
   if(!c || typeof c.id!=='string' || !c.id || c.id.length>200 || !Array.isArray(c.names)){partial=true;return;}
   var clean={id:c.id,names:c.names.filter(function(n){return typeof n==='string'&&n.trim();}).slice(0,20).map(function(n){return bounded(n,200);})};
   if(!clean.names.length){partial=true;return;}
-  if(ids[c.id]){conflicts[c.id]=true;partial=true;}else{ids[c.id]=true;channels.push(clean);}
+  if(ids[c.id]){
+   if(JSON.stringify(ids[c.id])!==JSON.stringify(clean)){conflicts[c.id]=true;partial=true;}
+  }else{ids[c.id]=clean;channels.push(clean);}
  });
  channels=channels.filter(function(c){return !conflicts[c.id];});
  snapshot.events.forEach(function(e){

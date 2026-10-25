@@ -19,6 +19,7 @@
    '<section class="gd-pane gd-detail"><h2>'+tr('Teraz w telewizji','On TV now')+'</h2>'+
     '<div class="gd-current-channel" id="gd-current-channel"></div>'+
     '<div id="gd-status" class="gd-status"></div>'+
+    '<div id="gd-metadata" class="gd-metadata"></div>'+
     '<div class="gd-program gd-now" id="gd-now"><div class="gd-eyebrow">'+tr('TERAZ','NOW')+'</div>'+
      '<div class="gd-title" id="gd-now-title"></div>'+
      '<div class="gd-time" id="gd-now-time"></div>'+
@@ -157,7 +158,9 @@
     timeLabel(event.time.start)+' - '+timeLabel(event.time.end):'';
  }
  function showPrograms(){
-  var current=modelAPI.nowNext(events,Date.now());
+  var rich=TV.epgMetadata?TV.epgMetadata.guide(selected,events):{events:events,label:''};
+  $('metadata').textContent=rich.label;
+  var current=modelAPI.nowNext(rich.events,Date.now());
   showEvent($('now'),'now-title','now-time',current.now);
   showEvent($('next'),'next-title','next-time',current.next);
   $('progress').style.width=modelAPI.progress(current.now,Date.now())+'%';

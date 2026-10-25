@@ -55,3 +55,12 @@ const serialized=JSON.stringify(cache.get('synthetic-test'));
 assert.ok(!serialized.includes('password')&&!serialized.includes('private.invalid')&&!serialized.includes('tmdb'));
 assert.equal(cache.get('synthetic-test').snapshot.events.length,3,'duplicate event collapsed');
 console.log('RICH_EPG_PASS identity/ambiguity, provenance, DST, partial/stale TTL, ordering, limits, isolation');
+
+const repeated=copy(clean);repeated.channels.push(copy(repeated.channels[0]));
+cache.clear();assert.equal(cache.put(repeated).accepted,true);
+assert.equal(cache.get(repeated.source).snapshot.channels.length,2,'identical IDs collapse');
+assert.equal(cache.get(repeated.source).partial,false);
+const conflict=copy(clean);conflict.channels.push({id:conflict.channels[0].id,names:['Different']});
+cache.clear();cache.put(conflict);
+assert.equal(cache.get(conflict.source).snapshot.channels.length,1,'conflicting IDs quarantined');
+assert.equal(cache.get(conflict.source).partial,true);
