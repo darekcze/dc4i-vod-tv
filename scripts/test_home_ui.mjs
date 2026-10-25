@@ -47,3 +47,9 @@ visibleCards=[moved];TV.homeRails.restoreFocus(saved);assert.equal(focused,moved
 assert.equal(card.item.tmdb.id,1,'custom canonical cards retain upstream focused-item contract');
 const next=TV.homeRails.card({kind:'airing',homeRowId:'now',channelId:'2',start:3,end:4,source:'synthetic',title:'B'});
 visibleCards=[next];TV.homeRails.restoreFocus(saved);assert.equal(focused,next,'missing item falls back to same row');
+
+for(const value of [{app:{id:'com.synthetic.app'}},{item:{tmdb:{id:987,type:'movie'},title:'Baseline'}}]){
+ const before={...value},after={...value};focused=before;const identity=TV.homeRails.captureFocus();
+ visibleCards=[moved,after,next];TV.homeRails.restoreFocus(identity);assert.equal(focused,after,'baseline identity survives rail insertion');
+ focused=after;visibleCards=[before];TV.homeRails.restoreFocus(identity);assert.equal(focused,before,'baseline identity survives rail removal');
+}
