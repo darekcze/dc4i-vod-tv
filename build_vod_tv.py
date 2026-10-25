@@ -187,3 +187,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1222_archive.py')],check=Tr
 
 # DVR information only: recording backend remains absent and unverified.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1223_dvr.py')],check=True)
+
+# Foreground-only reminders using the existing profile key and future-programme action.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1224_reminders.py')],check=True)

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+const app=readFileSync('build/dc4i-vodtv/app.js','utf8'),xt=readFileSync('build/dc4i-vodtv/vod-xtream.js','utf8');
+assert.ok(!xt.includes("var reminders=TV.store('dc4iEpgRemindersV1')"),'old cached profile list removed');
+assert.ok(!xt.includes("TV.toast('Teraz w TV: '"),'legacy delivery timer removed');
+let forwarded,opened=0;const TV={reminders:{add:e=>{forwarded=e;return true;},openSettings(){opened++;}}};
+const context={TV,SROWS:[{key:'reminderSettings',opts:[['edit','Configure']]}],draft:{}};
+const helper=xt.slice(xt.indexOf('function remindEpg(event){'),xt.indexOf('function chosenEpgChannels(){'));
+vm.runInNewContext(helper,context);const event={channelId:'1',time:{start:1}};assert.equal(context.remindEpg(event),true);assert.equal(forwarded,event);
+const choose=app.slice(app.indexOf('  function choose(e)'),app.indexOf('  // ---------- quick settings'));vm.runInNewContext(choose,context);
+context.choose({dataset:{r:'0',i:'0'}});assert.equal(opened,1);
+assert.ok(xt.includes("if(entry.state==='future')return remindEpg(entry);"),'future archive dispatcher preserves reminder entrypoint');
+assert.ok(readFileSync('build/dc4i-vodtv/features/details.js','utf8').includes('TV.xtream.remindEpg(e)'));
+assert.equal(JSON.parse(readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
+console.log('REMINDER_INTEGRATION_PASS single delivery system, existing future entrypoints, actual settings routing, version preserved');
