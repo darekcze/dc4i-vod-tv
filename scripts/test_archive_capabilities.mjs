@@ -38,3 +38,17 @@ assert.throws(()=>api.create({maxBufferBytes:67108865}),/limits/);
 let incompleteCalls=0;
 const incomplete=api.create({now:()=>now,transport:{verify:async()=>{incompleteCalls++;return proof;}}});
 incomplete.offer(offer);assert.equal((await incomplete.verify()).status,'unverified');assert.equal(incompleteCalls,0,'no probe without playback and cleanup contract');
+let captured,cleanup=0;
+player=api.create({now:()=>now,timeoutMs:5,transport:{...transport,verify:async request=>{captured=request;return proof;},play:()=>new Promise(()=>{}),stop(){cleanup++;}}});
+player.offer({...offer,password:'synthetic-do-not-forward',url:'https://example.invalid/private'});await player.verify();
+assert.deepEqual(Object.keys(captured).sort(),['end','providerId','start','streamId']);
+assert.equal(await player.start(),false);assert.equal(player.state().status,'failed');assert.ok(cleanup>0,'timed-out play cleans up transport');
+let finishPlay;player=api.create({now:()=>now,transport:{...transport,play:()=>new Promise(resolve=>{finishPlay=resolve;})}});
+player.offer(offer);await player.verify();const starting=player.start();player.stop();finishPlay({started:true});
+assert.equal(await starting,false);assert.equal(player.state().status,'stopped','late start cannot revive stopped session');
+for(const invalid of [{...offer,end:now+1},{...offer,streamId:'https://private.invalid'},{...offer,start:-1}]){
+ assert.equal(player.offer(invalid).status,'unavailable');assert.equal(await player.start(),false);
+}
+player=api.create({now:()=>now,transport});player.offer(offer);await player.verify();await player.start();
+assert.equal(player.seek(NaN),false);assert.equal(player.seek(Infinity),false);
+player.failure();assert.equal(player.state().status,'failed');assert.equal(player.pause(),false);
