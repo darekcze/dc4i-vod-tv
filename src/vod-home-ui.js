@@ -4,11 +4,13 @@
  var TV=window.TV,model=window.DC4IHomeRails;if(!TV||!model)return;
  var layoutKey='homeRailsLayoutV1',cacheKey='homeRailsMetadataV1';
  function tr(pl,en){return TV.S.uiLang==='en'?en:pl;}
- function write(key,value){TV.store(key,value);if(JSON.stringify(TV.store(key))!==JSON.stringify(value))throw Error('storage unavailable');}
- var cache=model.createCache({read:function(){return TV.store(cacheKey);},write:function(v){write(cacheKey,v);}});
- function config(){var raw=TV.store(layoutKey)||{};return {active:raw.active!==false,
-  order:model.configuration({order:raw.order}),enabled:model.configuration({enabled:raw.enabled})};}
- function save(value){try{write(layoutKey,value);TV.refresh();return true;}catch(e){TV.toast(tr('Nie można zapisać ustawień','Could not save settings'));return false;}}
+ function write(key,value){TV.store(key,value);if(JSON.stringify(TV.readMetadataStorage(key))!==JSON.stringify(value))throw Error('storage unavailable');}
+ var cache=model.createCache({read:function(){return TV.readMetadataStorage(cacheKey);},write:function(v){write(cacheKey,v);}});
+ function config(){try{var raw=TV.readMetadataStorage(layoutKey);if(raw===null)raw={};
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||(raw.active!==undefined&&typeof raw.active!=='boolean')||['order','enabled'].some(function(k){return raw[k]!==undefined&&(!Array.isArray(raw[k])||raw[k].length>11||raw[k].some(function(id){return model.ids.indexOf(id)<0;}));}))throw Error();
+  return {active:raw.active!==false,order:model.configuration({order:raw.order}),enabled:model.configuration({enabled:raw.enabled})};
+ }catch(e){return {active:false,order:[],enabled:[],storageError:true};}}
+ function save(value){try{if(config().storageError)throw Error();write(layoutKey,value);TV.refresh();return true;}catch(e){TV.toast(tr('Nie można zapisać ustawień','Could not save settings'));return false;}}
  function rows(){
   var cfg=config();if(!cfg.active)return [];
   var source=typeof TV.homeCandidates==='function'?TV.homeCandidates():[],stamp=typeof TV.homeCandidatesStamp==='function'?TV.homeCandidatesStamp():0;
@@ -62,7 +64,7 @@
  function render(){
   panel.innerHTML='';controls=[];var cfg=config();
   var heading=TV.el('h1','');heading.textContent=tr('Sekcje Home','Home sections');panel.appendChild(heading);
-  var hint=TV.el('p','');hint.textContent=tr('OK: włącz/wyłącz. Lewo/prawo: przesuń sekcję. Wstecz: wróć.','OK: toggle. Left/right: move section. Back: return.');panel.appendChild(hint);
+  var hint=TV.el('p','');hint.textContent=cfg.storageError?tr('Nie można odczytać ustawień; zapis wstrzymany','Settings unreadable; writes paused'):tr('OK: włącz/wyłącz. Lewo/prawo: przesuń sekcję. Wstecz: wróć.','OK: toggle. Left/right: move section. Back: return.');panel.appendChild(hint);
   function button(text,fn,index){var el=TV.el('div','f home-layout-row');el.textContent=text;el.dataset.index=String(index);el.onok=fn;controls.push([el]);panel.appendChild(el);}
   button(tr('Wróć','Back'),function(){TV.closeView();},0);
   button(tr('Własne sekcje: ','Custom sections: ')+(cfg.active?tr('Włączone','On'):tr('Wyłączone','Off')),function(){cfg.active=!cfg.active;save(cfg);render();TV.rebuild(selected,0);},1);

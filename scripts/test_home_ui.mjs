@@ -11,6 +11,7 @@ const TV={S:{uiLang:'en'},P:{},homeCandidates:()=>source,homeCandidatesStamp:()=
  focusHomeCard(el){focused=el;},el(){return new El();},addView(k,v){views[k]=v;},addSetting(r){settings.push(r);},refresh(){refreshes++;},rebuild(){},view:()=>view,
  openView(k){view=k;views[k].show();},closeView(){views[view].hide();view='home';},toast(x){messages.push(x);},itemOk(x){opened.push(x);},
  personalized:{settings:()=>({otherMin:0}),history:()=>[]},epgMetadata:{homeEvents:()=>[]}};
+TV.readMetadataStorage=k=>TV.store(k);
 const context={window:{TV},document:{createElement:()=>new El(),body:new El(),querySelector:()=>focused,querySelectorAll:()=>visibleCards},setInterval(fn){intervals.push(fn);},Date:class extends Date{static now(){return clock;}}};
 for(const name of ['vod-recommendations.js','vod-home-rails.js','vod-home-ui.js'])if(existsSync('src/'+name))vm.runInNewContext(readFileSync('src/'+name,'utf8'),context);
 assert.ok(TV.homeRails,'Home UI installed');
@@ -53,3 +54,4 @@ for(const value of [{app:{id:'com.synthetic.app'}},{item:{tmdb:{id:987,type:'mov
  visibleCards=[moved,after,next];TV.homeRails.restoreFocus(identity);assert.equal(focused,after,'baseline identity survives rail insertion');
  focused=after;visibleCards=[before];TV.homeRails.restoreFocus(identity);assert.equal(focused,before,'baseline identity survives rail removal');
 }
+TV.readMetadataStorage=()=>{throw Error('corrupt');};assert.equal(TV.homeRails.config().storageError,true);const prior=JSON.stringify(storage);TV.homeRails.openSettings();views['home-layout'].nav()[1][0].onok();assert.equal(JSON.stringify(storage),prior,'unreadable layout is never overwritten');assert.match(messages.at(-1),/zapisać|save/);

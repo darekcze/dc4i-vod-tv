@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';const c={window:{},Set};vm.runInNewContext(fs.readFileSync('src/vod-metadata-backup.js','utf8'),c);const api=c.window.DC4IMetadataBackup;
+let profile='a:',fail=false;const data={'a:dc4iChartLinksV1':JSON.stringify({region:'poland',category:'film',privateExtra:'SECRET'}),'a:accounts':'SECRET_ACCOUNT'};
+const b=api.create({profile:()=>profile,read:k=>data[profile+k]??null,write(k,v){if(fail)throw Error();if(v===null)delete data[profile+k];else data[profile+k]=v;}});
+const text=b.exportText();assert.ok(!text.includes('SECRET'));const incoming=JSON.stringify({format:'dc4i-preferences',schema:1,sections:{charts:{region:'global',category:'tv'}}});
+assert.equal(b.apply().ok,false);assert.equal(b.prepare(incoming,'charts').ok,true);assert.equal(b.apply().ok,true);assert.equal(JSON.parse(data['a:dc4iChartLinksV1']).privateExtra,'SECRET');assert.equal(b.rollback().ok,true);
+b.prepare(incoming,'charts');profile='b:';assert.equal(b.apply().reason,'conflict');profile='a:';b.prepare(incoming,'charts');data['a:dc4iChartLinksV1']=JSON.stringify({region:'global',category:'film'});assert.equal(b.apply().reason,'conflict');
+b.prepare(incoming,'charts');fail=true;assert.equal(b.apply().ok,false);fail=false;assert.equal(JSON.parse(data['a:dc4iChartLinksV1']).category,'film');
+for(const bad of ['x'.repeat(16385),'{',incoming.replace('"schema":1','"schema":2'),incoming.replace('"category":"tv"','"category":"tv","password":"x"'),incoming.replace('"charts":','"accounts":')])assert.throws(()=>api.parse(bad));
+data['a:dc4iChartLinksV1']='{';assert.equal(b.prepare(incoming,'charts').ok,false);assert.equal(data['a:dc4iChartLinksV1'],'{');assert.throws(()=>b.exportText());assert.equal(data['a:accounts'],'SECRET_ACCOUNT');
+console.log('METADATA_BACKUP_PASS allowlist, size/schema, preview, profile/concurrent conflicts, failed writes, rollback, secret exclusion');
+
+data['a:dc4iChartLinksV1']=JSON.stringify({region:'poland',category:'film',password:'SECRET'});const preview=b.prepare(incoming,'charts');assert.equal(preview.changes[0].before.value,'poland');assert.equal(preview.changes[0].after,'global');assert.equal(preview.changes[0].changed,true);assert.ok(!JSON.stringify(preview).includes('SECRET'));
+data['a:dc4iChartLinksV1']=JSON.stringify({region:'SECRET_REGION',category:'tv'});const hidden=b.prepare(incoming,'charts');assert.equal(hidden.changes[0].before.state,'invalid');assert.ok(!JSON.stringify(hidden).includes('SECRET_REGION'));assert.equal(hidden.changes[1].changed,false);delete data['a:dc4iChartLinksV1'];assert.equal(b.prepare(incoming,'charts').changes[0].before.state,'missing');

@@ -15,6 +15,7 @@ for(const providerState of ['success','empty','error','delayed']){
   xtream:{open(){},getLiveCategories:()=>[],getAccounts:()=>[{label:'fixture'}],ensureCatalog:async()=>[{id:'1',type:'live',title:'Channel',epgId:'a'}],
    guideEpg:async()=>{if(providerState==='delayed')return new Promise(resolve=>{resolveProvider=resolve;});if(providerState==='error')throw Error('fixture');return providerState==='success'?[{title:'Provider',time:{start:clock,end:clock+10000}}]:[];},guideWatch(){watched++;return true;}},
   addView(name,view){guide=view;},view:()=>'guide',rebuild(r,c){if(guide&&r!==undefined)focused=guide.nav()[r]?.[c||0];},closeView(){},toast(){}};
+ TV.readMetadataStorage=k=>TV.store(k);
  const context={window:{TV},document:{body:new El(),createElement:()=>new El()},Date:class extends Date{static now(){return clock;}},setTimeout(fn){timers.push(fn);return timers.length;},clearTimeout(){},setInterval(fn){intervals.push(fn);},Number,JSON};
  for(const name of ['vod-guide-model.js','vod-rich-epg.js','vod-epg-metadata-ui.js','vod-channel-guide.js'])vm.runInNewContext(readFileSync('src/'+name,'utf8'),context);
  TV.epgMetadata.acceptLocal({schemaVersion:1,source:'synthetic',fetchedAt:clock,channels:[{id:'a',names:['Channel']}],events:[{channelId:'a',title:'Local programme',start:clock-100,end:clock+3600000}]});

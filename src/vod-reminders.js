@@ -4,6 +4,7 @@
  function preferences(raw){raw=raw||{};return {enabled:raw.enabled!==false,quiet:raw.quiet===true,
   start:Number.isInteger(raw.start)&&raw.start>=0&&raw.start<1440?raw.start:1320,
   end:Number.isInteger(raw.end)&&raw.end>=0&&raw.end<1440?raw.end:480};}
+ function validPreferences(raw){return raw==null||(typeof raw==='object'&&!Array.isArray(raw)&&['enabled','quiet'].every(function(k){return raw[k]===undefined||typeof raw[k]==='boolean';})&&['start','end'].every(function(k){return raw[k]===undefined||(Number.isInteger(raw[k])&&raw[k]>=0&&raw[k]<1440);}));}
  function quiet(now,pref){
   if(!pref.quiet)return false;var date=new Date(now),minute=date.getHours()*60+date.getMinutes();
   return pref.start===pref.end|| (pref.start<pref.end?minute>=pref.start&&minute<pref.end:minute>=pref.start||minute<pref.end);
@@ -19,9 +20,9 @@
    if(!Array.isArray(data)||data.length>5000||JSON.stringify(data).length>2000000)return {ok:false,reason:'invalid-storage'};
    return {ok:true,raw:data.slice()};}catch(e){return {ok:false,reason:'storage-failed'};}}
   function write(key,value){try{options.write(key,value);return JSON.stringify(options.read(key))===JSON.stringify(value);}catch(e){return false;}}
-  function prefs(){try{var raw=options.read(PREF);if(raw!=null&&(typeof raw!=='object'||Array.isArray(raw)))throw Error('invalid preferences');return preferences(raw);}
+  function prefs(){try{var raw=options.read(PREF);if(!validPreferences(raw))throw Error('invalid preferences');return preferences(raw);}
    catch(e){return Object.assign(preferences(),{enabled:false,storageError:true});}}
-  function setPrefs(value){try{var old=options.read(PREF);if(old!=null&&(typeof old!=='object'||Array.isArray(old)))return {ok:false,reason:'invalid-preferences'};
+  function setPrefs(value){try{var old=options.read(PREF);if(!validPreferences(old))return {ok:false,reason:'invalid-preferences'};
    var next=Object.assign({},old||{},preferences(Object.assign({},old||{},value)));
    return {ok:write(PREF,next)};}catch(e){return {ok:false,reason:'storage-failed'};}}
   function list(){var data=load();if(!data.ok)return {ok:false,reason:data.reason,items:[]};var seen=Object.create(null);

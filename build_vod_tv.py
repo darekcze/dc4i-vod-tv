@@ -196,3 +196,9 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1225_chart_links.py')],chec
 
 # Observed native progression only, never external app opens.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1226_playback.py')],check=True)
+
+# Scoped metadata backup and strict storage boundaries, no migration.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1227_hardening.py')],check=True)
+
+# Recoverable metadata restore, not a multi-key localStorage atomicity claim.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1227_journal.py')],check=True)

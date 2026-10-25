@@ -3,6 +3,9 @@ class Events{constructor(){this.events={};}addEventListener(k,f){(this.events[k]
 let now=100000,visible=true,fail=false;const records={},TV={P:{prefix:'a:'},S:{uiLang:'en'},store(k,v){if(arguments.length===2&&!fail)records[this.P.prefix+k]=JSON.stringify(v);return JSON.parse(records[this.P.prefix+k]||'null');},readPlaybackStorage(){const v=records[this.P.prefix+'playbackLearningV1'];return v===undefined?null:JSON.parse(v);},addSetting(){},toast(){},personalized:{history:()=>[]}};
 const win=new Events();win.TV=TV;const doc=new Events();Object.defineProperty(doc,'visibilityState',{get:()=>visible?'visible':'hidden'});doc.hasFocus=()=>visible;
 const rows=[];TV.addRow=fn=>rows.push(fn);TV.homeCandidates=()=>[{tmdb:{id:1,type:'movie'},title:'Synthetic',genre_ids:[878],vote_average:8}];TV.itemOk=()=>{};TV.openItem=()=>{};TV.refresh=()=>{};
+TV.readMetadataStorage=k=>TV.store(k);
+TV.profileSettingsReadable=()=>true;
+TV.profileFlagEnabled=k=>TV.S[k]!==false&&(TV.store('settings')||{})[k]!==false;
 const context={window:win,document:doc,Date:class extends Date{static now(){return now;}},WeakMap,Set,Math};
 for(const f of ['vod-recommendations.js','vod-personalization-ui.js','vod-playback-learning.js','vod-playback-ui.js'])vm.runInNewContext(fs.readFileSync('src/'+f,'utf8'),context);
 const media=new Events();media.currentTime=0;media.duration=100;media.audioTracks=[{language:'en'}];media.textTracks=[{language:'pl',kind:'subtitles'}];
@@ -20,3 +23,5 @@ console.log('PLAYBACK_UI_PASS listener cleanup, profile/write/corruption/clear b
 
 delete records['a:playbackLearningV1'];start();media.paused=false;media.ended=false;advance();visible=false;doc.emit('visibilitychange');now+=100000;media.currentTime=90;media.emit('timeupdate');visible=true;doc.emit('visibilitychange');media.emit('timeupdate');now+=5000;media.currentTime=95;media.emit('timeupdate');media.emit('pause');assert.equal(TV.playbackLearning.history()[0].seconds,45,'visible still-playing session resumes without crediting hidden interval');
 win.emit('blur');now+=5000;win.emit('focus');media.currentTime=95;media.emit('timeupdate');now+=5000;media.currentTime=100;media.emit('timeupdate');media.emit('pause');assert.equal(TV.playbackLearning.history()[0].seconds,50,'focus resumes progression');TV.playbackLearning.stop(media);assert.equal(win.events.focus.size,0);
+records['a:playbackLearningV1']=JSON.stringify({schema:1,records:[{session:'imported-session',action:'completed',seconds:90,at:now,genres:[878],duration:100,imported:true}]});assert.equal(TV.playbackLearning.history().length,0,'imported metadata cannot establish native observed learning');
+for(let i=0;i<250;i++){TV.playbackLearning.begin(media,{});TV.playbackLearning.stop(media);}assert.equal(media.events.timeupdate.size,0);assert.equal(doc.events.visibilitychange.size,0);assert.equal(win.events.blur.size,0);assert.equal(win.events.focus.size,0,'repeated navigation leaves no session listeners');

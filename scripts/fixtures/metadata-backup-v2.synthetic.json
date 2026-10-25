@@ -1,0 +1,1 @@
+{"format":"dc4i-preferences","schema":2,"sections":{"profile":{"uiLang":"en","recoLearnPlayback":false},"opened":[{"key":"movie:123","action":"opened","at":1000,"genres":[878]}],"playback":[{"session":"synthetic-session-1","action":"partial","seconds":40,"at":1000,"genres":[878],"duration":100}]}}

@@ -25,30 +25,31 @@
     TV.addSetting({key:cfg.key,title:cfg.title,hint:cfg.hint,opts:cfg.opts},cfg.def);
   });
   function settings(){
+    if(typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable())return engine.settings({enabled:false});
     return engine.settings({
-      enabled:TV.S.recoEnabled!==false,
+      enabled:typeof TV.profileFlagEnabled==='function'&&TV.profileFlagEnabled('recoEnabled'),
       favouriteGenre:TV.S.recoFavouriteGenre||'scifi',
       sciFiMin:TV.S.recoSciFiMin==null?6:TV.S.recoSciFiMin,
       horrorMin:TV.S.recoHorrorMin==null?9:TV.S.recoHorrorMin,
       otherMin:TV.S.recoOtherMin==null?7:TV.S.recoOtherMin,
       hideHorror:TV.S.recoHorrorMode==='hide'||!!(TV.P&&TV.P.extraQ),
       eveningBoost:TV.S.recoEveningBoost!==false,
-      learnHistory:TV.S.recoLearnHistory!==false,
+      learnHistory:typeof TV.profileFlagEnabled==='function'&&TV.profileFlagEnabled('recoLearnHistory'),
       hideOpened:TV.S.recoHideOpened===true
     });
   }
   function history(){
-    var h=TV.store(historyKey);
-    return Array.isArray(h)?h:[];
+    try{var h=TV.readMetadataStorage(historyKey);return Array.isArray(h)?h:[];}catch(e){return [];}
   }
   function clear(){
-    TV.store(historyKey,[]);
+    try{TV.store(historyKey,[]);if(JSON.stringify(TV.readMetadataStorage(historyKey))!=='[]')throw Error();}
+    catch(e){TV.toast(TV.S.uiLang==='en'?'History was not cleared':'Nie wyczyszczono historii');return;}
     TV.toast('Wyczyszczono wybory bieżącego profilu');
     TV.refresh();
   }
   function record(item){
-    if(!item || !item.tmdb || !item.tmdb.id)return;
-    TV.store(historyKey,engine.record(history(),item,'opened',Date.now()));
+    if(!item || !item.tmdb || !item.tmdb.id||typeof TV.profileSettingsReadable!=='function'||!TV.profileSettingsReadable())return;
+    try{var prior=TV.readMetadataStorage(historyKey);if(prior!==null&&(!Array.isArray(prior)||prior.length>150))return;TV.store(historyKey,engine.record(prior||[],item,'opened',Date.now()));}catch(e){/* preserve unreadable history */}
   }
   TV.personalized={settings:settings,history:history,clear:clear};
   // Only user actions inside DC4I VODTV are observed. Never mark as watched.
