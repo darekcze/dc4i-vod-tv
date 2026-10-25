@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Chromium geometry regression test for the 1920x1080 LG quick drawer."""
 from pathlib import Path
-import json,re,subprocess,tempfile
+import json,re,subprocess,tempfile,os,shutil
 R=Path(__file__).resolve().parents[1]
-chrome="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+chrome=os.environ.get("CHROME_PATH") or next((p for p in [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    *(shutil.which(name) for name in ("chromium", "chromium-browser", "google-chrome", "google-chrome-stable"))
+] if p and os.access(p, os.X_OK)), None)
+if not chrome or not os.access(chrome, os.X_OK):
+    raise SystemExit("Chrome/Chromium unavailable; set CHROME_PATH to an executable browser path.")
 with tempfile.TemporaryDirectory(prefix="dc4i-panel-test-",dir=R/"private") as profile:
  command=[chrome,"--headless=new","--disable-gpu","--no-first-run","--disable-extensions","--disable-background-networking",
           "--user-data-dir="+profile,"--window-size=1920,1080","--force-device-scale-factor=1","--virtual-time-budget=1200",
