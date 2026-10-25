@@ -40,7 +40,7 @@ TV.S.uiLang='pl';
 assert.equal(adapter.timeline({epgId:'a'},1,provider,'success').status,'Dane EPG dostawcy');
 const many=Array.from({length:230},(_,i)=>({
  title:'Broadcast '+i,time:{start:now+i*1000,end:now+(i+1)*1000}}));
-assert.equal(adapter.timeline({epgId:'a'},0,many,'success').events.length,201,
+assert.equal(adapter.timeline({epgId:'unmapped'},0,many,'success').events.length,201,
  '200 visible rows plus a truncation sentinel');
 assert.throws(()=>adapter.timeline({epgId:'a'},5,provider),/day/);
 const guide=readFileSync('src/vod-channel-guide.js','utf8');
