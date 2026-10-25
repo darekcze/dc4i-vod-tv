@@ -13,6 +13,17 @@ Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates
 - Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
 - System-wide LG Search integration remains unverified and is not advertised.
 
+## [1.2.18] - 2026-10-25
+
+### Profile recommendations
+- Adds a Home row of ranked, explainable per-profile suggestions (match score 0-100).
+- Settings: favorite genre, rating thresholds for Sci-Fi (6/10), horror (9/10 or hidden), other genres (7/10), evening family/romance boost, learn local openings, hide opened items, clear history.
+- Stores at most 150 local opening events per profile. Opened does not imply watched. Ratings and genres originate from TMDB, with no invented scores.
+- App ID, user playlists and existing design stay unchanged.
+
+### Validation
+- Recommender unit tests, profile isolation, TV-size Chromium tests and versioned IPK validation. Homebrew list retains 33 entries (32 other apps unchanged).
+
 ## [1.2.17] - 2026-10-25
 
 ### Canonical TMDB/Xtream identity, EPG and detailed posters

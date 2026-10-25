@@ -11,6 +11,17 @@ Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.bor
 - Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
 - Systemowe LG Search nadal wymaga osobnych testów.
 
+## [1.2.18] - 25.10.2026
+
+### Personalizacja i polecane per profil
+- Nowy wiersz Dopasowane do profilu z rankingiem 0-100 i uzasadnieniem; ranking nie udaje oceny filmu.
+- Ustawienia: ulubiony gatunek, minimalna ocena Sci-Fi 6/10, horror 9/10 lub całkowicie ukryj, inne gatunki 7/10, wieczorny bonus dla familijnych i romantycznych, uczenie lokalnych wyborów, ukrywanie otwartych tytułów i czyszczenie historii.
+- Osobna historia otwarć dla każdego profilu, do 150 zdarzeń. Otwarcie nie oznacza obejrzenia; brak ocen filmów nie jest uzupełniany fikcyjnymi wartościami.
+- Bez zmiany identyfikatora aplikacji i bez usuwania kont Xtream.
+
+### Weryfikacja
+- Testy jednostkowe, izolacja profili, interfejs Chromium 1920x1080 i poprawność pakietu IPK. Katalog zachowuje 33 aplikacje (32 inne bez zmian).
+
 ## [1.2.17] - 25.10.2026
 
 ### Wspólne karty TMDB/Xtream, plakaty, oceny i EPG

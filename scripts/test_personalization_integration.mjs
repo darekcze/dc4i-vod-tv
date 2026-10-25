@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+const base='build/dc4i-vodtv/';
+const html=readFileSync(base+'index.html','utf8');
+const app=readFileSync(base+'app.js','utf8');
+const metadata=JSON.parse(readFileSync(base+'appinfo.json','utf8'));
+assert.equal(metadata.id,'com.dc4i.vodtv');
+assert.equal(metadata.version,'1.2.18');
+assert.ok(html.includes('<script src="vod-recommendations.js"></script>'));
+assert.ok(html.includes('<script src="vod-personalization-ui.js"></script>'));
+assert.ok(html.indexOf('vod-recommendations.js')<html.indexOf('vod-personalization-ui.js'));
+assert.ok(html.indexOf('app.js')<html.indexOf('vod-personalization-ui.js'));
+assert.ok(app.includes('homeCandidates: function()'),'source metadata exposed to ranked rows');
+assert.ok(app.includes('genre_ids:') && app.includes('vote_average:'),'genre and real TMDB score carried into home candidate');
+assert.ok(app.includes('recoScore'),'a numeric match appears on ranked cards');
+assert.ok(app.includes('var personalized=extra.filter'),'new personalized row positioned before others');
+const uiPath=base+'vod-personalization-ui.js';
+assert.ok(existsSync(uiPath));
+const ui=readFileSync(uiPath,'utf8');
+for(const key of ['recoEnabled','recoFavouriteGenre','recoSciFiMin','recoHorrorMin','recoOtherMin','recoHorrorMode','recoEveningBoost','recoLearnHistory','recoHideOpened']){
+ assert.ok(ui.includes("key:'"+key+"'"),'setting available on TV '+key);
+}
+assert.ok(ui.includes("TV.addRow("),'actual recommendation row provided');
+assert.ok(ui.includes("historyKey='recommendationOpensV1'") && ui.includes('TV.store(historyKey'),'per-profile activity log');
+assert.ok(ui.includes("TV.itemOk=function"),'title actions recorded as opened');
+assert.ok(!ui.includes("record(history,it,'watched'"),'clicks are not claimed as watched');
+assert.ok(ui.includes("Dopasowane do profilu"),'transparent home row label');
+const css=readFileSync(base+'dc4i.css','utf8');
+assert.ok(css.includes('.reco-match'),'score badge with TV-readable styling');
+console.log('PERSONALIZATION_INTEGRATION_ASSERTIONS_PASS');
