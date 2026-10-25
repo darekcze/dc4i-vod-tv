@@ -12,7 +12,11 @@
  function create(port){var preview=null,undo=null;
   function exportText(){var sections={};Object.keys(keys).forEach(function(name){var raw=port.read(keys[name]);if(raw!==null)sections[name]=project(name,JSON.parse(raw));});if(!Object.keys(sections).length)throw Error('nothing saved');return JSON.stringify({format:'dc4i-preferences',schema:1,sections:sections},null,2);}
   function prepare(text,name){preview=null;if(!Object.prototype.hasOwnProperty.call(keys,name))return {ok:false,reason:'section'};try{var sections=parse(text);if(!sections[name])throw Error();var key=keys[name],raw=port.read(key),old=raw===null?{}:JSON.parse(raw);if(!object(old))throw Error();
-   preview={profile:port.profile(),key:key,before:raw,after:JSON.stringify(Object.assign(Object.create(null),old,sections[name])),section:name};return {ok:true,section:name,fields:Object.keys(sections[name])};}catch(e){return {ok:false,reason:'invalid-or-unreadable'};}}
+   var changes=Object.keys(sections[name]).map(function(field){var before={state:'missing'};
+    if(Object.prototype.hasOwnProperty.call(old,field)){try{var candidate=Object.assign({},sections[name]);candidate[field]=old[field];before={state:'value',value:section(name,candidate)[field]};}catch(e){before={state:'invalid'};}}
+    var after=sections[name][field];return {field:field,before:before,after:after,changed:before.state!=='value'||JSON.stringify(before.value)!==JSON.stringify(after)};
+   });
+   preview={profile:port.profile(),key:key,before:raw,after:JSON.stringify(Object.assign(Object.create(null),old,sections[name])),section:name};return {ok:true,section:name,fields:Object.keys(sections[name]),changes:changes};}catch(e){return {ok:false,reason:'invalid-or-unreadable'};}}
   function apply(){if(!preview)return {ok:false,reason:'preview-required'};var p=preview;preview=null;
    try{if(port.profile()!==p.profile||port.read(p.key)!==p.before)return {ok:false,reason:'conflict'};port.write(p.key,p.after);
     if(port.read(p.key)!==p.after)return {ok:false,reason:'write-unconfirmed'};undo=p;return {ok:true};}catch(e){return {ok:false,reason:'write-unconfirmed'};}}
