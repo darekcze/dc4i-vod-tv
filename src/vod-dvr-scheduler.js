@@ -71,7 +71,7 @@
      if(job.state==='recording'&&now>=job.end)await operate(job,'finish');
      if(job.state!=='scheduled')continue;
      if(now>=job.end||now-job.start>30000){job.state='missed';job.reason='start-window-missed';continue;}
-     if(now>=job.start&&jobs.filter(active).length<concurrent&&!jobs.some(function(j){return j.state==='interrupted';}))await operate(job,'start');
+     if(now>=job.start&&used()<=quota&&jobs.filter(active).length<concurrent&&!jobs.some(function(j){return j.state==='interrupted';}))await operate(job,'start');
     }
    })().finally(function(){ticking=null;});return ticking;
   }
@@ -91,13 +91,12 @@
    for(var i=0;i<value.jobs.length;i++){
     var raw=value.jobs[i],job=clean(raw);if(!job||seen[job.id]||STATES.indexOf(raw.state)<0)return false;seen[job.id]=true;
     job.state=active(raw)?'interrupted':raw.state;job.reason=job.state==='interrupted'?'restart-interrupted':'restored-metadata';
-    if(raw.bytes){if(!Number.isSafeInteger(raw.bytes)||raw.bytes<0||raw.bytes>quota)return false;job.bytes=raw.bytes;}
+    if(raw.bytes){if(!Number.isSafeInteger(raw.bytes)||raw.bytes<0)return false;job.bytes=raw.bytes;}
     if(raw.artifactId){if(!id(raw.artifactId))return false;job.artifactId=raw.artifactId;}
     if(raw.completedAt){if(!Number.isSafeInteger(raw.completedAt)||raw.completedAt<0||raw.completedAt>clock())return false;job.completedAt=raw.completedAt;}
     if(job.state==='finished-unverified'&&(!job.bytes||!job.artifactId||!job.completedAt))return false;
     restored.push(job);
    }
-   if(restored.reduce(function(n,j){return n+reserved(j);},0)>quota)return false;
    jobs=restored;jobs.forEach(function(j){versions[j.id]=0;});return true;
   }
   async function reconcile(key){
@@ -111,7 +110,7 @@
    job.state='interrupted';job.reason='recovery-unverified';return false;
   }
   return {schedule:schedule,tick:tick,cancel:cancel,snapshot:snapshot,restore:restore,reconcile:reconcile,jobs:function(){return jobs.map(publicJob);},
-   quota:function(){return {limit:quota,reserved:used(),remaining:Math.max(0,quota-used())};},
+   quota:function(){return {limit:quota,reserved:used(),overQuota:used()>quota,remaining:Math.max(0,quota-used())};},
    capability:function(){return {usable:false,simulation:available,reason:available?'in-memory-contract-only':'backend-unavailable'};},
    retentionPlan:function(){return jobs.filter(function(j){return j.state==='finished-unverified'&&clock()-j.completedAt>=retention;}).map(function(j){return {id:j.id,artifactId:j.artifactId,bytes:j.bytes};});}};
  }

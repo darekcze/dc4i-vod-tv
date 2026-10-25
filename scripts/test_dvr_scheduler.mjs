@@ -49,3 +49,12 @@ assert.equal(over.jobs()[0].state,'interrupted');assert.equal(over.quota().remai
 let rejectStat;const racing=api.create({...options,backend:{...backend,stat:()=>new Promise((_,reject)=>{rejectStat=reject;})}});
 racing.restore({schema:1,jobs:[{...job,state:'interrupted'}]});const reconciling=racing.reconcile('a');await racing.cancel('a');
 rejectStat(Error('synthetic private URL must not escape'));await reconciling;assert.equal(racing.jobs()[0].state,'cancelled','late recovery error cannot revive cancelled job');
+const overRecovered=api.create(options);assert.equal(overRecovered.restore(over.snapshot()),true,'over-budget snapshot survives reconstruction');
+assert.equal(overRecovered.jobs()[0].bytes,600);assert.equal(overRecovered.quota().remaining,0);
+assert.equal(overRecovered.schedule({...job,id:'blocked',start:now+1000,end:now+2000}).accepted,false);
+const aggregate=api.create(options);
+const excess={schema:1,jobs:Array.from({length:3},(_,i)=>({...job,id:'aggregate'+i,start:now+(i+1)*1000,end:now+(i+2)*1000,state:'scheduled'}))};
+assert.equal(aggregate.restore(excess),true,'aggregate over-quota reservations retained');
+assert.equal(aggregate.quota().reserved,600);const beforeStarts=starts.length;now=excess.jobs[0].start;await aggregate.tick();
+assert.equal(starts.length,beforeStarts,'over-quota recovery cannot start jobs');
+assert.equal(aggregate.schedule({...job,id:'blocked2',start:now+5000,end:now+6000}).reason,'quota');
