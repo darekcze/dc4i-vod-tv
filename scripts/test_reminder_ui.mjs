@@ -5,6 +5,7 @@ class El{constructor(){this.children=[];this.dataset={};}setAttribute(){}appendC
 let now=100000,profile='a',visible='visible',focused=true,fail=false,view='home';const data={},views={},messages=[],intervals=[],listeners={};
 const TV={S:{uiLang:'en'},store(k,v){const key=profile+':'+k;if(arguments.length===2&&!fail)data[key]=JSON.stringify(v);return JSON.parse(data[key]||'null');},
  el:()=>new El(),addSetting(){},addView(k,v){views[k]=v;},openView(k){view=k;views[k].show();},closeView(){views[view].hide();view='home';},rebuild(){},view:()=>view,toast:s=>messages.push(s)};
+TV.readReminderStorage=k=>TV.store(k);
 const context={window:{TV,addEventListener(k,fn){listeners[k]=fn;}},document:{body:new El(),get visibilityState(){return visible;},hasFocus:()=>focused,addEventListener(k,fn){listeners[k]=fn;}},
  Date:class extends Date{static now(){return now;}},setInterval(fn){intervals.push(fn);}};
 for(const name of ['vod-reminders.js','vod-reminder-ui.js'])if(existsSync('src/'+name))vm.runInNewContext(readFileSync('src/'+name,'utf8'),context);

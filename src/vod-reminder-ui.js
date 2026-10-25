@@ -1,7 +1,7 @@
 /* In-app foreground reminders only; no Luna/system toast, wake or background API. */
 (function(){
  'use strict';var TV=window.TV,api=window.DC4IReminders;if(!TV||!api)return;
- var model=api.create({read:function(k){return TV.store(k);},write:function(k,v){TV.store(k,v);}});
+ var model=api.create({read:function(k){if(typeof TV.readReminderStorage!=='function')throw Error('Reminder storage unavailable');return TV.readReminderStorage(k);},write:function(k,v){TV.store(k,v);}});
  function tr(pl,en){return TV.S.uiLang==='en'?en:pl;}
  function foreground(){return document.visibilityState==='visible'&&typeof document.hasFocus==='function'&&document.hasFocus();}
  var panel=TV.el('main','reminder-settings');panel.hidden=true;panel.setAttribute('translate','no');document.body.appendChild(panel);
