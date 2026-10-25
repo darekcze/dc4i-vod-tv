@@ -10,3 +10,6 @@ __pycache__/
 *.pyc
 
 tools/
+
+# Isolated release worktrees
+.worktrees/
