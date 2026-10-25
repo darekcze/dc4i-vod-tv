@@ -193,3 +193,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1224_reminders.py')],check=
 
 # Official chart links only; no feed ingestion.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1225_chart_links.py')],check=True)
+
+# Observed native progression only, never external app opens.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1226_playback.py')],check=True)

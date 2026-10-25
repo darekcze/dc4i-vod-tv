@@ -62,7 +62,7 @@
     if(!pref.enabled || typeof TV.homeCandidates!=='function')return null;
     var source=TV.homeCandidates();
     if(!source || !source.length)return null;
-    var suggestions=engine.rank(source,pref,history(),Date.now()).slice(0,14);
+    var suggestions=engine.rank(source,pref,TV.personalized.history(),Date.now()).slice(0,14);
     if(!suggestions.length)return null;
     var cards=suggestions.map(function(entry){
       return Object.assign({},entry.item,{recoScore:entry.score,recoReason:entry.reason});

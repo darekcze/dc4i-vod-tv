@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+const root='build/dc4i-vodtv/',xt=fs.readFileSync(root+'vod-xtream.js','utf8'),app=fs.readFileSync(root+'app.js','utf8');
+const order=[],media={load(){order.push('load');},play(){order.push('play');},pause(){},removeAttribute(){}};const els={video:media,player:{},playmsg:{}};
+const c={account:()=>({}),streamUrl:()=> 'synthetic-stream',document:{querySelector:()=>null},$:k=>els[k],rows(){},TV:{playbackLearning:{begin(v,i){assert.equal(v,media);order.push('observe');},stop(v){assert.equal(v,media);order.push('stop');}}}};
+vm.runInNewContext(xt.slice(xt.indexOf('function play(i){'),xt.indexOf('function nav(){')),c);c.play({id:'1',title:'Synthetic'});assert.deepEqual(order,['observe','load','play']);c.stop();assert.ok(order.includes('stop'));
+assert.ok(fs.readFileSync(root+'features/details.js','utf8').includes('learning:{genre_ids:'));assert.ok(xt.includes('learning:i.learning'),'episodes inherit matched series metadata');
+const P={prefix:'a:'},raw={};const context={P,localStorage:{getItem:k=>Object.hasOwn(raw,k)?raw[k]:null}};
+vm.runInNewContext(app.slice(app.indexOf('  function store('),app.indexOf('  // ---------- settings')),context);assert.equal(context.readPlaybackStorage(),null);raw['a:playbackLearningV1']='{';assert.throws(()=>context.readPlaybackStorage());
+assert.equal(JSON.parse(fs.readFileSync(root+'appinfo.json')).version,'1.2.19');
+console.log('PLAYBACK_INTEGRATION_PASS actual native play/stop hooks, matched metadata propagation, strict storage and version preservation');

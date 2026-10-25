@@ -75,9 +75,13 @@
     var recentSignals=0;
     if(pref.learnHistory && historyArr.length && g.length){
       historyArr.forEach(function(e){
-        if (!e || (e.action!=='opened' && e.action!=='completed') || !Array.isArray(e.genres))return;
+        var observed=e&&e.provenance==='native-media-progression'&&e.seconds>=30&&(e.action==='observed-partial'||e.action==='observed-completed');
+        if (!e || (!observed&&e.action!=='opened' && e.action!=='completed') || !Array.isArray(e.genres))return;
         if(now-Number(e.at)>90*86400000 || now<Number(e.at))return;
-        if(e.genres.some(function(x){return g.indexOf(x)>=0;}))recentSignals++;
+        if(e.genres.some(function(x){return g.indexOf(x)>=0;})){
+          recentSignals+=observed?(e.action==='observed-completed'?2:1):1;
+          if(observed&&new Date(e.at).getDay()===date.getDay()&&Math.abs(new Date(e.at).getHours()-date.getHours())<=1)recentSignals+=0.5;
+        }
       });
     }
     var affinity=Math.min(9,recentSignals*3);
