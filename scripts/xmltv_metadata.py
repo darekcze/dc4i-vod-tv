@@ -47,10 +47,24 @@ def parse_xmltv(data, source, fetched_at):
         xml = data.decode('utf-8-sig')
         if '\x00' in xml or re.search(r'<!\s*(DOCTYPE|ENTITY)', xml, re.I):
             raise ValueError('XML declarations unsupported')
-        root = ET.fromstring(xml)
+        parser = ET.XMLPullParser(events=('start', 'end'))
+        depth, nodes, root = 0, 0, None
+        for offset in range(0, len(xml), 4096):
+            parser.feed(xml[offset:offset + 4096])
+            for kind, node in parser.read_events():
+                if kind == 'start':
+                    if root is None:
+                        root = node
+                    depth += 1
+                    nodes += 1
+                    if depth > 16 or nodes > 200_000:
+                        raise ValueError('XMLTV structure limit')
+                else:
+                    depth -= 1
+        parser.close()
     except (UnicodeError, ET.ParseError) as exc:
         raise ValueError('invalid XMLTV document') from exc
-    if root.tag != 'tv':
+    if root is None or root.tag != 'tv':
         raise ValueError('expected tv document')
     channels, conflicts = {}, set()
     channel_rows = root.findall('channel')

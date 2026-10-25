@@ -54,4 +54,14 @@ class XmltvTests(unittest.TestCase):
             with self.assertRaises(ValueError):self.parse(data)
         with self.assertRaises(ValueError):module.parse_xmltv(b'<tv/>','https://host/?password=x',NOW)
 
+    def test_depth_record_limits_and_compression_are_rejected(self):
+        import gzip
+        cases=[b'<tv>'+b'<x>'*40+b'</x>'*40+b'</tv>',gzip.compress(b'<tv/>'),
+               b'<tv>'+b'<channel id="x"><display-name>A</display-name></channel>'*1001+b'</tv>',
+               b'<tv>'+b'<programme/>'*20001+b'</tv>',
+               '<!DOCTYPE tv [<!ENTITY x "bad">]><tv/>'.encode('utf-16')]
+        for data in cases:
+            with self.subTest(size=len(data)):
+                with self.assertRaises(ValueError):self.parse(data)
+
 if __name__=='__main__':unittest.main(verbosity=2)
