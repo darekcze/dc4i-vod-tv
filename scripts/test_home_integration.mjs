@@ -11,7 +11,7 @@ context.store('homeRailsLayoutV1',{enabled:[]});
 await Promise.resolve();context.P.prefix='a:';assert.equal(context.store('homeRailsLayoutV1').order[0],'series');
 const build=app.slice(app.indexOf('  function buildRows()'),app.indexOf('  function el('));
 let renders=0,boots=0;const hero={hidden:false};
-const ctx={window:{TV:{}},TV:{homeRails:{rows:()=>[{id:'cached',items:[{title:'fixture'}]}]}},rowProviders:[],base:[],recent:[],heroItems:[],render(){renders++;},booted(){boots++;},$:()=>hero};
+const ctx={window:{TV:{}},TV:{view:()=>'home',homeRails:{captureFocus:()=>null,restoreFocus(){},rows:()=>[{id:'cached',items:[{title:'fixture'}]}]}},rowProviders:[],base:[],recent:[],heroItems:[],render(){renders++;},booted(){boots++;},$:()=>hero};
 ctx.window.TV=ctx.TV;vm.createContext(ctx);vm.runInContext(build+';buildRows();',ctx);
 assert.equal(renders,1,'cold-start rows render without base catalogue');assert.equal(boots,1);assert.equal(hero.hidden,true);
 assert.equal(ctx.rowsData[0].id,'cached');

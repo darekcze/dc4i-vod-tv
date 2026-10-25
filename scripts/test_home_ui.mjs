@@ -2,15 +2,16 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import vm from 'node:vm';
 class El{constructor(){this.children=[];this.dataset={};this.hidden=false;this.classList={};}setAttribute(){}appendChild(x){this.children.push(x);return x;}set innerHTML(v){this.children=[];}scrollIntoView(){}}
+let focused=null,visibleCards=[];
 let clock=1792929600000,profile='a',source=[],stamp=0,view='home',opened=[],messages=[],refreshes=0;
 const storage={},views={},settings=[],intervals=[];
 const movie={title:'Synthetic',tmdb:{id:1,type:'movie'},vote_average:8,vote_count:300,genre_ids:[878],release_date:'2026-01-01',img:'https://image.tmdb.org/t/p/w500/test.jpg'};
 const TV={S:{uiLang:'en'},P:{},homeCandidates:()=>source,homeCandidatesStamp:()=>stamp,
  store(k,v){const key=profile+':'+k;if(arguments.length===2)storage[key]=JSON.stringify(v);return JSON.parse(storage[key]||'null');},
- el(){return new El();},addView(k,v){views[k]=v;},addSetting(r){settings.push(r);},refresh(){refreshes++;},rebuild(){},view:()=>view,
+ focusHomeCard(el){focused=el;},el(){return new El();},addView(k,v){views[k]=v;},addSetting(r){settings.push(r);},refresh(){refreshes++;},rebuild(){},view:()=>view,
  openView(k){view=k;views[k].show();},closeView(){views[view].hide();view='home';},toast(x){messages.push(x);},itemOk(x){opened.push(x);},
  personalized:{settings:()=>({otherMin:0}),history:()=>[]},epgMetadata:{homeEvents:()=>[]}};
-const context={window:{TV},document:{createElement:()=>new El(),body:new El()},setInterval(fn){intervals.push(fn);},Date:class extends Date{static now(){return clock;}}};
+const context={window:{TV},document:{createElement:()=>new El(),body:new El(),querySelector:()=>focused,querySelectorAll:()=>visibleCards},setInterval(fn){intervals.push(fn);},Date:class extends Date{static now(){return clock;}}};
 for(const name of ['vod-recommendations.js','vod-home-rails.js','vod-home-ui.js'])if(existsSync('src/'+name))vm.runInNewContext(readFileSync('src/'+name,'utf8'),context);
 assert.ok(TV.homeRails,'Home UI installed');
 let rows=TV.homeRails.rows();assert.equal(rows[0].items[0].kind,'status');
@@ -38,3 +39,11 @@ source=[{...movie,title:'Fresh live item',tmdb:{id:99,type:'movie'}}];stamp=cloc
 assert.equal(TV.homeRails.rows().find(r=>r.id==='films').items[0].tmdb.id,99,'failed persistence cannot replace live catalogue with old cache');
 profile='new';assert.equal(TV.homeRails.rows().find(r=>r.id==='films').items[0].tmdb.id,99,'live rows work without any cache');
 TV.store=workingStore;
+
+const oldCard=TV.homeRails.card({kind:'airing',homeRowId:'now',channelId:'1',start:1,end:2,source:'synthetic',title:'A'});
+focused=oldCard;const saved=TV.homeRails.captureFocus();
+const moved=TV.homeRails.card({kind:'airing',homeRowId:'missedToday',channelId:'1',start:1,end:2,source:'synthetic',title:'A'});
+visibleCards=[moved];TV.homeRails.restoreFocus(saved);assert.equal(focused,moved,'follow same airing after temporal row change');
+assert.equal(card.item.tmdb.id,1,'custom canonical cards retain upstream focused-item contract');
+const next=TV.homeRails.card({kind:'airing',homeRowId:'now',channelId:'2',start:3,end:4,source:'synthetic',title:'B'});
+visibleCards=[next];TV.homeRails.restoreFocus(saved);assert.equal(focused,next,'missing item falls back to same row');

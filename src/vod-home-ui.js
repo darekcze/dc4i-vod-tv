@@ -25,7 +25,7 @@
    pref:TV.personalized?TV.personalized.settings():{},history:TV.personalized?TV.personalized.history():[]});
   result.forEach(function(row){
    if(row.ranking==='profile'&&freshness)row.title+=' · '+freshness;
-   row.items=row.items.map(function(item){return Object.assign({},item,{homeRail:true});});
+   row.items=row.items.map(function(item){return Object.assign({},item,{homeRail:true,homeRowId:row.id});});
   });
   if(!result.length)result=[{id:'home-status',title:tr('Twój Home','Your Home'),items:[{homeRail:true,kind:'status',
    title:tr('Brak propozycji dla bieżących ustawień','No suggestions for current settings'),
@@ -41,9 +41,13 @@
  }
  function card(item){
   var el=TV.el('div','card f home-rail-card'),pic=TV.el('div','pic'),title=TV.el('b','ttl'),caption=TV.el('div','cap');
+  el.homeRailRow=item.homeRowId||'home-status';
+  el.homeRailKey=item.kind==='title'?'title:'+item.tmdb.type+':'+item.tmdb.id:item.kind==='airing'?JSON.stringify(['airing',item.channelId,item.start,item.end,item.source]):'status';
+  el.item=item;
   el.setAttribute('translate','no');title.textContent=item.title||'';pic.appendChild(title);el.appendChild(pic);
   if(item.kind==='title'){
    var loaded=TV.homeCandidates().find(function(x){return x.tmdb&&x.tmdb.id===item.tmdb.id&&x.tmdb.type===item.tmdb.type;});
+   el.item=Object.assign({},loaded||{},item);
    if(loaded&&/^https:\/\/image\.tmdb\.org\//.test(loaded.img||'')){var img=document.createElement('img');img.src=loaded.img;img.alt='';img.loading='lazy';pic.appendChild(img);}
    caption.textContent='TMDB '+item.vote_average+'/10 · '+tr('Dopasowanie ','Match ')+item.recoScore+'/100 · '+reason(item.recoReason);
    el.onok=function(){TV.itemOk(Object.assign({},loaded||{},item));};
@@ -77,7 +81,15 @@
  });
  TV.addSetting({key:'homeRailsLayout',title:tr('Home: sekcje i kolejność','Home: sections and order'),
   hint:tr('Ustawienia bieżącego profilu','Current profile settings'),opts:[['edit',tr('Konfiguruj','Configure')]]},'');
- TV.homeRails={rows:rows,card:card,config:config,enabled:function(){return config().active;},openSettings:function(){TV.openView('home-layout');}};
+ function captureFocus(){var el=document.querySelector('.focus');return el&&el.homeRailKey?{key:el.homeRailKey,row:el.homeRailRow}:null;}
+ function restoreFocus(saved){
+  if(!saved||typeof TV.focusHomeCard!=='function')return;
+  var cards=[].slice.call(document.querySelectorAll('.home-rail-card'));
+  var target=cards.find(function(el){return el.homeRailKey===saved.key&&el.homeRailRow===saved.row;})||
+    cards.find(function(el){return el.homeRailKey===saved.key;})||cards.find(function(el){return el.homeRailRow===saved.row;});
+  if(target)TV.focusHomeCard(target);
+ }
+ TV.homeRails={captureFocus:captureFocus,restoreFocus:restoreFocus,rows:rows,card:card,config:config,enabled:function(){return config().active;},openSettings:function(){TV.openView('home-layout');}};
  // Reclassify now/upcoming/missed and cache age without any network requests.
  setInterval(function(){if(TV.view()==='home'&&TV.homeRails.enabled())TV.refresh();},60000);
  TV.refresh();
