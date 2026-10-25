@@ -184,3 +184,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1221_home_ui.py')],check=Tr
 
 # Draft archive capability contract: no verified production transport yet.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1222_archive.py')],check=True)
+
+# DVR information only: recording backend remains absent and unverified.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1223_dvr.py')],check=True)

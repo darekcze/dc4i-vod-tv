@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+const settings=[],messages=[];
+const TV={S:{uiLang:'en'},addSetting:r=>settings.push(r),toast:s=>messages.push(s)};
+const ctx={window:{TV},TV,setTimeout,clearTimeout};
+for(const name of ['vod-dvr-scheduler.js','vod-dvr-ui.js'])vm.runInNewContext(readFileSync('src/'+name,'utf8'),ctx);
+assert.equal(TV.dvr.capability().usable,false);assert.equal(TV.dvr.capability().simulation,false);
+assert.equal(TV.dvr.record,undefined);assert.equal(TV.dvr.schedule,undefined);
+assert.equal(settings.length,1);assert.equal(settings[0].opts[0][0],'info');
+TV.dvr.explain();assert.match(messages.pop(),/DVR unavailable/);TV.S.uiLang='pl';TV.dvr.explain();assert.match(messages.pop(),/DVR niedostępne/);
+const app=readFileSync('build/dc4i-vodtv/app.js','utf8'),html=readFileSync('build/dc4i-vodtv/index.html','utf8');
+assert.ok(html.indexOf('vod-dvr-scheduler.js')<html.indexOf('vod-dvr-ui.js'));
+const choose=app.slice(app.indexOf('  function choose(e)'),app.indexOf('  // ---------- quick settings'));
+Object.assign(ctx,{SROWS:settings,draft:{}});vm.runInNewContext(choose,ctx);ctx.choose({dataset:{r:'0',i:'0'}});assert.match(messages.pop(),/DVR niedostępne/);
+assert.equal(JSON.parse(readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
+console.log('DVR_INTEGRATION_PASS no backend/record action; PL/EN informational settings; version unchanged');
