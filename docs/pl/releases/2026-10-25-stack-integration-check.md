@@ -16,3 +16,8 @@ fixture. Następny krok: istniejący autoryzowany Chrome na Mac mini, odizolowan
 checkout, przypięte źródło brand i istniejący CLI, build i testy syntetyczne.
 Bez obchodzenia sandboxa, ponawiania zabronionego pobrania i kontaktu z LG.
 Produkcja pozostaje1.2.19; szczegółowe SHA i dowody w angielskim odpowiedniku.
+
+Naprawa QA: podgląd ucięty na1213px przy wysokości1080px jest teraz ostatnim
+elementem nawigacji z limitem40vh. OK rozpoczyna czytanie, góra/dół przewija do
+końca, Wstecz kończy czytanie, kolejne zamyka. Regresja RED→GREEN obejmuje długie
+PL/EN. Wymagany rzeczywisty retest przeglądarki; transakcje bez zmian.

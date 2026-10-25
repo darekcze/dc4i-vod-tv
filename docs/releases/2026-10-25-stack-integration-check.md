@@ -28,3 +28,10 @@ Permitted next QA route: existing authorized Mac mini Chrome, isolated checkout
 of this integration branch; provide pinned brand source and existing webOS CLI,
 build the offline fixture and execute1920x1080/remote/profile/import/privacy
 checks against synthetic inputs. Preserve existing dirty worktrees. No LG access.
+
+Browser QA reported preview clipped at1213px in1080px viewport. Fix: preview is
+now the final focusable control, bounded to40vh with internal scrolling. OK enters
+reading; Up/Down scroll to either end; Back exits reading, then closes normally.
+Node regression failed before fix and passes after, including long PL/EN content.
+Actual browser retest is still required; previous browser results do not validate
+this revised layout. Transaction/preview-token logic is preserved.
