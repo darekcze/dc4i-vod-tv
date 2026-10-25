@@ -74,5 +74,7 @@
  TV.addSetting({key:'homeRailsLayout',title:tr('Home: sekcje i kolejność','Home: sections and order'),
   hint:tr('Ustawienia bieżącego profilu','Current profile settings'),opts:[['edit',tr('Konfiguruj','Configure')]]},'');
  TV.homeRails={rows:rows,card:card,config:config,enabled:function(){return config().active;},openSettings:function(){TV.openView('home-layout');}};
+ // Reclassify now/upcoming/missed and cache age without any network requests.
+ setInterval(function(){if(TV.view()==='home'&&TV.homeRails.enabled())TV.refresh();},60000);
  TV.refresh();
 })();
