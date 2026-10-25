@@ -10,5 +10,8 @@ c.backupWrite('dc4iChartLinksV1','{"region":"global","category":"tv"}');P.prefix
 assert.equal(JSON.parse(fs.readFileSync('build/dc4i-vodtv/appinfo.json')).version,'1.2.19');
 console.log('HARDENING_GENERATED_PASS strict metadata/settings reads, settings write guard, backup key boundary and profile isolation');
 
-let reloads=0,messages=[];Object.assign(c,{dirty:true,draft:{recoLearnPlayback:false},S:{uiLang:'en'},location:{reload(){reloads++;}},toast:t=>messages.push(t)});
+let reloads=0,messages=[];Object.assign(c,{dirty:true,settingsEditBaseline:'null',draft:{recoLearnPlayback:false},S:{uiLang:'en'},location:{reload(){reloads++;}},toast:t=>messages.push(t)});
 vm.runInNewContext(app.slice(app.indexOf('  function closeSettings()'),app.indexOf('  function choose(e)')),c);fail=true;c.closeSettings();assert.equal(reloads,0);assert.match(messages.pop(),/not saved/);fail=false;c.closeSettings();assert.equal(reloads,1);assert.equal(JSON.parse(data['a:settings']).recoLearnPlayback,false);
+data['a:metadataRestoreJournalV1']='{';assert.equal(c.metadataRestorePending(),true);assert.equal(c.profileSettingsReadable(),false);assert.throws(()=>c.readChartStorage());assert.throws(()=>c.readReminderStorage('dc4iReminderPrefsV1'));assert.throws(()=>c.readMetadataStorage('homeRailsLayoutV1'));assert.throws(()=>c.backupWrite('dc4iChartLinksV1','{}'));assert.throws(()=>c.restoreRead('accounts'));assert.equal(c.restoreRead('metadataRestoreJournalV1'),'{','raw recovery port can inspect invalid journal without exposing unrelated storage');delete data['a:metadataRestoreJournalV1'];
+
+const storedSettings=data['a:settings'];c.settingsEditBaseline='null';c.closeSettings();assert.equal(data['a:settings'],storedSettings);assert.match(messages.pop(),/changed elsewhere/);

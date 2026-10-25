@@ -77,9 +77,9 @@ sys.exit(bool(failed))
 PY
 ```
 
-Expected current inventory:46 non-browser Node suites,14 Python cases,
-generated structure/approved branding/41 JS syntax, CLI check, extra Warsaw run:
-52 commands. Retain actual results.json and projectCommit, not just this count.
+Expected current inventory:48 non-browser Node suites,14 Python cases,
+generated structure/approved branding/42 JS syntax, CLI check, extra Warsaw run:
+54 commands. Retain actual results.json and projectCommit, not just this count.
 No IPK packaging/install/publish occurs. Fixture identity is explicitly offline;
 never distribute fixture output as a production app.
 

@@ -13,7 +13,7 @@ PR nie jest tu scalany ani publikowany. Szczegółowe dowody i inwentarz czytnik
 | #24 / PR35 | Pierwszy plan, cisza/DST/profile/błędy, zgodność danych, ścisły odczyt | Powiadomienia systemowe/tło/budzenie, webOS/fokus |
 | #25 / PR36 | Cztery oficjalne linki tygodniowe, wybór/feedback/fokus | Licencjonowane źródło danych i zintegrowane rankingi, realne otwarcie |
 | #26 / PR37 | Postęp lokalnego playera, granice sesji/profilu, ranking obu trybów Home | Rzeczywiste zdarzenia/ścieżki, filtr audio, dubbing, historia innych aplikacji |
-| #27 / bieżący PR | Kopia dozwolonych ustawień, podgląd/import jednej sekcji/cofnięcie, audyt zapisu, limity | Pełna kopia danych, atomowe odtwarzanie wielu kluczy po awarii, migracje, TV/soak/wydanie |
+| #27 / bieżący PR | Kopia ustawień i metadanych historii, bezpieczny diff, dziennik/cofanie po przerwaniu, migracja1→2, audyt/limity | Kopia sekretów/kont, globalna atomowość, migracja produkcji, TV/soak/wydanie |
 
 Audyt obejmuje układ/cache Home, historię otwarć, ulubione/grupę/kanał przewodnika,
 przypomnienia, rankingi, obserwacje odtwarzania i ogólne ustawienia profilu.
@@ -37,3 +37,11 @@ opiekuna środowiska; rzeczywiste testy przeglądarki/pilota/pola tekstowego i s
 uprawnione produkcyjne wejścia i prawa źródeł; osobne dowody dostawców/DVR. Testy
 LG są nadal zabronione. Dostęp do wdrożenia niezweryfikowany, brak płatnych Actions.
 Bez publikacji, dopóki odpowiednie bramki i dowody rollbacku nie zostaną spełnione.
+
+Aktualizacja: v2 przywracania ma dozwolony dziennik metadataRestoreJournalV1,
+syntetyczne testy przerwań/quota/konfliktów/zmian profilu oraz migrację schematu1→2.
+Importowane obserwacje nie są dowodem natywnego odtwarzania. Web Locks wymagane;
+bez gwarancji wobec obcych niewspółpracujących zapisów. Nie ma migracji produkcji.
+Osobna diagnoza Chromium: SIGABRT i restrykcje sandbox/NoNewPrivs/seccomp. Oficjalny
+Playwright1.62/Headless Shell151 rev1234 odmówiony HTTP403 Domain forbidden na
+cdn.playwright.dev, bez instalacji i obejścia. Przeglądarka nadal jest bramką.

@@ -13,7 +13,7 @@ production remains1.2.19. No PR is merged or version bumped by this audit.
 | #24 / PR35 | Compatible foreground reminders, quiet/DST/profile/failure/expiry/cancel tests; strict generated reader and toast layering | Native background/system toast/wake, actual webOS visibility/focus behavior; browser/device acceptance |
 | #25 / PR36 | Four exact official Netflix weekly outbound links, per-profile choice, launch feedback/focus, strict preferences; no feed | Redistribution-ready feed, integrated rankings, copied data/cache; real external browser launch/return |
 | #26 / PR37 | Observed native progression with unique intervals, profile/session boundaries, legacy+custom Home affinity, runtime track policy; injected media/generated tests | Real media event timing/track support, strict audio filter/selection, dubbing proof, external-player watch reporting |
-| #27 / current draft | Scoped metadata preference backup/preview/single-section import/undo; strict-reader audit, failed-write/corruption/profile tests and synthetic resource bounds | Full user-data backup, crash-persistent multi-key restore, actual migrations, TV quota/performance, overnight soak, browser/remote/release acceptance |
+| #27 / current draft | Scoped preference/history-metadata backup, sanitized diff, single-section undo, journaled multi-key recovery, schema1→2 fixtures; strict-reader/failure/profile tests, bounded catalogue stress and250 listener cycles | Secret/account/full user-data backup, globally atomic cross-context restore, actual production migration, TV quota/performance, overnight soak, browser/remote/release acceptance |
 
 ## Storage audit inventory
 
@@ -35,7 +35,7 @@ production remains1.2.19. No PR is merged or version bumped by this audit.
 - settings: unreadable general settings cannot be overwritten by generic store;
   new learning/personalization fail closed. Legacy unrelated settings boot is not
   redesigned or fully schema-migrated. Corrupt recovery requires an authorized
-  valid backup, not automatic deletion. No migration ledger or version change.
+  valid backup, not automatic deletion. No production migration or version change. Supported schema1 backup migration is tested synthetically; v2 metadata restore has an allowlisted recovery journal.
 - Rich EPG/archive/DVR models use injected/in-memory boundaries, not newly
   provisioned storage services. Credentials/playlists remain existing user data.
 
@@ -70,3 +70,20 @@ No release rollback was executed or claimed tested here.
    availability/authorization; ordinary TV browsing must not require a server.
 6. No verified deploy credentials/runner; no paid Actions. Publication only after
    applicable requirements pass, with public catalog/IPK checks and rollback proof.
+
+## Journal increment and diagnostic update
+
+metadataRestoreJournalV1 contains only normalized allowed before/after metadata,
+never raw settings/unknown fields. Recovery pauses affected readers, retains
+corrupt/conflicted journals and requires an explicit user action. V2 adds fixed
+profile preferences plus opened/playback metadata; imported playback is not native
+observed evidence. Browser Web Locks is required for the UI transaction path;
+non-cooperating external writers still have no global atomicity guarantee.
+Synthetic interruption/quota/reconstruction, capacity and schema migration tests
+are implemented. Actual browser Web Locks/storage/long-run behavior remains open.
+
+Separate fresh-environment browser diagnosis confirmed SIGABRT, sandbox helper
+nobody:nogroup4755, NoNewPrivs1/seccomp/single UID map. Official Playwright1.62
+Chromium Headless Shell151 rev1234 download was denied HTTP403 Domain forbidden
+at cdn.playwright.dev, no browser payload installed. Do not retry elsewhere or
+change security settings. Approved runtime/network or authorized desktop is needed.

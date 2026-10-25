@@ -7,7 +7,7 @@
   if(!v||v.schema!==1||!Array.isArray(v.records)||v.records.length>150)throw Error();return v.records;}
  function write(records){TV.store(key,{schema:1,records:records});return JSON.stringify(read())===JSON.stringify(records);}
  function valid(r){return r&&typeof r.session==='string'&&r.session.length<=100&&['partial','completed'].indexOf(r.action)>=0&&Number.isFinite(r.seconds)&&r.seconds>=30&&r.seconds<=604800&&Number.isFinite(r.at)&&Array.isArray(r.genres);}
- function history(){try{return read().filter(valid).map(function(r){return {action:'observed-'+r.action,at:r.at,genres:r.genres.filter(function(g){return Number.isInteger(g)&&g>0;}).slice(0,32),seconds:r.seconds,provenance:'native-media-progression'};});}catch(e){return [];}}
+ function history(){try{return read().filter(function(r){return valid(r)&&r.imported!==true;}).map(function(r){return {action:'observed-'+r.action,at:r.at,genres:r.genres.filter(function(g){return Number.isInteger(g)&&g>0;}).slice(0,32),seconds:r.seconds,provenance:'native-media-progression'};});}catch(e){return [];}}
  function clear(){epoch++;try{if(!write([]))throw Error();TV.toast(tr('Wyczyszczono obserwacje odtwarzania profilu','Profile playback observations cleared'));}catch(e){TV.toast(tr('Nie usunięto obserwacji','Observations were not cleared'));}}
  function begin(media,item){if(!media||typeof media.addEventListener!=='function')return false;if(bound.has(media))bound.get(media)();
   evidence=null;evidenceProfile=null;var token=profile(),startedEpoch=epoch,ready=false,id=Date.now().toString(36)+'-'+(++counter)+'-'+Math.random().toString(36).slice(2,10),model=api.create({now:Date.now,save:function(record){
