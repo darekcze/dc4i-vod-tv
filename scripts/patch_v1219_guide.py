@@ -53,6 +53,11 @@ function guideEpg(channel){
  var copy=Object.assign({},channel,{accountId:selected});
  return guideAdapter.get(copy);
 }
+function guideConfig(){
+ returnToGuide=true;
+ if(TV.guide && TV.guide.suspend)TV.guide.suspend();
+ TV.openView('xtream','all');
+}
 function guideWatch(channel){
  if(!channel || channel.type!=='live')return false;
  if(!selected && saved.length)selected=saved[0].id;
@@ -75,7 +80,7 @@ s=s.replace(anchor,bridge+anchor,1)
 anchor=" searchEpg:searchEpg,remindEpg:remindEpg,playEpg:playEpg,"
 assert s.count(anchor)==1
 s=s.replace(anchor,anchor+
-  "\n ensureCatalog:ensureGuideCatalog,guideEpg:guideEpg,guideWatch:guideWatch,"
+  "\n ensureCatalog:ensureGuideCatalog,guideEpg:guideEpg,guideWatch:guideWatch,guideConfig:guideConfig,"
   "\n getLiveCategories:function(){return categories.filter(function(c){return c.type==='live';}).slice();},",1)
 anchor="bind('playerclose',stop);"
 assert s.count(anchor)==1
@@ -86,5 +91,20 @@ s=s.replace(anchor," back:function(){if(playing){if(returnToGuide)leaveGuidePlay
 anchor="  if(e.keyCode===461||e.keyCode===27||e.keyCode===8){stop();return true;}"
 assert s.count(anchor)==1
 s=s.replace(anchor,"  if(e.keyCode===461||e.keyCode===27||e.keyCode===8){if(returnToGuide)leaveGuidePlayback();else stop();return true;}",1)
+anchor=" hide:function(){if(playing)stop();detailPanel.hidden=true;detailItem=null;root.hidden=true;},"
+assert s.count(anchor)==1
+s=s.replace(anchor," hide:function(){if(playing)stop();detailPanel.hidden=true;detailItem=null;root.hidden=true;"+
+  "if(returnToGuide){returnToGuide=false;if(TV.guide&&TV.guide.resume)TV.guide.resume();}},",1)
 p.write_text(s,encoding='utf-8')
+# UI module must load after its Xtream API provider is ready.
+shutil.copy2(R/'src/vod-channel-guide.js',A/'vod-channel-guide.js')
+shutil.copy2(R/'src/vod-channel-guide.css',A/'vod-channel-guide.css')
+p=A/'index.html';t=p.read_text(encoding='utf-8')
+anchor='<script src="vod-xtream.js"></script>'
+assert t.count(anchor)==1
+t=t.replace(anchor,anchor+'\\n<script src="vod-channel-guide.js"></script>')
+css='<link rel="stylesheet" href="vod-xtream.css">'
+assert t.count(css)==1
+t=t.replace(css,css+'\\n<link rel="stylesheet" href="vod-channel-guide.css">')
+p.write_text(t,encoding='utf-8')
 print('GUIDE_EPG_BRIDGE_PATCH_READY')

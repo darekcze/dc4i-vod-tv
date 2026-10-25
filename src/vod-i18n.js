@@ -67,6 +67,10 @@ function adapt(value){
 }
 function translate(n){
  if(!n)return;
+ // External metadata and proper names must not be translated as UI prefixes.
+ // Source-aware views mark the root with translate=no.
+ if(n.nodeType===3 && n.parentNode && n.parentNode.closest && n.parentNode.closest('[translate="no"]'))return;
+ if(n.nodeType===1 && n.closest && n.closest('[translate="no"]'))return;
  if(n.nodeType===3){var v=n.nodeValue,after=adapt(v);if(v!==after)n.nodeValue=after;return;}
  if(n.nodeType!==1||/^(SCRIPT|STYLE|TEXTAREA|INPUT|NOSCRIPT)$/.test(n.nodeName))return;
  var title=n.getAttribute('title');if(title){var t=adapt(title);if(title!==t)n.setAttribute('title',t);}
