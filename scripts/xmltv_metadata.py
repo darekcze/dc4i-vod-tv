@@ -93,7 +93,7 @@ def parse_xmltv(data, source, fetched_at):
             identity = row.get('channel', '')
             title = text(row, 'title')
             start, end = timestamp(row.get('start')), timestamp(row.get('stop'))
-            if not identity or len(identity) > 200 or identity in conflicts or not title or end <= start:
+            if not identity or len(identity) > 200 or identity not in channels or identity in conflicts or not title or end <= start:
                 raise ValueError('invalid programme')
         except ValueError:
             diagnostics['skipped'] += 1
