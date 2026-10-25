@@ -21,3 +21,10 @@ Wyjątki sieciowe wypisują jedynie klasę, bez treści/URL/nagłówków/sekret�
 32 niezwiązane zachowane, źródło bez zmian, błędne wersje/ścieżki odrzucone.
 Brak prawdziwych kluczy, kandydata IPK, API, merge, wdrożenia i kontaktu z TV.
 Szczegółowe komendy i ograniczenia w angielskim odpowiedniku.
+
+Naprawa zasobów: izolowany staging kopiuje zaufane publiczne packages/icons/browse/
+manifests (preferowane dist). Lokalne odnośniki pozostawionych aplikacji muszą mieć
+pliki; brak zasobu kończy operację przed feedem. Bez pobierania URL, wychodzących
+symlinków i zmian źródła. Stare pakiety nie są kasowane. Regresja RED→GREEN
+sprawdza bajty pakietu/ikony/browse/CSS/starego IPK, brakujące pliki, symlinki
+oraz33 wpisy/32 niezwiązane. Bez produkcyjnego kandydata, sekretów i wdrożenia.

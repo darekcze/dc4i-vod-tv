@@ -23,9 +23,15 @@ class ReleaseTests(unittest.TestCase):
    (r/'build/dc4i-vodtv/appinfo.json').write_text(json.dumps({'id':'com.dc4i.vodtv','version':'1.2.20'}))
    (r/'private/com.dc4i.vodtv_1.2.20_all.ipk').write_bytes(b'SYNTHETIC CATALOGUE TEST ONLY NOT AN IPK')
    Image.new('RGB',(80,80)).save(r/'assets/brand/DC4I_VOD_TV_Neon_Approved_2026-10-24.png')
-   others=[{'id':'other.'+str(i),'manifest':{'version':'1'}} for i in range(32)];feed={'packages':[{'id':'com.dc4i.vodtv'}]+others};original=json.dumps(feed);(r/'api/apps.json').write_text(original)
+   (r/'packages/dstore').mkdir(parents=True);(r/'icons/dstore').mkdir(parents=True);(r/'browse').mkdir();
+   public={'packages/dstore/other.ipk':b'UNRELATED PACKAGE','icons/dstore/other.png':b'UNRELATED ICON','browse/index.html':b'<html>browse</html>','browse/style.css':b'body{}','packages/com.dc4i.vodtv_1.2.18_all.ipk':b'OLD PUBLIC PACKAGE PRESERVED'}
+   for name,value in public.items():(r/name).write_bytes(value)
+   others=[{'id':'other.'+str(i),'manifest':{'version':'1'}} for i in range(32)];feed={'packages':[{'id':'com.dc4i.vodtv'}]+others};others[0].update({'iconUri':'https://lg.darc.dev/icons/dstore/other.png','fullDescriptionUrl':'https://lg.darc.dev/browse/'});others[0]['manifest']['ipkUrl']='https://lg.darc.dev/packages/dstore/other.ipk';original=json.dumps(feed);(r/'api/apps.json').write_text(original)
    p=subprocess.run([sys.executable,str(repo/'publish_vod_tv.py'),'--root',str(r),'--output-root',str(out)],capture_output=True,text=True)
    self.assertEqual(p.returncode,0,p.stderr);result=json.loads((out/'api/apps.json').read_text());self.assertEqual(result['packages'][1:],others);self.assertEqual(result['packages'][0]['manifest']['version'],'1.2.20');self.assertEqual((r/'api/apps.json').read_text(),original)
+   for name,value in public.items():self.assertEqual((out/'dist'/name).read_bytes(),value);self.assertEqual((r/name).read_bytes(),value)
+   (r/'packages/dstore/other.ipk').unlink();missing=Path(t)/'missing';rejected=subprocess.run([sys.executable,str(repo/'publish_vod_tv.py'),'--root',str(r),'--output-root',str(missing)],capture_output=True,text=True);self.assertNotEqual(rejected.returncode,0);self.assertIn('Missing retained local asset',rejected.stderr);self.assertFalse((missing/'dist/api/apps.json').exists())
+   (r/'packages/dstore/other.ipk').symlink_to(Path(t)/'outside');(Path(t)/'outside').write_bytes(b'PRIVATE OUTSIDE');escaped=subprocess.run([sys.executable,str(repo/'publish_vod_tv.py'),'--root',str(r),'--output-root',str(Path(t)/'escaped')],capture_output=True,text=True);self.assertNotEqual(escaped.returncode,0)
    bad=subprocess.run([sys.executable,str(repo/'publish_vod_tv.py'),'--root',str(r),'--output-root',str(r)],capture_output=True,text=True);self.assertNotEqual(bad.returncode,0);self.assertEqual((r/'api/apps.json').read_text(),original)
    again=subprocess.run([sys.executable,str(repo/'publish_vod_tv.py'),'--root',str(r),'--output-root',str(out)],capture_output=True,text=True);self.assertNotEqual(again.returncode,0)
 if __name__=='__main__':unittest.main()
