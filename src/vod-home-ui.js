@@ -13,8 +13,12 @@
   var cfg=config();if(!cfg.active)return [];
   var source=typeof TV.homeCandidates==='function'?TV.homeCandidates():[],stamp=typeof TV.homeCandidatesStamp==='function'?TV.homeCandidatesStamp():0;
   if(source.length&&stamp>0)cache.put(source,stamp);
-  var stored=cache.get(),items=source.length&&!stamp?source:stored.items;
-  var freshness=source.length&&!stamp?tr('Aktualność nieznana','Freshness unknown'):
+  var stored=cache.get(),age=Date.now()-stamp;
+  // Persistence is optional: a quota/storage failure must never suppress live data.
+  var useSource=source.length&&(!stamp||(age>=0&&age<90000000));
+  var items=useSource?source:stored.items;
+  var freshness=useSource?(!stamp?tr('Aktualność nieznana','Freshness unknown'):
+   age>=3600000?tr('Nieaktualne metadane','Stale metadata'):tr('Metadane katalogu','Catalogue metadata')):
    stored.status==='stale'?tr('Nieaktualny cache','Stale cache'):stored.status==='fresh'?tr('Cache metadanych','Metadata cache'):'';
   var events=TV.epgMetadata&&TV.epgMetadata.homeEvents?TV.epgMetadata.homeEvents():[];
   var result=model.build({now:Date.now(),candidates:items,events:events,config:cfg,lang:TV.S.uiLang,

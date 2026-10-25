@@ -32,3 +32,9 @@ console.log('HOME_UI_PASS actual store namespaces, remote settings/order, profil
 
 const priorRefreshes=refreshes;view='home';intervals.forEach(fn=>fn());assert.equal(refreshes,priorRefreshes+1);
 view='home-layout';intervals.forEach(fn=>fn());assert.equal(refreshes,priorRefreshes+1,'no timer redraw of settings');
+view='home';profile='a';clock=1792929600000;source=[movie];stamp=clock;TV.homeRails.rows();
+const workingStore=TV.store;TV.store=function(k,v){return arguments.length===2?null:workingStore.call(TV,k);};
+source=[{...movie,title:'Fresh live item',tmdb:{id:99,type:'movie'}}];stamp=clock+100;clock=stamp;
+assert.equal(TV.homeRails.rows().find(r=>r.id==='films').items[0].tmdb.id,99,'failed persistence cannot replace live catalogue with old cache');
+profile='new';assert.equal(TV.homeRails.rows().find(r=>r.id==='films').items[0].tmdb.id,99,'live rows work without any cache');
+TV.store=workingStore;
