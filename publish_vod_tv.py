@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent/'scripts'))
-from release_contract import candidate,options
+from release_contract import candidate,options,preserve_distribution
 args=options(Path(__file__).resolve().parent,publishing=True)
 SOURCE=args.root
 ROOT=args.output_root
@@ -49,10 +49,9 @@ catalog={'paging':{'page':1,'count':len(package_list),'maxPage':1,'itemsTotal':l
 formatted=json.dumps(catalog,ensure_ascii=False,indent=2)+'\n'
 formatted_manifest=json.dumps(manifest,ensure_ascii=False,indent=2)+'\n'
 DIST=ROOT/'dist'
+if ROOT!=SOURCE:preserve_distribution(SOURCE,DIST,extras,BASE)
 for folder in ['api','icons','packages','manifests']:
  (DIST/folder).mkdir(parents=True,exist_ok=True)
-for old_package in (DIST/'packages').glob('*.ipk'):
- if old_package.name.startswith(APP+'_') and old_package.name not in (IPK.name, 'com.dc4i.vodtv_1.2.3_all.ipk', 'com.dc4i.vodtv_1.2.1_all.ipk', 'com.dc4i.vodtv_1.2.0_all.ipk'): old_package.unlink()
 for p in [ROOT/'index.html', ROOT/'apps.json', ROOT/'api/apps.json',DIST/'index.html',DIST/'apps.json',DIST/'api/apps.json']:
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(formatted,encoding='utf-8')
 for p in [ROOT/'manifests/dc4i-vodtv.manifest.json',DIST/'manifests/dc4i-vodtv.manifest.json']:

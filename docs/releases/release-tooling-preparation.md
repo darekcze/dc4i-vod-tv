@@ -38,3 +38,17 @@ Preserves33 entries/32 unrelated, original source bytes unchanged, rejects
 nonempty/source-root output, mismatched version, fixture identity and malformed
 versions. Existing blocked production prerequisites/rights/secret-distribution
 policy remain. No IPK, real API, merge, deployment or TV operation.
+
+## Retained distribution assets repair
+
+Isolated staging now preflights and copies trusted public packages/icons/browse/
+manifests trees (existing dist preferred per tree, source tree fallback). Local
+URLs in retained catalogue entries must resolve to those files or generated
+routes; directory routes require index.html. Missing required assets fail closed
+with an actionable local path, without fetching any URL. All source symlinks/
+escaping paths are rejected; output stays contained. Source bytes are untouched.
+Old packages are no longer pruned. Catalogue equality alone is not acceptance:
+regressions assert package/icon/browse/CSS/old-package bytes, missing-reference
+rejection before feed creation, escaping symlink rejection and33/32 preservation.
+RED reproduced FileNotFoundError for the retained DStore package; GREEN full
+3-case release-tooling suite and py_compile. No deploy/candidate or real key.
