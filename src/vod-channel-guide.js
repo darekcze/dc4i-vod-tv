@@ -164,10 +164,12 @@
     timeLabel(event.time.start)+' - '+timeLabel(event.time.end):'';
  }
  function showPrograms(){
+  var restoreTimelineFocus=pane==='timeline';
   var rich=TV.epgMetadata?TV.epgMetadata.guide(selected,events,providerState):{events:events,label:''};
   $('metadata').textContent=rich.label;
   if(selected && rich.status)status(rich.status);
   showTimeline();
+  if(restoreTimelineFocus)chooseFocus();
   var current=modelAPI.nowNext(rich.events,Date.now());
   showEvent($('now'),'now-title','now-time',current.now);
   showEvent($('next'),'next-title','next-time',current.next);
