@@ -24,8 +24,10 @@
    model.event(type,{profile:profile(),foreground:foreground,time:media.currentTime,duration:media.duration});}
   var handlers={},names=['loadedmetadata','playing','timeupdate','pause','seeking','waiting','stalled','ended','error'];
   names.forEach(function(name){handlers[name]=function(){event(name);};media.addEventListener(name,handlers[name]);});
-  function background(){event('pause');}document.addEventListener('visibilitychange',background);window.addEventListener('blur',background);
-  function detach(){event('stop');names.forEach(function(name){media.removeEventListener(name,handlers[name]);});document.removeEventListener('visibilitychange',background);window.removeEventListener('blur',background);bound.delete(media);evidence=null;}
+  function background(){event('pause');}
+  function resume(){if(document.visibilityState==='visible'&&typeof document.hasFocus==='function'&&document.hasFocus()&&media.paused===false&&media.ended!==true)event('playing');else background();}
+  document.addEventListener('visibilitychange',resume);window.addEventListener('blur',background);window.addEventListener('focus',resume);
+  function detach(){event('stop');names.forEach(function(name){media.removeEventListener(name,handlers[name]);});document.removeEventListener('visibilitychange',resume);window.removeEventListener('blur',background);window.removeEventListener('focus',resume);bound.delete(media);evidence=null;}
   bound.set(media,detach);return true;
  }
  TV.addSetting({key:'recoLearnPlayback',title:tr('Polecane: ucz się z odtwarzania lokalnego','Recommendations: learn from local playback'),hint:tr('Tylko zaobserwowany postęp; bez historii zewnętrznych aplikacji','Observed progression only; no external app history'),opts:[[true,tr('Tak','Yes')],[false,tr('Nie','No')]]},true);
