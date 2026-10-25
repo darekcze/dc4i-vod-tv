@@ -4,12 +4,12 @@ from pathlib import Path
 import shutil
 R=Path(__file__).resolve().parents[1]
 A=R/'build/dc4i-vodtv'
-for name in ('vod-rich-epg.js','vod-epg-metadata-ui.js'):
+for name in ('vod-rich-epg.js','vod-epg-identity.js','vod-epg-metadata-ui.js'):
     shutil.copy2(R/'src'/name,A/name)
 p=A/'index.html';s=p.read_text()
 anchor='<script src="vod-channel-guide.js"></script>'
 assert s.count(anchor)==1
-s=s.replace(anchor,'<script src="vod-rich-epg.js"></script>\n<script src="vod-epg-metadata-ui.js"></script>\n'+anchor)
+s=s.replace(anchor,'<script src="vod-rich-epg.js"></script>\n<script src="vod-epg-identity.js"></script>\n<script src="vod-epg-metadata-ui.js"></script>\n'+anchor)
 p.write_text(s)
 p=A/'features/details.js';s=p.read_text()
 anchor='    if(d && TV.xtream && TV.xtream.getAccounts().length && TV.xtream.searchEpg)'

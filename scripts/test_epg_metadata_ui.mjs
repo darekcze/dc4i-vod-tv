@@ -41,3 +41,9 @@ for(const state of ['loading','success','empty','error']){
  const adapter=TV.epgMetadata.create({now:()=>snapshot.fetchedAt});adapter.acceptLocal(snapshot);
  assert.equal(adapter.guide({epgId:'a'},state==='success'?provider:[],state).status,'Lokalne metadane XMLTV');
 }
+
+vm.runInNewContext(readFileSync('src/vod-epg-identity.js','utf8'),context);
+TV.homeCandidates=()=>[{title:'Example',release_date:'2026-01-01',tmdb:{id:123,type:'movie'},vote_average:8,vote_count:20}];
+TV.S.uiLang='en';
+assert.match(ui.describe({title:'Example',year:'2026'}),/TMDB candidate \(link unverified\): movie:123/);
+assert.match(ui.describe({title:'Example',year:'2026'}),/TMDB 8\/10/);

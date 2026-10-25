@@ -186,14 +186,15 @@
   if(pane==='timeline'&&!view.events.length)pane='actions';
   function date(t){return new Date(t).toLocaleString(TV.S.uiLang==='en'?'en-GB':'pl-PL',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
   $('range').textContent=date(view.from)+' — '+date(view.to)+' · '+(timelineDay+6)+'/10';
-  view.events.forEach(function(e){
+  view.events.slice(0,200).forEach(function(e){
    var el=TV.el('div','f gd-airing');el.setAttribute('tabindex','0');
    el.textContent=date(e.start)+' — '+date(e.end)+' · '+e.title+' · '+TV.epgMetadata.describe(e);
    // Metadata rows have no playback or reminder action.
    host.appendChild(el);
   });
+  if(view.events.length>200){var limit=TV.el('div','gd-empty');limit.textContent=tr('Pokazano pierwsze 200 emisji','Showing first 200 airings');host.appendChild(limit);}
   if(!view.events.length){var empty=TV.el('div','gd-empty');empty.textContent=tr('Brak lokalnych danych w tym okresie','No local data in this period');host.appendChild(empty);}
-  timelineIndex=Math.max(0,Math.min(timelineIndex,view.events.length-1));
+  timelineIndex=Math.max(0,Math.min(timelineIndex,Math.min(200,view.events.length)-1));
  }
  function shiftDay(delta){timelineDay=Math.max(-5,Math.min(4,timelineDay+delta));timelineIndex=0;showPrograms();chooseFocus();}
  function showSelected(){

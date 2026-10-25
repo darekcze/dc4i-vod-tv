@@ -44,6 +44,14 @@
    if(e.categories&&e.categories.length)parts.push(e.categories.join(', '));
    if(e.originalLanguage)parts.push(tr('Język oryginalny: ','Original language: ')+e.originalLanguage);
    if(e.rating)parts.push(tr('Ocena XMLTV: ','XMLTV rating: ')+e.rating.value+' ('+e.rating.system+'; '+tr('niezweryfikowana','unverified')+')');
+   if(window.DC4IEpgIdentity&&typeof TV.homeCandidates==='function'){
+    var identity=window.DC4IEpgIdentity.match(e,TV.homeCandidates());
+    if(identity.status==='candidate'){
+     var candidate=identity.candidate;
+     parts.push(tr('Kandydat TMDB (powiązanie niezweryfikowane): ','TMDB candidate (link unverified): ')+candidate.type+':'+candidate.id);
+     if(candidate.rating)parts.push('TMDB '+candidate.rating.value+'/10 · '+candidate.rating.votes+' '+tr('głosów','votes'));
+    }else if(identity.status==='ambiguous')parts.push(tr('Niejednoznaczne dopasowanie TMDB','Ambiguous TMDB match'));
+   }
    parts.push(tr('Ścieżki audio/napisy niezweryfikowane','Audio/subtitle tracks unverified'));
    return parts.join(' · ');
   }
