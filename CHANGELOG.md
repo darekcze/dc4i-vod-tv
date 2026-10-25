@@ -1,6 +1,20 @@
 # Changelog - DC4I VOD TV
 
-Technical application identifier: `com.dc4i.boringtv` (kept stable across upgrades).
+Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates). Earlier `com.dc4i.boringtv` releases are legacy builds.
+
+## [1.2.12] - 2026-10-25
+
+### Public release and automatic update discovery
+- Published `com.dc4i.vodtv_1.2.12_all.ipk` on [lg.darc.dev](https://lg.darc.dev/), Homebrew feed and versioned manifest with release date, package size and SHA-256. Cloudflare Pages project: `lg-webos-repo`.
+- Quick settings now fetch `https://lg.darc.dev/api/apps.json` on opening. Compare local semantic version with the current release and display **Aktualna**, **Aktualizacja dostępna**, **Wersja nowsza niż repo**, or **Offline**. No unsupported automatic installation is claimed.
+- Preserved the approved neon logo and personal family dedication. Retained the redesigned TV-readable 900px quick drawer and the separate repo and website links.
+- Kodi metadata handoff and Plex/YouTube title-search launch actions from the preceding work remain available. Actual native playback behavior varies by player.
+
+### Release verification
+- Offline build, IPK content, TMDB, local version-comparison scenarios, handoff tests and 1920x1080 layout tests passed.
+- 33 Homebrew entries retained unchanged except the VOD TV version. Kodi's large archive intentionally remains on the official mirror.
+- Production endpoints `/api/apps.json`, `/manifests/dc4i-vodtv.manifest.json`, `/packages/com.dc4i.vodtv_1.2.12_all.ipk`, `/browse/` and `/about.html` returned HTTP 200. Public IPK SHA-256 matched the manifest.
+- TV LG OLED55G42LW successfully installed and launched 1.2.12; onboard download of the current Homebrew catalog returned 1.2.12. A real-origin headless browser test observed version status **Aktualna**. Manual picture/audio inspection of the update-status drawer on TV remains optional additional visual QA.
 
 ## [1.2.2] - 2026-10-24
 

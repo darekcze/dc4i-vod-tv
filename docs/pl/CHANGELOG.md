@@ -1,6 +1,19 @@
 # Dziennik zmian - DC4I VOD TV
 
-Identyfikator aplikacji `com.dc4i.boringtv` pozostaje bez zmian, aby aktualizacje zastępowały wcześniejsze wersje.
+Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.boringtv` jest archiwalny.
+
+## [1.2.12] - 25.10.2026
+
+### Publikacja i sprawdzanie wersji
+- Opublikowano `com.dc4i.vodtv_1.2.12_all.ipk` oraz zaktualizowano manifest Homebrew na `lg.darc.dev`. Publiczny manifest zawiera datę wydania i sumę SHA-256.
+- Szybkie ustawienia podczas otwierania odczytują najnowszą wersję z `https://lg.darc.dev/api/apps.json` i porównują ją z zainstalowaną: **Aktualna**, **Aktualizacja dostępna**, **Wersja nowsza niż repo**, **Offline**. Aplikacja nie instaluje aktualizacji bez potwierdzenia.
+- Zachowano szerszy, czytelny panel 900 px, zatwierdzone logo neonowe, dedykację dla Ani i rodziny, linki do repozytorium i strony firmy.
+- Dodatkowe akcje Kodi, Plex i YouTube nadal wykorzystują wcześniej przygotowane mechanizmy przekazywania tytułów.
+
+### Testy
+- Testy pakietu IPK, składni JavaScript, scenariuszy porównywania wersji, integracji Kodi i geometrii panelu 1920x1080 zakończyły się powodzeniem.
+- Potwierdzono 33 aplikacje w katalogu, zachowując 32 inne pozycje. Pobranie publicznego IPK i porównanie SHA-256 z manifestem: OK.
+- Wersja 1.2.12 została zainstalowana i uruchomiona na fizycznym LG. Telewizor odczytał z publicznego repozytorium wersję 1.2.12, a test w Chromium pokazał stan **Aktualna**. Pełna wizualna kontrola panelu bezpośrednio na ekranie TV pozostaje do wykonania.
 
 ## [1.2.2] - 24.10.2026
 

@@ -13,12 +13,21 @@
 - [x] PL region, PL/EN UI setting, 40 European/US cities, root-only UI hidden by default.
 - [x] JS syntax, IPK archive contents, TMDB configuration API 200.
 - [ ] YouTube Data API backed by protected deployed service, real response and cache/quota test.
-- [ ] Install/update on user's physical LG TV, hardware remote navigation, streaming app links.
+- [x] Install/update to 1.2.12 on physical LG TV and confirm app launch, package ID, manifest, and catalog network access.
+- [ ] Final hands-on TV remote navigation and per-provider playback acceptance; a package install does not prove every external player works.
 - [ ] Confirm upstream distribution rights (repository license currently unspecified).
 - [ ] Independent final visual acceptance of the new icon/splash.
 
 ## Remaining blockers
 YouTube key is available privately at `private/youtube_api_key.txt` and was created on Google Cloud project `h0st-pl`. It MUST NOT be placed in a public package without API restrictions or a server-side proxy. Browser can still launch YouTube and TMDB trailer links independently from YouTube Data API.
+
+## 1.2.12 release verification (2026-10-25)
+- Public Homebrew catalog is the update source: `https://lg.darc.dev/api/apps.json`. Production manifest includes `releaseDate`, `published_at`, exact IPK size and SHA-256.
+- Cloudflare Pages: `lg-webos-repo`, production deployed on `main`. Previous deployment can be restored if needed. Backed up preceding manifest and Pages Worker in `private/release-backups/2026-10-25-pre-1212`.
+- Production tested by direct HTTPS requests and TV-local HTTP call. Homebrew has 33 items, other 32 unchanged.
+- IPK SHA-256: `27830bcc55553374149b924eb91bb748c6ccc545dc8129c7cd7bb0269d219466`.
+- LG OLED55G42LW: Ares install succeeded, launched app 1.2.12; TV-side HTTP to published API returned 1.2.12.
+- Chrome real-origin version check returned `current` / `Aktualna`. Automatic installer is not implied by a version check.
 
 ## Rollback
 Cloudflare Pages retains previous deployments. Current production is the source-of-truth. To revert, redeploy the previously verified Pages deployment and its matching manifest and binary, do not merely change version numbers. Local packages are kept under `private/` on AI-Hot.

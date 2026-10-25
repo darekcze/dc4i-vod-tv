@@ -5,11 +5,11 @@ from PIL import Image
 import json,re,subprocess,tarfile,io,urllib.request,urllib.error,hashlib
 R=Path(__file__).resolve().parent
 A=R/'build'/'dc4i-vodtv'
-P=R/'private'/'com.dc4i.vodtv_1.2.5_all.ipk'
+P=R/'private'/'com.dc4i.vodtv_1.2.12_all.ipk'
 meta=json.loads((A/'appinfo.json').read_text())
 assert meta['id']=='com.dc4i.vodtv'
 assert meta['title']=='DC4I VOD TV'
-assert meta['version']=='1.2.5'
+assert meta['version']=='1.2.12'
 assert Image.open(A/'icon.png').size==(80,80)
 assert Image.open(A/'largeIcon.png').size==(130,130)
 assert Image.open(A/'splash.png').size==(1920,1080)

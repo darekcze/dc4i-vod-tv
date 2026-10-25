@@ -27,6 +27,14 @@ for pkg in packages:
         file=DIST/"packages/dstore"/unquote(urlparse(m["ipkUrl"]).path.split("/")[-1])
         assert file.exists(),(mid,file)
         assert hashlib.sha256(file.read_bytes()).hexdigest()==m["ipkHash"]["sha256"],mid
+    elif mid=="org.xbmc.kodi":
+        # Official Kodi 21 webOS archive is larger than Cloudflare Pages' per-file limit.
+        # It intentionally remains an externally hosted, checksum-pinned download.
+        first_party+=1
+        parsed=urlparse(m["ipkUrl"])
+        assert parsed.scheme=="https" and parsed.netloc=="mirrors.kodi.tv",mid
+        assert parsed.path=="/releases/webos/org.xbmc.kodi-webos_21.0.ipk",mid
+        assert m["ipkSize"] > 25*1024*1024,mid
     else:
         first_party+=1
         assert m["ipkUrl"].startswith("https://lg.darc.dev/packages/"),mid

@@ -4,14 +4,18 @@ Public .ipk contains a bundled TMDB client key. No key values written to git-tra
 """
 from pathlib import Path
 import json,hashlib,shutil
+from datetime import datetime
+from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent
 APP='com.dc4i.vodtv'
-VERSION='1.2.5'
+VERSION='1.2.12'
 BASE='https://lg.darc.dev'
 IPK=ROOT/'private'/f'{APP}_{VERSION}_all.ipk'
 assert IPK.exists(), 'Build the IPK before publishing'
 size=IPK.stat().st_size
 sha=hashlib.sha256(IPK.read_bytes()).hexdigest()
+PUBLISHED=datetime.now(ZoneInfo('Europe/Warsaw'))
+RELEASE_DATE=PUBLISHED.date().isoformat()
 icon_uri=BASE+'/icons/dc4i-vod-tv-neon.png'
 package_uri=BASE+'/packages/'+IPK.name
 manifest={
@@ -19,6 +23,7 @@ manifest={
  'appDescription':'Spersonalizowany katalog filmów i seriali dla Polski, z ocenami TMDB, nowościami VOD i łatwym otwieraniem aplikacji streamingowych.',
  'iconUri':icon_uri,
  'sourceUrl':'https://github.com/darekcze/dc4i-vod-tv',
+ 'releaseDate':RELEASE_DATE,'published_at':PUBLISHED.isoformat(timespec='seconds'),
  'rootRequired':False,
  'ipkUrl':package_uri,
  'ipkHash':{'sha256':sha},
@@ -87,6 +92,7 @@ footer{font-size:12px;color:#8ea1bd;padding-bottom:35px}
 <p>Filmowe rekomendacje TMDB, polski region, personalizacja DC4I, ulubione, wyszukiwanie i otwieranie serwisów VOD. YouTube Trending jest ukryte do chwili skonfigurowania osobnego klucza YouTube Data API v3.</p>
 <p>Niektóre przyciski otwierania bezpośrednio konkretnego filmu zależą od obsługi przez daną aplikację i wersji systemu webOS.</p>
 </div></main><footer>DC4I VOD TV jest spersonalizowanym wariantem społecznościowej aplikacji TheBoringTV. Źródło: <a href="https://github.com/theboringhumane/theboringtv-lgwebos">theboringhumane/theboringtv-lgwebos</a>. Informacje o filmach: TMDB (projekt nie jest z nim powiązany).</footer></body></html>'''
+html=html.replace('com.dc4i.vodtv_1.2.5_all.ipk',IPK.name).replace('bieżącą wersję 1.2.4','bieżącą wersję '+VERSION)
 (DIST/'about.html').write_text(html,encoding='utf-8')
 (ROOT/'about.html').write_text(html,encoding='utf-8')
 (DIST/'_headers').write_text('/\n  Content-Type: application/json; charset=utf-8\n/index.html\n  Content-Type: application/json; charset=utf-8\n/api/apps.json\n  Content-Type: application/json; charset=utf-8\n',encoding='utf-8')
@@ -118,6 +124,7 @@ Reproducible preparation: build_dc4i.py (base), build_vod_tv.py (PL/EN and neon)
 
 To release changes, build the app IPK, run test_vod_tv.py, run publish_vod_tv.py, and deploy dist via Cloudflare Pages. Test Homebrew and app startup on a real LG webOS TV before claiming end-to-end compatibility.
 '''
+README=README.replace('DC4I VOD TV 1.2.4','DC4I VOD TV '+VERSION)
 (ROOT/'README.md').write_text(README,encoding='utf-8')
 print('HOMEBREW_CATALOG_READY',entry['id'],entry['manifest']['version'],len(catalog['packages']))
 print('IPK_PUBLISHED_FILE',str(DIST/'packages'/IPK.name))
