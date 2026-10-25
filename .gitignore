@@ -13,3 +13,5 @@ tools/
 
 # Isolated release worktrees
 .worktrees/
+
+.superpowers/

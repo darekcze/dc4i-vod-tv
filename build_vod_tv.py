@@ -166,3 +166,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1216_catalog.py')],check=Tr
 subprocess.run([sys.executable,str(R/'scripts/patch_v1217_identity.py')],check=True)
 subprocess.run([sys.executable,str(R/'scripts/patch_v1217_details.py')],check=True)
 subprocess.run([sys.executable,str(R/'scripts/patch_v1217_epg.py')],check=True)
+
+# Personalized per-profile settings, explainable TMDB recommendations.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1218_personalization.py')],check=True)
