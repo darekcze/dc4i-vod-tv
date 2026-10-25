@@ -35,3 +35,20 @@ assert.throws(()=>model.createCache({read:()=>null,write(){},ttlMs:0}),/limits/)
 assert.equal(model.build({now,candidates:[],events:Array(20001).fill(events[0])}).length,0,'oversized inputs refused');
 if(process.env.TZ==='Europe/Warsaw')assert.equal(day.end-day.start,25*3600000,'DST day has25 hours');
 console.log('HOME_RAILS_PASS calendar buckets, ordering, ranking/source truth, TTL, profile isolation, limits');
+
+profiles.a=JSON.stringify({schema:1,at:clock,items:[null,{tmdb:{id:-1,type:'movie'}}]});
+assert.equal(cache.get().status,'missing','fully corrupt cache cannot appear fresh');
+const spring=model.bounds(new Date(2026,2,29,12).getTime());
+if(process.env.TZ==='Europe/Warsaw')assert.equal(spring.end-spring.start,23*3600000);
+clock=now;profiles.a=null;
+assert.equal(cache.put(Array.from({length:400},(_,i)=>({...movie,tmdb:{id:i+1,type:'movie'}}))),true);
+assert.equal(cache.get().items.length,300);
+profiles.a=JSON.stringify({schema:1,at:clock+1,items:[movie]});assert.equal(cache.get().status,'missing');
+profiles.a=JSON.stringify({schema:1,at:clock,items:Array(301).fill(movie)});assert.equal(cache.get().status,'missing');
+assert.equal(cache.put([movie],clock+1),false);
+cache.put([movie]);assert.equal(cache.clear(),true);assert.equal(cache.get().status,'missing');
+const broken=model.createCache({read(){throw Error('fixture');},write(){throw Error('fixture');}});
+assert.equal(broken.put([movie]),false);assert.equal(broken.get().status,'missing');assert.equal(broken.clear(),false);
+const chronological=model.build({now,candidates:[],events:[event('late',now+300,now+400),event('early',now+100,now+200),event('edge',now-100,now)],config:{enabled:['today','missedToday']}});
+assert.deepEqual(Array.from(chronological.find(r=>r.id==='today').items,x=>x.title),['early','late']);
+assert.equal(chronological.find(r=>r.id==='missedToday').items[0].title,'edge');

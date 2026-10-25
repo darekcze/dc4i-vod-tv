@@ -57,6 +57,7 @@
   var originalOpenItem=TV.openItem;
   TV.openItem=function(item){record(item);return originalOpenItem(item);};
   TV.addRow(function(){
+    if(TV.homeRails && TV.homeRails.enabled())return null;
     var pref=settings();
     if(!pref.enabled || typeof TV.homeCandidates!=='function')return null;
     var source=TV.homeCandidates();

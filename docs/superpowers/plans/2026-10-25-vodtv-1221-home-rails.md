@@ -19,3 +19,12 @@ profile key, credentials, URLs, histories or network calls enter cached metadata
 
 Do not claim complete #21: real browser/performance QA, source coverage and release
 acceptance remain open. Existing profiles/playlists/history and version1.2.19 stay.
+
+## Integration execution
+- [x] Existing build/card/row/settings hooks, live catalogue timestamp and cache-only startup.
+- [x] Profile-scoped layout/cache, per-row remote toggles and left/right reordering.
+- [x] PL/EN freshness/empty-state and honest title/metadata action separation.
+- [x] Regression for corrupt fresh envelope, ordering/boundaries, both DST transitions,
+  cap/future/failed/cleared storage, real built-store namespaces and cold render hooks.
+- [ ] Final committed-tree build/regression and independent review.
+- [ ] Actual browser/layout/performance and provider/release acceptance remain gated.

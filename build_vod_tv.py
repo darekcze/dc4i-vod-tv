@@ -178,3 +178,6 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1219_release.py')],check=Tr
 
 # Draft metadata UI boundary: no public loader, credentials or release version change.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1220_epg_ui.py')],check=True)
+
+# Draft per-profile Home rails, preserving the released version until acceptance.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1221_home_ui.py')],check=True)

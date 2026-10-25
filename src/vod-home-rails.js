@@ -33,7 +33,7 @@
     Number.isSafeInteger(x.start)&&x.start>=0&&Number.isSafeInteger(x.end)&&x.end>x.start&&
     x.provenance&&/^[a-zA-Z0-9_.-]{1,64}$/.test(x.provenance.source||'');}).map(function(x){
    return {kind:'airing',title:x.title.slice(0,500),channelId:x.channelId.slice(0,200),start:x.start,end:x.end,
-    source:x.provenance.source,playable:false};
+    source:x.provenance.source,freshness:x.freshness==='fresh'||x.freshness==='stale'?x.freshness:'unknown',playable:false};
   }).filter(function(x){var key=JSON.stringify(x);if(seen[key])return false;seen[key]=true;return true;})
     .sort(function(a,b){return a.start-b.start||a.channelId.localeCompare(b.channelId)||a.title.localeCompare(b.title);});
  }
@@ -68,14 +68,17 @@
   options=options||{};var ttl=options.ttlMs===undefined?3600000:options.ttlMs,stale=options.staleMs===undefined?86400000:options.staleMs;
   if(typeof options.read!=='function'||typeof options.write!=='function'||!Number.isSafeInteger(ttl)||ttl<=0||!Number.isSafeInteger(stale)||stale<0)throw Error('invalid cache limits');
   var clock=options.now||Date.now;
-  return {put:function(input){var items=candidates(input).slice(0,300);if(!items.length)return false;
-    try{options.write(JSON.stringify({schema:1,at:clock(),items:items}));return true;}catch(e){return false;}},
+  return {put:function(input,fetchedAt){var at=fetchedAt===undefined?clock():fetchedAt;
+    if(!Number.isSafeInteger(at)||at<0||at>clock()||clock()-at>=ttl+stale)return false;
+    var items=candidates(input).slice(0,300);if(!items.length)return false;
+    try{options.write(JSON.stringify({schema:1,at:at,items:items}));return true;}catch(e){return false;}},
    get:function(){var missing={status:'missing',items:[]};try{
     var raw=options.read();if(typeof raw!=='string'||raw.length>1000000)return missing;
     var data=JSON.parse(raw),age=clock()-data.at;
     if(data.schema!==1||!Number.isSafeInteger(data.at)||age<0||age>=ttl+stale||!Array.isArray(data.items)||data.items.length>300)return missing;
-    return {status:age<ttl?'fresh':'stale',items:candidates(data.items)};
+    var items=candidates(data.items);if(!items.length||items.length!==data.items.length)return missing;
+    return {status:age<ttl?'fresh':'stale',items:items,fetchedAt:data.at};
    }catch(e){return missing;}},clear:function(){try{options.write(null);return true;}catch(e){return false;}}};
  }
- root.DC4IHomeRails={build:build,bounds:bounds,configuration:configuration,createCache:createCache};
+ root.DC4IHomeRails={ids:IDS.slice(),labels:LABELS,build:build,bounds:bounds,configuration:configuration,createCache:createCache};
 })(window);
