@@ -1,0 +1,17 @@
+/* Unified provider searches. 1920x1080 webOS remote-focus layout. */
+.vx-label {font-size:25px;font-weight:650;color:#e5f3ff;margin:0 0 12px;}
+.vx-engines {display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.vx-engine {box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;min-width:150px;min-height:57px;padding:12px 22px;border-radius:16px;background:#203d74;color:#eaf3ff;font-size:22px;font-weight:600;cursor:pointer;border:2px solid rgba(118,165,244,.3);white-space:nowrap;transition:background .15s,color .15s,border-color .15s;}
+.vx-engine.focus,.vx-engine:focus-visible {background:#b4f34c;color:#071638;border-color:#eafdc8;outline:3px solid rgba(180,243,76,.5);outline-offset:3px;}
+#search #syt {margin:15px 0 0;max-width:1775px;min-height:110px;}
+#search #sres {height:275px;min-height:275px;}
+#search .vx-engines {flex-wrap:nowrap;}
+#search .vx-engine {min-width:174px;}
+#details .davailability-title {margin:20px 0 -12px;font-size:22px;color:#d9e8fc;font-weight:600;}
+#details .dbtns {margin-top:22px;white-space:normal;max-width:1250px;}
+#details .dbtn {font-size:21px;padding:11px 21px;margin:0 12px 9px 0;}
+#details .dnone {margin-right:0;padding:13px 6px;color:#dde3f6;font-size:24px;font-weight:550;}
+#details .dexternal {margin-top:17px;max-width:1320px;}
+#details .vx-label {font-size:23px;margin-bottom:10px;}
+#details .vx-engine {min-width:155px;min-height:53px;font-size:21px;padding:10px 19px;}
+#details .dextra {font-size:18px;margin-top:10px;}

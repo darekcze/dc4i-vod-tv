@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+const code=readFileSync('src/vod-external-search.js','utf8');
+const events=[], messages=[];
+const mockElement=(tag,cls,text='')=>({tag,cls,textContent:text,children:[],get firstChild(){return this.children[0]||null;},appendChild(x){this.children.push(x);return x;},removeChild(x){this.children.splice(this.children.indexOf(x),1);},replaceChildren(...args){this.children=args;},onok:null});
+const TV={S:{uiLang:'pl'},onTV:true,el:mockElement,toast:x=>messages.push(x),
+ vodHandoff:{youtubeSearch:(q)=>events.push(['youtube',q]),plexSearch:q=>events.push(['plex',q]),kodi:(q,id)=>events.push(['kodi-id',q,id]),kodiSearch:q=>events.push(['kodi-search',q])},
+ vodPlayers:{open:(id,q,tmdb,details)=>events.push(['player',id,q,tmdb,details])}};
+const context=vm.createContext({window:{TV},String,Promise});vm.runInContext(code,context);
+assert.ok(TV.vodExternalSearch);
+const zone=mockElement('div','test');
+let chips=TV.vodExternalSearch.render(zone,{title:'Lupin'});
+assert.deepEqual([...chips.map(x=>x.textContent)],['YouTube','Kodi','Plex','Stremio','Smarters Player']);
+assert.equal(zone.children.length,2);
+assert.equal(zone.children[0].textContent,'Szukaj w:');
+chips.forEach(x=>x.onok());
+assert.deepEqual(events.map(e=>e.slice(0,2)),[['youtube','Lupin'],['kodi-search','Lupin'],['plex','Lupin'],['player','stremio'],['player','iptv']]);
+assert.equal(events[3][2],'Lupin');
+assert.equal(events[4][2],'Lupin');
+events.length=0;
+chips=TV.vodExternalSearch.render(zone,{title:'The Matrix',tmdb:{id:603,type:'movie'},details:{external_ids:{imdb_id:'tt0133093'}}});
+assert.equal(chips.length,5);
+assert.equal(zone.children.length,2,'repeat render replaces, does not duplicate controls');
+chips[1].onok();chips[3].onok();
+assert.equal(events[0][0],'kodi-id'); assert.equal(events[0][2].id,603);
+assert.equal(events[1][0],'player');assert.equal(events[1][1],'stremio');assert.equal(events[1][2],'The Matrix');
+events.length=0;messages.length=0;
+chips=TV.vodExternalSearch.render(zone,{title:' '});chips.forEach(x=>x.onok());
+assert.equal(events.length,0);assert.equal(messages.length,5);
+TV.S.uiLang='en';TV.vodExternalSearch.render(zone,{title:'Lupin'});
+assert.equal(zone.children[0].textContent,'Search in:');
+console.log('UNIFIED_PROVIDER_SEARCH_TEST_PASS');

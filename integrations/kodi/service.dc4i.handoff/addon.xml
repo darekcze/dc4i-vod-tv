@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="service.dc4i.handoff" name="DC4I Title Handoff" version="0.1.2" provider-name="DC4I">
+  <requires><import addon="xbmc.python" version="3.0.0" /></requires>
+  <extension point="xbmc.service" library="service.py" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Local-only title handoff from DC4I VOD TV to Kodi.</summary>
+    <description lang="en_GB">Match TMDB IDs to existing XCUI Xtream catalog, open movies or exact series detail without storing provider credentials.</description>
+    <platform>all</platform>
+    <license>MIT</license>
+  </extension>
+</addon>

@@ -29,6 +29,15 @@ YouTube key is available privately at `private/youtube_api_key.txt` and was crea
 - LG OLED55G42LW: Ares install succeeded, launched app 1.2.12; TV-side HTTP to published API returned 1.2.12.
 - Chrome real-origin version check returned `current` / `Aktualna`. Automatic installer is not implied by a version check.
 
+## 1.2.13 unified search release, 2026-10-25
+
+- LG webOS package `com.dc4i.vodtv_1.2.13_all.ipk` was published to Cloudflare Pages `lg-webos-repo` and installed/launched on LG OLED55G42LW. The TV's installed appinfo reported version 1.2.13. Public Homebrew feed (`/api/apps.json`) returned the same version and retained 33 package entries.
+- Quick panel targets: logo and Website open `https://www.dc4i.com/labs`; App repo opens `https://lg.darc.dev/browse/`. Both public URLs responded HTTP 200 in host verification.
+- Both search and title details include exactly YouTube, Kodi, Plex, Stremio, and Smarters Player below selected-service VOD results. No offer means `Brak w wybranych serwisach`.
+- Kodi Title Handoff 0.1.2 deployed on the TV. Its private catalog stays on the TV. Tested `search-empty` and an actual native Kodi selection dialog for Breaking Bad.
+- E2E Chromium 1920x1080 smoke tested Search and Details with a mocked TMDB provider/offers response; static and unit tests verified actions. Not all third-party apps guarantee search/deep-link support, especially Smarters.
+- IPK SHA-256: `27cfd23565fe1f2671f804610f8cf8d71ea773e58fbee99c959dc19741352ee4` (matched production download). Previous production deployment is available for rollback.
+
 ## Rollback
 Cloudflare Pages retains previous deployments. Current production is the source-of-truth. To revert, redeploy the previously verified Pages deployment and its matching manifest and binary, do not merely change version numbers. Local packages are kept under `private/` on AI-Hot.
 

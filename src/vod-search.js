@@ -29,7 +29,7 @@
   });
   var toggles = [
     {mode:'available', label:tr('Dostępne w kraju','Streaming here')},
-    {mode:'other', label:tr('Pozostałe (Stremio / IPTV)','Others (Stremio / IPTV)')},
+    {mode:'other', label:tr('Pozostałe','Other titles')},
     {mode:'all', label:tr('Wszystkie','All titles')}
   ], filterEls = [];
   toggles.forEach(function(item) {
@@ -126,8 +126,7 @@
       var badge=TV.el('div','swhere vod-status');
       if(r.info.unknown) badge.textContent=tr('Nie potwierdzono dostępności','Availability could not be verified');
       else if(r.info.available) badge.textContent=tr('W VOD: ','Streaming: ')+r.info.names.slice(0,3).join(' · ');
-      else badge.textContent=tr('Brak streamingu '+regionLabel()+' · otwórz szczegóły',
-          'Not streaming '+regionLabel()+' · open details');
+      else badge.textContent=tr('Brak w wybranych serwisach','Not available in selected services');
       card.appendChild(badge);strip.appendChild(card);
     });
     if(TV.view()==='search')TV.rebuild();

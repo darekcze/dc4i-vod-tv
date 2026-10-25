@@ -64,5 +64,26 @@
       {id:'youtube.leanback.v4',params:{contentTarget:url}})
       .then(function(r){return r&&r.returnValue!==false;},function(){toast(tr('YouTube nie otworzył wyszukiwarki','YouTube search could not open'));return false;});
   }
-  TV.vodHandoff={kodi:kodi,plexSearch:plexSearch,youtubeSearch:youtubeSearch};
+  // Free-text search opens Kodi with a title hint. The companion Kodi addon
+  // handles action=search and shows authorized Xtream catalog matches.
+  function kodiSearch(title) {
+    var term=String(title||'').trim();
+    if(!term){toast(tr('Wpisz tytuł do wyszukania','Enter a title to search'));return Promise.resolve(false);}
+    if(!TV.onTV){toast(tr('Szukaj w Kodi jest dostępne na LG TV','Kodi search requires LG TV'));return Promise.resolve(false);}
+    var payload={action:'search',title:term.slice(0,120)};
+    // For an already running Kodi, POST activates its local search dialog.
+    // On cold start webOS passes the same payload as a native launch parameter.
+    var request=fetch(LOCAL_KODI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){return r.ok;},function(){return false;});
+    var shortProbe=Promise.race([request,new Promise(function(resolve){setTimeout(function(){resolve(false);},900);})]);
+    return shortProbe.then(function(){
+      return TV.luna('com.webos.applicationManager/launch',
+        {id:'org.xbmc.kodi',params:{dc4i:payload}})
+      .then(function(r){
+        if(r && r.returnValue!==false)return true;
+        toast(tr('Nie udało się uruchomić Kodi','Cannot open Kodi'));return false;
+      },function(){toast(tr('Nie udało się uruchomić Kodi','Cannot open Kodi'));return false;});
+    });
+  }
+  TV.vodHandoff={kodi:kodi,kodiSearch:kodiSearch,plexSearch:plexSearch,youtubeSearch:youtubeSearch};
 })();

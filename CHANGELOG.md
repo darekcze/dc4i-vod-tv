@@ -2,6 +2,20 @@
 
 Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates). Earlier `com.dc4i.boringtv` releases are legacy builds.
 
+## [1.2.13] - 2026-10-25
+
+### Unified provider search and dedicated Labs links
+- Search and title details now display the same five **Szukaj w:** actions: YouTube, Kodi, Plex, Stremio, and Smarters Player. Action labels are available in English and Polish.
+- Streaming availability remains based on TMDB's selected region and user's selected services. Available offers appear first; without a confirmed offer the UI displays **Brak w wybranych serwisach**. No external launcher is advertised as a verified source.
+- Replaced the old single YouTube search shortcut. Search provider controls are placed **below** the VOD results. Details have a separate provider-search toolbar below known streaming offers.
+- Quick-settings Website points to `https://www.dc4i.com/labs`; App repo points to `https://lg.darc.dev/browse/`. The company logo uses the Labs URL too.
+- Added `kodiSearch` handoff to the installed Kodi companion service `service.dc4i.handoff` 0.1.2. It accepts free-text queries, searches the user's own indexed Kodi/XCUI catalog and presents an interactive title picker. Kodi's existing exact TMDB movie/series handoff remains available.
+- Plex uses Plex Web title search, YouTube passes the search term, Stremio uses the selected title/detail link when supported, Smarters passes an experimental title hint. Proprietary player support varies; successful app launch is **not** equivalent to playback.
+
+### Verification
+- Real Chromium TV-sized smoke test passed for selected-service VOD, no selected-service availability, both provider action rows and 1920x1080 geometry.
+- Node tests for all five launch actions, Kodi search and links, JS syntax, IPK contents and TMDB response passed. Kodi service 0.1.2 was verified on the LG TV; no-result search returned `search-empty` and a real title opened a native choice dialog.
+
 ## [1.2.12] - 2026-10-25
 
 ### Public release and automatic update discovery

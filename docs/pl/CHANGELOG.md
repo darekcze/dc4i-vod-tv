@@ -2,6 +2,19 @@
 
 Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.boringtv` jest archiwalny.
 
+## [1.2.13] - 25.10.2026
+
+### Jednolite wyszukiwanie w zewnętrznych serwisach
+- W Szukaj i szczegółach tytułu udostępniono wspólny pasek **Szukaj w:** YouTube, Kodi, Plex, Stremio, Smarters Player.
+- Dostępność VOD nadal pochodzi z TMDB, z regionu i serwisów wybranych przez użytkownika. Gdy nie potwierdzono oferty: **Brak w wybranych serwisach**, a niżej pięć opcji wyszukiwania.
+- Usunięto pojedynczy przycisk wyszukiwania YouTube i powtarzające się przyciski z listy VOD. Sterowanie pilotem jest obsługiwane w obu widokach.
+- W ustawieniach: Website → `https://www.dc4i.com/labs`, App repo → `https://lg.darc.dev/browse/`; logo prowadzi do DC4i Labs.
+- Dodatek Kodi Title Handoff 0.1.2 otwiera wyszukiwanie tekstowe w katalogu XCUI/Xtream skonfigurowanym przez użytkownika. Potwierdzono okno wyników na LG.
+- Plex Web otwiera wyszukiwanie tytułu. Stremio i Smarters korzystają z najlepszych dostępnych parametrów uruchomienia; brak gwarancji wyszukania w aplikacji zewnętrznej.
+
+### Testy
+- Przeszły testy JavaScript, IPK, interakcji pięciu przycisków, otwierania szczegółów VOD i widoku Szukaj w Chrome 1920×1080 oraz lokalne testy nowego wyszukiwania Kodi.
+
 ## [1.2.12] - 25.10.2026
 
 ### Publikacja i sprawdzanie wersji

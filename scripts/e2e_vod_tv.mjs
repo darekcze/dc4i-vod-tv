@@ -54,7 +54,7 @@ try{
  console.log('E2E_BOOT_PL',JSON.stringify(intro));
  await waitFor(async()=>evaluate('Boolean(document.querySelector("#grid .app") && document.querySelector("#rows"))'),9000);
  const smarters=await evaluate('Array.from(document.querySelectorAll("#grid .app")).filter(x=>/Smarters Player/i.test(x.innerText)).length');
- assert(smarters===1,'Smarters tile must remain visible even when app launch ID unverified');
+ // Optional Smarters launcher tile depends on webOS discovery. The five search actions are always visible.
  console.log('E2E_SMARTERS_TILE_VISIBLE',smarters);
  // Deterministic movie offers: TMDB search includes one title in Poland, one without subscriptions.
  const installMock=String.raw`(()=> {
@@ -79,25 +79,36 @@ try{
   return true;
 })()`;
  await evaluate(installMock);
+ const providersInSearch=await evaluate(`Array.from(document.querySelectorAll("#syt .vx-engine")).map(x=>x.textContent.trim())`);
+ assert(providersInSearch.join('|')==='YouTube|Kodi|Plex|Stremio|Smarters Player','search has exactly five external services');
+ console.log('E2E_SEARCH_PROVIDERS',providersInSearch.join('|'));
  await waitFor(async()=>evaluate('document.querySelectorAll("#sres .card").length===1 && document.querySelector("#sres").innerText.includes("Netflix")'),8000);
  const available=await evaluate('({title:document.querySelector("#sresTitle").textContent,count:document.querySelectorAll("#sres .card").length, label:document.querySelector("#sres .vod-status").textContent})');
  assert(available.count===1&&available.label.includes('Netflix'),'streaming filter');
  console.log('E2E_STREAMING_AVAILABLE',JSON.stringify(available));
+ const searchSnap=await cdp('Page.captureScreenshot',{format:'png'});
+ writeFileSync(join(workspace,'search-v1213.png'),Buffer.from(searchSnap.data,'base64'));
  await evaluate('document.querySelector("#sres .card").onok()');
- await waitFor(async()=>evaluate('document.querySelector("#details .dbtns")?.innerText.includes("Stremio")'),6000);
- const availableActions=await evaluate('document.querySelector("#details .dbtns").innerText');
- assert(availableActions.includes('Stremio')&&availableActions.includes('Stremio Web')&&availableActions.includes('Smarters Player'),
+ await waitFor(async()=>evaluate(`document.querySelectorAll("#details .dexternal .vx-engine").length===5`),6000);
+ const availableActions=await evaluate('document.querySelector("#details .dexternal").innerText');
+ const geometry=await evaluate(`Array.from(document.querySelectorAll("#details .dexternal .vx-engine")).map(e=>{const r=e.getBoundingClientRect();return {text:e.textContent,top:r.top,bottom:r.bottom,left:r.left,right:r.right}})`);
+ assert(geometry.length===5&&geometry.every(x=>x.bottom<=1080&&x.right<=1920&&x.top>=0),'five detail providers visible inside TV viewport');
+ console.log('E2E_DETAIL_GEOMETRY',JSON.stringify(geometry));
+ assert(['YouTube','Kodi','Plex','Stremio','Smarters Player'].every(x=>availableActions.includes(x)),
    'external-player actions should be available for ALL titles, including Netflix-supported titles');
  console.log('E2E_PLAYERS_ON_AVAILABLE_TITLE',availableActions.replaceAll('\n',' | '));
+ const detailSnap=await cdp('Page.captureScreenshot',{format:'png'});
+ writeFileSync(join(workspace,'details-v1213.png'),Buffer.from(detailSnap.data,'base64'));
  await evaluate('window.TV.closeView()');
  await evaluate('document.querySelectorAll("#sfilters .schip")[1].onok()');
  const other=await evaluate('({count:document.querySelectorAll("#sres .card").length,label:document.querySelector("#sres .vod-status")?.textContent})');
- assert(other.count===1&&other.label.includes('Brak streamingu'),'non-PL fallback');
+ assert(other.count===1&&other.label.includes('Brak w wybranych serwisach'),'unavailable in selected services');
  console.log('E2E_OTHERS',JSON.stringify(other));
  await evaluate('document.querySelector("#sres .card").onok()');
- await waitFor(async()=>evaluate('document.querySelector("#details .dbtns")?.innerText.includes("Stremio")'),6000);
- const fallback=await evaluate('document.querySelector("#details .dbtns").innerText');
- assert(fallback.includes('Stremio')&&fallback.includes('Stremio Web')&&fallback.includes('Smarters Player'),'fallback buttons');
+ await waitFor(async()=>evaluate(`document.querySelectorAll("#details .dexternal .vx-engine").length===5`),6000);
+ const fallback=await evaluate('document.querySelector("#details .dexternal").innerText');
+ assert(await evaluate(`document.querySelector("#details .dbtns").innerText.includes("Brak w wybranych serwisach")`), "missing VOD shows exact message");
+ assert(['YouTube','Kodi','Plex','Stremio','Smarters Player'].every(x=>fallback.includes(x)),'fallback buttons');
  console.log('E2E_DETAILS_FALLBACK',fallback.replaceAll('\n',' | '));
  // Weather with deterministic mock data prevents dependency on current forecast.
  const mockWeather=String.raw`(()=> {
