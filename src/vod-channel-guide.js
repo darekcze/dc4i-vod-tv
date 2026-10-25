@@ -272,7 +272,8 @@
   model=modelAPI.group(items,TV.xtream.getLiveCategories(),fav);
   groupId=groupForId(groupId).id;
   groupSwitchWithoutFocus(groupId);
-  if(!model.channels.length){
+  if(model.limited){status(tr('Katalog przekracza bezpieczny limit przewodnika','Catalogue exceeds the safe guide limit'));}
+  else if(!model.channels.length){
     status(TV.xtream.getAccounts().length ?
       tr('Brak kanałów w katalogu Xtream','No Xtream channels in catalog') :
       tr('Dodaj playlistę w sekcji Playlisty','Add a playlist under Playlists'));

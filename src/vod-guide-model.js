@@ -25,7 +25,7 @@
   }
   function group(records,categories,favorites) {
     var live=[],seen=Object.create(null),favoriteSet=Object.create(null),byGroup=Object.create(null);byGroup.all=[];byGroup.favorites=[];
-    if(!Array.isArray(records)||records.length>200000||!Array.isArray(categories)||categories.length>5000||!Array.isArray(favorites)||favorites.length>5000)return {groups:[],byGroup:byGroup,channels:[]};
+    if(!Array.isArray(records)||records.length>200000||!Array.isArray(categories)||categories.length>5000||!Array.isArray(favorites)||favorites.length>5000)return {groups:[{id:'all',title:'Wszystkie kanały',count:0},{id:'favorites',title:'Ulubione',count:0}],byGroup:byGroup,channels:[],limited:true};
     (favorites||[]).forEach(function(id){favoriteSet[String(id)]=true;});
     (records||[]).forEach(function(raw){
       if(!raw || raw.type!=='live' || !raw.id)return;
