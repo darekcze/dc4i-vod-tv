@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const dir='build/dc4i-vodtv/';
+const html=readFileSync(dir+'index.html','utf8');
+const xt=readFileSync(dir+'vod-xtream.js','utf8');
+const search=readFileSync(dir+'features/search.js','utf8');
+const detail=readFileSync(dir+'features/details.js','utf8');
+assert.ok(html.includes('<script src="vod-epg.js"></script>'));
+assert.ok(xt.includes('searchEpg:searchEpg'),'EPG scans owner configured channels');
+assert.ok(xt.includes("'get_simple_data_table'"),'real provider historical/future EPG');
+assert.ok(xt.includes('remindEpg:remindEpg'),'reminder action');
+assert.ok(search.includes('epgResults'),'search considers program metadata');
+assert.ok(detail.includes("class=\"depg\""),'details shows EPG sources');
+assert.ok(detail.includes('TV.xtream.searchEpg'),'details requests EPG');
+assert.ok(detail.includes('Przypomnij'),'future EPG supports in-app reminder');
+assert.ok(detail.includes('CatchUp'),'archived indication surfaced');
+console.log('EPG_INTEGRATION_ASSERTIONS_PASS');

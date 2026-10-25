@@ -1,17 +1,17 @@
 {
   "id": "com.dc4i.vodtv",
-  "version": "1.2.16",
+  "version": "1.2.17",
   "type": "web",
   "title": "DC4I VOD TV",
   "appDescription": "Katalog VOD z ocenami TMDB i prywatnymi playlistami Xtream Codes: kanały TV, grupy, filmy, seriale, wyszukiwanie i odtwarzacz. Konto użytkownik konfiguruje na telewizorze.",
   "iconUri": "https://lg.darc.dev/icons/dc4i-vod-tv-neon.png",
   "sourceUrl": "https://github.com/darekcze/dc4i-vod-tv",
   "releaseDate": "2026-10-25",
-  "published_at": "2026-10-25T12:14:39+01:00",
+  "published_at": "2026-10-25T13:02:49+01:00",
   "rootRequired": false,
-  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.16_all.ipk",
+  "ipkUrl": "https://lg.darc.dev/packages/com.dc4i.vodtv_1.2.17_all.ipk",
   "ipkHash": {
-    "sha256": "887b110b2d938a8cb87df9f8fca2385280754c70076fbae1e114684b68bf2d9f"
+    "sha256": "a5d367413f422340ca2cee4805035e21219364c04d84df5382dde4997d43667e"
   },
-  "ipkSize": 2592712
+  "ipkSize": 2598546
 }

@@ -142,6 +142,40 @@ try{
  await evaluate(`document.querySelectorAll('#slangs .language-filter')[1].onok()`);
  await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .xtream-result').length===1`),6000);
  console.log('E2E_XTREAME_SERIES_EN',await evaluate(`document.querySelector('#sres .xtream-result .ttl').textContent`));
+ // Identity regression: the same KATSEYE-style TMDB ID must add Xtream as
+ // a second source on ONE detail card rather than duplicate/drop it.
+ await evaluate(`document.querySelectorAll('#slangs .language-filter')[0].onok()`);
+ await evaluate(`(()=>{TV.xtream.searchCatalog=async()=>[
+ {type:'movie',id:'501',tmdb:'101',title:'[PL] Film dostępny (2026)',year:'2026',rating:'4.2',group:'[PL] Movies',icon:''},
+ {type:'movie',id:'502',tmdb:'999',title:'[PL] Film bez streamingu (2026)',year:'2026',group:'[PL] Movies',icon:''}
+ ];return true;})()`);
+ await evaluate(`document.querySelectorAll('#sfilters .vod-filter')[0].onok()`);
+ await waitFor(async()=>evaluate(`document.querySelectorAll('#sres .card').length>=2`),7000);
+ const merged=await evaluate(`(()=>{const r=Array.from(document.querySelectorAll('#sres .card'));return {cards:r.length,links:TV.titleSources.get({id:101,media_type:'movie'}).map(x=>x.id)}})()`);
+ assert(merged.cards===3 && merged.links.join(',')==='501','merged TMDB + Xtream source and unmerged mismatched source');
+ await evaluate(`document.querySelector('#sres .card').onok()`);
+ await waitFor(async()=>evaluate(`Array.from(document.querySelectorAll('#details .dbtns .dbtn')).some(x=>x.textContent.includes('Xtream Filmy'))`),7000);
+ console.log('E2E_MERGED_DETAILS',await evaluate(`Array.from(document.querySelectorAll('#details .dbtns .dbtn')).map(x=>x.textContent).join(' | ')`));
+
+ await evaluate(`window.TV.xtream.searchEpg=async()=>[
+ {title:'Film dostępny',channelTitle:'[PL] HBO HD',channelId:'100',time:{start:Date.now()+7200000,end:Date.now()+10800000},duration:60,state:'future',archiveFlag:false}
+ ]`);
+ await evaluate(`document.querySelector('#sres .card') && document.querySelector('#details .depg') ? true : false`);
+ // Reopen details to trigger an EPG lookup with a future airing.
+ await evaluate('window.TV.closeView()');
+ await evaluate(`document.querySelector('#sres .card').onok()`);
+ await waitFor(async()=>evaluate(`document.querySelector('#details .depg').textContent.includes('HBO HD')`),5000);
+ const epgInfo=await evaluate(`document.querySelector('#details .depg').innerText`);
+ assert(epgInfo.includes('Przypomnij'),'future HBO airing has in-app reminder');
+ console.log('E2E_EPG_FUTURE',epgInfo.replaceAll('\n',' | '));
+ await evaluate('window.TV.closeView()');
+ // Owner's Xtream catalogue cards open detail first with poster and rating.
+ await evaluate(`TV.xtream.openItem({type:'movie',id:'902',title:'[PL] KATSEYE Wild Hearts 2026',rating:'4.2',tmdb:'1728113',icon:'https://image.tmdb.org/t/p/w500/test.jpg',year:'2026',group:'[PL] Movies'})`);
+ const detailState=await evaluate(`({visible:!document.querySelector('#dx-details').hidden,title:document.querySelector('#dx-detailtitle').textContent,rating:document.querySelector('#dx-detailrating').textContent,poster:document.querySelector('#dx-detailposter').getAttribute('src'),play:!!document.querySelector('#dx-detailplay')})`);
+ assert(detailState.visible&&detailState.title.includes('KATSEYE')&&detailState.rating.includes('4.2')&&detailState.poster&&detailState.play,'Xtream poster + rating + details');
+ console.log('E2E_XTREAM_DETAILS',JSON.stringify(detailState));
+ await evaluate('window.TV.closeView()');
+ await evaluate('window.TV.closeView()');
  // Weather with deterministic mock data prevents dependency on current forecast.
  const mockWeather=String.raw`(()=> {
   const original=window.fetch;

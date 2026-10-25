@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+const app=readFileSync('build/dc4i-vodtv/vod-xtream.js','utf8');
+const style=readFileSync('build/dc4i-vodtv/vod-xtream.css','utf8');
+assert.ok(app.includes("detailPanel.id='dx-details'"),'preview overlay exists');
+assert.ok(app.includes('function showDetails(i)'),'catalog cards open details');
+assert.ok(app.includes("'get_vod_info'"),'movie provider metadata via API');
+assert.ok(app.includes("'get_series_info'"),'series provider metadata via API');
+assert.ok(app.includes('dx-detailrating'),'display the correct provider rating');
+assert.ok(app.includes('dx-detailposter'),'poster visible in catalog details');
+assert.ok(app.includes("bind('detailplay'"),'explicit watch button');
+assert.ok(style.includes('.dx-details'),'dedicated layout');
+console.log('XTREAM_DETAIL_VIEW_ASSERTIONS_PASS');

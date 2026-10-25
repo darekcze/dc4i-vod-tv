@@ -13,6 +13,20 @@ Technical application identifier since 1.2.0: `com.dc4i.vodtv` (in-place updates
 - Headless UI tests validated playlist management, filters, title search, playback control and reload persistence.
 - System-wide LG Search integration remains unverified and is not advertised.
 
+## [1.2.17] - 2026-10-25
+
+### Canonical TMDB/Xtream identity, EPG and detailed posters
+- Fixed a bug where a matching Xtream record was discarded without adding its playable source to the canonical TMDB card. Verified nonzero TMDB ID takes precedence, otherwise exact normalized title+type+year, with collision protection.
+- Verified KATSEYE: Wild Hearts (2026), TMDB movie 1728113, using actual TMDB and configured provider metadata. Distinct films such as KATSEYE Argentina and Brasil are kept separate.
+- Xtream browse includes posters, provider rating and a details page with description, genre, release date and watch button. Where possible, TMDB provides localized synopsis and a separately labeled score.
+- Added limited local Xtream EPG source discovery (get_simple_data_table), event statuses (past/current/future), current-TV actions and future foreground-only reminders.
+- CatchUp is an explicitly labeled attempt, not guaranteed playback. The provider flagged an HBO 2 archive event but a test URL returned empty data. No recording scheduler has been verified.
+- EPG lookup currently checks up to 12 priority TV/movie channels, not the entire channel list. Provider credentials and catalogs stay in user storage on LG, not distributed with this release.
+
+### Validation
+- Unit tests for ID/year/type mapping, source cache, catalog details, EPG time and archive flags; end-to-end 1920x1080 Chromium tests covering merged streaming sources, poster, rating, EPG reminder, navigation and existing app features.
+- Public package SHA-256 a5d367413f422340ca2cee4805035e21219364c04d84df5382dde4997d43667e. Cloudflare Homebrew catalog has 33 apps, 32 unaffected. Installed/launched 1.2.17 on LG OLED55G42LW in place.
+
 ## [1.2.16] - 2026-10-25
 
 ### Owner-approved navigation and playlist-based discovery

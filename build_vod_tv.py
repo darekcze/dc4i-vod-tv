@@ -161,3 +161,8 @@ subprocess.run([sys.executable,str(R/'scripts/patch_v1215_navigation.py')],check
 
 # User-selected 7 tabs, unified VOD+Xtream search, and persistent playlist backup.
 subprocess.run([sys.executable,str(R/'scripts/patch_v1216_catalog.py')],check=True)
+
+# Canonical titles with Xtream sources and provider cover/rating enrichment.
+subprocess.run([sys.executable,str(R/'scripts/patch_v1217_identity.py')],check=True)
+subprocess.run([sys.executable,str(R/'scripts/patch_v1217_details.py')],check=True)
+subprocess.run([sys.executable,str(R/'scripts/patch_v1217_epg.py')],check=True)

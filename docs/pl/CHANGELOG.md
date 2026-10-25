@@ -11,6 +11,19 @@ Identyfikator aplikacji od wersji 1.2.0: `com.dc4i.vodtv`. Starszy `com.dc4i.bor
 - Na LG G4 potwierdzono pobranie 145 699 pozycji, odtwarzanie HD Live TV, filmu 4K oraz odcinka serialu. Dane utrzymały się po ponownym uruchomieniu aplikacji, ale nie ma gwarancji zachowania przy każdej aktualizacji webOS.
 - Systemowe LG Search nadal wymaga osobnych testów.
 
+## [1.2.17] - 25.10.2026
+
+### Wspólne karty TMDB/Xtream, plakaty, oceny i EPG
+- Naprawiono pomijanie źródła Xtream po połączeniu go z kartą TMDB. W szczegółach jednego tytułu mogą pojawić się Netflix, Xtream Filmy i inne źródła, z osobnymi przyciskami.
+- Mapowanie preferuje poprawny identyfikator TMDB, następnie zgodny tytuł, rodzaj i rok. KATSEYE: Wild Hearts 2026 posiada potwierdzony w TMDB i Xtream identyfikator filmu 1728113; inne produkcje KATSEYE nie są łączone z nim przypadkowo.
+- Filmy i Seriale Xtream: plakaty, ocena źródła, ekran szczegółów, opis, premiera, gatunek, osobny przycisk Odtwórz. Wzbogacanie TMDB może udostępnić drugi opis i ocenę, zawsze osobno oznaczone.
+- EPG dostawcy: emisje obecne, przeszłe i przyszłe oraz przypomnienie w aplikacji (tylko gdy aplikacja działa).
+- CatchUp pozostaje funkcją eksperymentalną. Mimo has_archive=1 rzeczywisty test materiału HBO zwrócił pusty strumień, więc nie deklarujemy działającego odtwarzania nagrania. Nie ma jeszcze potwierdzonego backendu harmonogramowania nagrań.
+- Wyszukiwanie EPG obejmuje obecnie maksymalnie 12 wybranych kanałów na zapytanie, nie całą ofertę TV.
+
+### Weryfikacja
+- Testy mapowania, EPG, pakietu IPK i ekranu 1920x1080 zakończone sukcesem. Wersja 1.2.17 opublikowana na lg.darc.dev oraz zainstalowana na LG, bez odinstalowywania aplikacji.
+
 ## [1.2.16] - 25.10.2026
 
 ### Nawigacja, połączone wyszukiwanie i zachowanie playlist

@@ -44,6 +44,12 @@ YouTube key is available privately at `private/youtube_api_key.txt` and was crea
 - Homebrew remains 33 entries, 32 others unchanged. SHA-256: `887b110b2d938a8cb87df9f8fca2385280754c70076fbae1e114684b68bf2d9f`.
 - Confirmed installed version 1.2.16 and TV-side access to the matching public manifest. The app was updated in place, not uninstalled. Full EPG program matching, provider playback and physical TV visual QA are not asserted.
 
+## 1.2.17 canonical title/EPG release (2026-10-25)
+- Public Homebrew release 1.2.17; installed and launched on LG OLED55G42LW in place. SHA-256 a5d367413f422340ca2cee4805035e21219364c04d84df5382dde4997d43667e.
+- Canonical title merges TMDB and verified Xtream sources; provider catalog cards show cover and score with details.
+- EPG lookup limited to 12 priority TV/movie channels. Archive signal is not evidence that recorded playback works. In-app reminders only work while VODTV is running.
+- Tests passed: unit and Chromium E2E 1920x1080, IPK packaging, production checksum, version on TV. Remains: broader EPG index, verified CatchUp, optional DVR recording backend.
+
 ## Rollback
 Cloudflare Pages retains previous deployments. Current production is the source-of-truth. To revert, redeploy the previously verified Pages deployment and its matching manifest and binary, do not merely change version numbers. Local packages are kept under `private/` on AI-Hot.
 
