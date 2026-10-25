@@ -13,7 +13,7 @@ def replace(old,new):
     global s
     assert s.count(old)==1,('Home anchor changed',old[:70],s.count(old))
     s=s.replace(old,new,1)
-replace('  function buildRows() {','  function buildRows() {\n    var homeFocus=window.TV&&TV.homeRails&&TV.view()==='home'?TV.homeRails.captureFocus():null;\n    var home=window.TV && TV.homeRails?TV.homeRails.rows():[];')
+replace('  function buildRows() {','  function buildRows() {\n    var homeFocus=window.TV&&TV.homeRails&&TV.view()==="home"?TV.homeRails.captureFocus():null;\n    var home=window.TV && TV.homeRails?TV.homeRails.rows():[];')
 replace('rowsData = personalized.concat(', 'rowsData = home.concat(personalized,')
 replace('    if (base.length) render();',"    if(base.length||home.length){$('hero').hidden=!heroItems.length;render();if(homeFocus)TV.homeRails.restoreFocus(homeFocus);if(home.length)booted();}")
 replace('    refresh: function () { buildRows(); },', '    refresh: function () { buildRows(); },\n    focusHomeCard:focusEl,')
