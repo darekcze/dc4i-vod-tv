@@ -5,11 +5,11 @@ from PIL import Image
 import json,re,subprocess,tarfile,io,urllib.request,urllib.error,hashlib
 R=Path(__file__).resolve().parent
 A=R/'build'/'dc4i-vodtv'
-P=R/'private'/'com.dc4i.vodtv_1.2.17_all.ipk'
+P=R/'private'/'com.dc4i.vodtv_1.2.18_all.ipk'
 meta=json.loads((A/'appinfo.json').read_text())
 assert meta['id']=='com.dc4i.vodtv'
 assert meta['title']=='DC4I VOD TV'
-assert meta['version']=='1.2.17'
+assert meta['version']=='1.2.18'
 assert Image.open(A/'icon.png').size==(80,80)
 assert Image.open(A/'largeIcon.png').size==(130,130)
 assert Image.open(A/'splash.png').size==(1920,1080)
@@ -42,6 +42,8 @@ with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tf:
   for f in ['keys.js','appinfo.json','splash.png','dc4i.css','dc4i-wordmark.png','neon-app-logo.png','vod-root.js','vod-i18n.js','vod-root.css','vod-xtream.js','vod-xtream.css']:
     assert any(n.endswith('/'+f) or n==f for n in names),f+' not in IPK'
 assert 'vod-xtream.js' in html and 'vod-xtream.css' in html
+assert 'vod-recommendations.js' in html and 'vod-personalization-ui.js' in html
+assert 'Dopasowane do profilu' in (A/'vod-personalization-ui.js').read_text()
 assert 'dc4iXtreamPlaylistsV1' in (A/'vod-xtream.js').read_text()
 assert '192.168.1.11' not in (A/'vod-xtream.js').read_text(), 'Unwanted LAN proxy dependency'
 print('IPK_CONTENTS_OK',len(names),'files')
