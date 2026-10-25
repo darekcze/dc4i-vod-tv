@@ -3,13 +3,18 @@
 from pathlib import Path
 from PIL import Image
 import json,re,subprocess,tarfile,io,urllib.request,urllib.error,hashlib
-R=Path(__file__).resolve().parent
-A=R/'build'/'dc4i-vodtv'
-P=R/'private'/'com.dc4i.vodtv_1.2.19_all.ipk'
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent/'scripts'))
+from release_contract import candidate,options,safe_error
+args=options(Path(__file__).resolve().parent)
+R=args.root
+A=args.app_dir
+APP,VERSION=candidate(A,args.release_version)
+P=R/'private'/f'{APP}_{VERSION}_all.ipk'
 meta=json.loads((A/'appinfo.json').read_text())
 assert meta['id']=='com.dc4i.vodtv'
 assert meta['title']=='DC4I VOD TV'
-assert meta['version']=='1.2.19'
+assert meta['version']==VERSION
 assert Image.open(A/'icon.png').size==(80,80)
 assert Image.open(A/'largeIcon.png').size==(130,130)
 assert Image.open(A/'splash.png').size==(1920,1080)
@@ -47,11 +52,14 @@ assert 'Dopasowane do profilu' in (A/'vod-personalization-ui.js').read_text()
 assert 'dc4iXtreamPlaylistsV1' in (A/'vod-xtream.js').read_text()
 assert '192.168.1.11' not in (A/'vod-xtream.js').read_text(), 'Unwanted LAN proxy dependency'
 print('IPK_CONTENTS_OK',len(names),'files')
-try:
-  u='https://api.themoviedb.org/3/configuration?api_key='+km.group(0)
-  with urllib.request.urlopen(u,timeout=15) as response:
-    obj=json.load(response);assert response.status==200 and 'images' in obj
-  print('TMDB_API_OK HTTP_200')
-except Exception as e:
-  print('TMDB_API_UNVERIFIED',str(e)[:150])
+if args.offline:
+  print('TMDB_API_NOT_RUN offline requested')
+else:
+  try:
+    u='https://api.themoviedb.org/3/configuration?api_key='+km.group(0)
+    with urllib.request.urlopen(u,timeout=15) as response:
+      obj=json.load(response);assert response.status==200 and 'images' in obj
+    print('TMDB_API_OK HTTP_200')
+  except Exception as e:
+    print('TMDB_API_UNVERIFIED',safe_error(e))
 print('PACKAGE_SIZE',P.stat().st_size,'SHA256',hashlib.sha256(P.read_bytes()).hexdigest())
