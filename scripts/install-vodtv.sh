@@ -12,15 +12,23 @@ LAUNCH=0
 DRY_RUN=0
 PACKAGE=''
 CLI_SOURCE='auto'
+TV_HOST='192.168.1.60'
+TV_PORT=9922
+CONNECT_TIMEOUT=2
+SSH_TIMEOUT=12
+INSTALL_TIMEOUT=120
 usage() {
   cat <<'EOF'
 Usage: install-vodtv.sh [--ipk /absolute/path/file.ipk | --version X.Y.Z] [--launch] [--dry-run] [--cli auto|minimal|archive]
 Default: install only, never launch or test on TV.
 --cli auto uses existing minimal CLI, falls back to official archive only when files are missing.
 The script never uninstalls apps, wakes or reboots the TV.
+Offline/sleeping TV: fast non-disruptive TCP preflight and actionable error.
+Exit codes: 20=TV unavailable, 21=SSH failed, 22=installer timeout, 23=installer failed.
 EOF
 }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+fail() { local code="$1"; shift; printf 'ERROR [%s]: %s\n' "$code" "$*" >&2; exit "$code"; }
 while (($#)); do
  case "$1" in
   --ipk) (($# >= 2)) || die 'Missing --ipk argument'; PACKAGE="$2"; shift 2;;
@@ -62,12 +70,49 @@ if ((DRY_RUN)); then
  printf 'DRY RUN: would check SSH reachability and install package. Launch: %s\n' "$LAUNCH"
  exit 0
 fi
-# Non-disruptive connectivity check using existing, locally protected credential handler.
-CHECK_OUTPUT="$(/usr/bin/expect "$ROOT/tv_ssh_authed.exp" 'echo TV_CONNECTION_OK' 2>&1)" || die 'TV SSH check failed (TV may be asleep or offline)'
-[[ "$CHECK_OUTPUT" == *TV_CONNECTION_OK* && "$CHECK_OUTPUT" == *'REMOTE_SSH_EXIT 0'* ]] || die 'TV SSH check did not confirm success'
-printf 'TV SSH reachable. Starting installation.\n'
-# No automatic retries. A failed or stalled CLI must be diagnosed before another attempt.
-"$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE"
+# Fast, non-disruptive TCP probe. Do not wake or control the TV.
+if ! /usr/bin/python3 - "$TV_HOST" "$TV_PORT" "$CONNECT_TIMEOUT" <<'PY'
+import socket, sys
+host, port, timeout = sys.argv[1], int(sys.argv[2]), float(sys.argv[3])
+try:
+    with socket.create_connection((host, port), timeout=timeout):
+        pass
+except (OSError, TimeoutError):
+    sys.exit(1)
+PY
+then
+ fail 20 "TV SSH port is unreachable within ${CONNECT_TIMEOUT}s. TV may be asleep/offline or network is unavailable. No installation attempted; wake TV manually and rerun."
+fi
+# Bound SSH authentication and installation separately. Never echo credentials.
+# Python subprocess timeout terminates the entire process group, preventing orphan CLI.
+run_bounded() {
+ local seconds="$1" timeout_code="$2" error_code="$3"; shift 3
+ /usr/bin/python3 - "$seconds" "$timeout_code" "$error_code" "$@" <<'PY'
+import os, signal, subprocess, sys
+seconds, timeout_code, error_code = map(int, sys.argv[1:4])
+command = sys.argv[4:]
+p = subprocess.Popen(command, start_new_session=True)
+try:
+    code = p.wait(timeout=seconds)
+except subprocess.TimeoutExpired:
+    os.killpg(p.pid, signal.SIGTERM)
+    try:
+        p.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        os.killpg(p.pid, signal.SIGKILL)
+        p.wait()
+    print("ERROR: operation timed out; process group stopped", file=sys.stderr)
+    sys.exit(timeout_code)
+sys.exit(0 if code == 0 else error_code)
+PY
+}
+printf 'TV SSH port reachable. Checking authenticated connection.\n'
+# Existing Expect script validates SSH and reports REMOTE_SSH_EXIT 0.
+CHECK_OUTPUT="$(run_bounded "$SSH_TIMEOUT" 21 21 /usr/bin/expect "$ROOT/tv_ssh_authed.exp" 'echo TV_CONNECTION_OK' 2>&1)" || fail 21 "TV reachable but authenticated SSH failed or timed out. No installation attempted."
+[[ "$CHECK_OUTPUT" == *TV_CONNECTION_OK* && "$CHECK_OUTPUT" == *'REMOTE_SSH_EXIT 0'* ]] || fail 21 'TV SSH authentication did not confirm success. No installation attempted.'
+printf 'TV SSH authenticated. Installing package (max %ss).\n' "$INSTALL_TIMEOUT"
+# No automatic retries. The installer has a hard deadline and no launch by default.
+run_bounded "$INSTALL_TIMEOUT" 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation failed or timed out. Check TV state and CLI diagnostics before retrying.'
 printf 'Installer returned success.\n'
 if ((LAUNCH)); then
  printf 'Explicit --launch requested. Launching application.\n'
