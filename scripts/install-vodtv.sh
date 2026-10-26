@@ -20,6 +20,7 @@ VERIFY_ONLY=0
 LAUNCH=0
 WAKE_IF_NEEDED=0
 CLI_TMP=''
+WOKE_BY_INSTALLER=0
 
 usage() {
  cat <<'EOF'
@@ -81,7 +82,22 @@ else
 fi
 
 cleanup() {
+ local previous_exit=$?
+ trap - EXIT
+ # Restore the prior black-screen state only when THIS run sent Wake-on-LAN.
+ # This also applies to failed installations. Do not change an already-active TV.
+ if ((WOKE_BY_INSTALLER)); then
+  printf 'Restoring TV black-screen state after installer wake...\n'
+  local output
+  output="$(run_bounded 8 26 26 /usr/bin/python3 "$ROOT/tools/lg_ssap_probe.py" --action screen-off --timeout 3 2>&1)" || true
+  if [[ "$output" == *'SCREEN_OFF_RESPONSE {"returnValue": true}'* ]]; then
+   printf 'TV_SCREEN_RESTORED\n'
+  else
+   printf 'WARNING: TV screen restore not confirmed; previous exit=%s\n' "$previous_exit" >&2
+  fi
+ fi
  if [[ -n "$CLI_TMP" && -d "$CLI_TMP" ]]; then rm -rf "$CLI_TMP"; fi
+ exit "$previous_exit"
 }
 trap cleanup EXIT
 
@@ -149,6 +165,7 @@ PY
  if [[ "$power_result" != *'"state": "Active"'* ]] && ((WAKE_IF_NEEDED)); then
   printf 'TV not confirmed Active. Trying one authorized Wake-on-LAN using verified LAN ARP MAC.\n'
   power_result="$(/usr/bin/python3 "$probe" --wake-first --action state --timeout 3 2>&1)" || true
+  if [[ "$power_result" == *WAKE_PACKET_SENT_TO_LAN_MAC* ]]; then WOKE_BY_INSTALLER=1; fi
   if [[ "$power_result" != *'"state": "Active"'* ]]; then
    # A double Power Off can take a few seconds to recover; wait only for readiness.
    for attempt in 1 2 3; do
