@@ -16,6 +16,7 @@ PACKAGE=''
 DRY_RUN=0
 CHECK_ONLY=0
 LAUNCH=0
+ALLOW_ALWAYS_READY=0
 CLI_TMP=''
 
 usage() {
@@ -25,9 +26,13 @@ Usage:
   install-vodtv.sh --version X.Y.Z [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --ipk /absolute/path/file.ipk [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --version X.Y.Z --dry-run
+  install-vodtv.sh --ipk /absolute/path/file.ipk --allow-always-ready
 Default: install only, never launch, wake, reboot or interact with TV UI.
 --check-only: read-only TV readiness check; no IPK or installer involved.
 --dry-run: validate package and local tooling; no TV contact.
+--allow-always-ready: explicit owner-approved single background install attempt
+  when power-state API is unavailable; SSH auth must still succeed.
+  A short (20s) installer deadline applies. Not valid with --launch.
 Known errors: exit 20=port unreachable, 21=SSH auth/timeout,
 22=install timeout, 23=install failure, 24=power state not confirmed Active.
 EOF
@@ -50,12 +55,14 @@ while (($#)); do
   --check-only) CHECK_ONLY=1; shift;;
   --dry-run) DRY_RUN=1; shift;;
   --launch) LAUNCH=1; shift;;
+  --allow-always-ready) ALLOW_ALWAYS_READY=1; shift;;
   -h|--help) usage; exit 0;;
   *) die "Unknown option: $1";;
  esac
 done
 
 [[ "$CLI_SOURCE" =~ ^(auto|minimal|archive)$ ]] || die 'Invalid --cli setting'
+if ((ALLOW_ALWAYS_READY && LAUNCH)); then die '--allow-always-ready cannot be used with --launch'; fi
 if ((CHECK_ONLY)); then
  ((DRY_RUN==0 && LAUNCH==0)) || die '--check-only cannot be combined with --dry-run or --launch'
 else
@@ -148,9 +155,19 @@ print('POWER_STATE='+state.strip())
 if state.strip().casefold()!='active':
     sys.exit(24)
 PY
- )" || fail 24 "TV active state not confirmed ($power_result). It may be sleeping or power API unavailable. Installation skipped."
- printf '%s\n' "$power_result"
- printf 'Power state Active; checking SSH authentication.\n'
+ )" || {
+  if ((ALLOW_ALWAYS_READY)); then
+   printf 'POWER_UNCONFIRMED (%s). Explicit --allow-always-ready: trying one bounded, non-interactive installation via SSH.\n' "$power_result"
+  else
+   fail 24 "TV active state not confirmed ($power_result). It may be sleeping or power API unavailable. Installation skipped."
+  fi
+ }
+ if [[ "$power_result" == POWER_STATE=Active ]]; then
+  printf '%s\n' "$power_result"
+ else
+  ((ALLOW_ALWAYS_READY)) || fail 24 "TV not confirmed active ($power_result). Installation skipped."
+ fi
+ printf 'Checking SSH authentication.\n'
  local ssh_result
  ssh_result="$(run_bounded 12 21 21 /usr/bin/expect "$ROOT/tv_ssh_authed.exp" 'echo TV_CONNECTION_OK' 2>&1)" || fail 21 'TV SSH authentication failed/timed out. Installation skipped.'
  [[ "$ssh_result" == *TV_CONNECTION_OK* && "$ssh_result" == *'REMOTE_SSH_EXIT 0'* ]] || fail 21 'TV SSH not authenticated. Installation skipped.'
@@ -174,8 +191,10 @@ fi
 prepare_cli
 printf 'Package: %s\nCLI: %s\nNode: %s\n' "$PACKAGE" "$CLI" "$("$NODE" --version)"
 shasum -a 256 "$PACKAGE"
-printf 'Installing on %s (120-second bound).\n' "$DEVICE"
-run_bounded 120 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation timed out or failed; inspect this result before retry.'
+INSTALL_DEADLINE=120
+if ((ALLOW_ALWAYS_READY)); then INSTALL_DEADLINE=20; fi
+printf 'Installing on %s (%s-second bound).\n' "$DEVICE" "$INSTALL_DEADLINE"
+run_bounded "$INSTALL_DEADLINE" 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation timed out or failed; inspect this result before retry.'
 printf 'INSTALL_SUCCESS\n'
 if ((LAUNCH)); then
  printf 'Explicit --launch requested; launching %s\n' "$APP_ID"
