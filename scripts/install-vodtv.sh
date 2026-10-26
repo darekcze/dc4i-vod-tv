@@ -9,9 +9,10 @@ TV_HOST='192.168.1.60'
 TV_PORT=9922
 NODE='/Users/czech/.nvm/versions/node/v20.19.4/bin/node'
 MINIMAL="$ROOT/tools/webos-cli-minimal/node_modules/@webos-tools/cli/bin"
+LOCAL_CLI="/tmp/dc4i-ares-cli/node_modules/@webos-tools/cli/bin"
 ARCHIVE="$ROOT/tools/ares-cli-node-arm64.tar.gz"
 CLI_SOURCE='auto'
-CLI="$MINIMAL"
+CLI="$LOCAL_CLI"
 PACKAGE=''
 DRY_RUN=0
 CHECK_ONLY=0
@@ -28,6 +29,9 @@ Usage:
   install-vodtv.sh --version X.Y.Z --dry-run
   install-vodtv.sh --ipk /absolute/path/file.ipk --wake-if-needed
 Default: install only, never launch, wake, reboot or interact with TV UI.
+--cli auto: use a validated local CLI cache; otherwise extract the official archive
+  into temporary LOCAL storage. Do not execute Node modules from SMB AI-Hot.
+--cli minimal: explicitly run the network-mount CLI (diagnostic only, may stall).
 --wake-if-needed: explicitly allow ONE ARP-addressed Wake-on-LAN action
   when paired SSAP does not report Active. No Power-toggle or Home key.
 --check-only: read-only TV readiness check; no IPK or installer involved.
@@ -79,15 +83,22 @@ prepare_cli() {
  [[ -x "$NODE" ]] || die "Node 20 runtime not available: $NODE"
  [[ -d "$ROOT/.ares-home" ]] || die 'Private CLI configuration is missing'
  export HOME="$ROOT/.ares-home"
- if [[ "$CLI_SOURCE" == archive || ( "$CLI_SOURCE" == auto && ! -f "$MINIMAL/ares-install.js" ) ]]; then
+ if [[ "$CLI_SOURCE" == "minimal" ]]; then
+  CLI="$MINIMAL"
+  printf 'WARNING: explicit network-mount CLI may stall on SMB module loading.\n'
+ elif [[ "$CLI_SOURCE" == "auto" && -f "$LOCAL_CLI/ares-install.js" && -f "$MINIMAL/ares-install.js" ]] && cmp -s "$LOCAL_CLI/ares-install.js" "$MINIMAL/ares-install.js"; then
+  CLI="$LOCAL_CLI"
+  printf 'Using previously verified local CLI cache.\n'
+ else
   [[ -f "$ARCHIVE" ]] || die "CLI archive not found: $ARCHIVE"
   if ((DRY_RUN)); then
-   printf 'DRY RUN: would extract official CLI archive to a temporary directory\n'
+   printf 'DRY RUN: would extract official CLI archive to a new local temporary directory.\n'
    return 0
   fi
   CLI_TMP="$(mktemp -d "${TMPDIR:-/tmp/}dc4i-ares-cli.XXXXXX")"
   tar -xzf "$ARCHIVE" -C "$CLI_TMP"
   CLI="$CLI_TMP/node_modules/@webos-tools/cli/bin"
+  printf 'Using official CLI extracted to local temporary storage.\n'
  fi
  [[ -f "$CLI/ares-install.js" ]] || die "Installer not found: $CLI"
  if ((LAUNCH)); then [[ -f "$CLI/ares-launch.js" ]] || die 'Launcher is missing'; fi
