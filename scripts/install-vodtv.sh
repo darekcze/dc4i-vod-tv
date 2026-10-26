@@ -73,7 +73,7 @@ done
 if ((WAKE_IF_NEEDED && DRY_RUN)); then die '--wake-if-needed cannot be used with --dry-run'; fi
 if ((VERIFY_ONLY && (DRY_RUN || LAUNCH || WAKE_IF_NEEDED))); then die '--verify-only cannot be combined with --dry-run, --launch or --wake-if-needed'; fi
 if ((CHECK_ONLY)); then
- ((DRY_RUN==0 && LAUNCH==0 && VERIFY_ONLY==0)) || die '--check-only cannot be combined with --dry-run, --verify-only or --launch'
+ ((DRY_RUN==0 && LAUNCH==0 && VERIFY_ONLY==0 && WAKE_IF_NEEDED==0)) || die '--check-only is strictly read-only; do not combine with --dry-run, --verify-only, --launch or --wake-if-needed'
 else
  [[ -n "$PACKAGE" ]] || { usage; die 'Specify --version or --ipk'; }
  [[ "$PACKAGE" = /* && "$PACKAGE" == *.ipk ]] || die 'IPK must be an absolute .ipk path'
@@ -92,7 +92,7 @@ prepare_cli() {
  if [[ "$CLI_SOURCE" == "minimal" ]]; then
   CLI="$MINIMAL"
   printf 'WARNING: explicit network-mount CLI may stall on SMB module loading.\n'
- elif [[ "$CLI_SOURCE" == "auto" && -f "$LOCAL_CLI/ares-install.js" && -f "$MINIMAL/ares-install.js" ]] && cmp -s "$LOCAL_CLI/ares-install.js" "$MINIMAL/ares-install.js"; then
+ elif [[ "$CLI_SOURCE" == "auto" && -f "$LOCAL_CLI/ares-install.js" && -f "$MINIMAL/ares-install.js" ]] && cmp -s "$LOCAL_CLI/ares-install.js" "$MINIMAL/ares-install.js" && cmp -s "${LOCAL_CLI%/bin}/package.json" "${MINIMAL%/bin}/package.json"; then
   CLI="$LOCAL_CLI"
   printf 'Using previously verified local CLI cache.\n'
  else
