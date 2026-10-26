@@ -10,6 +10,7 @@ ARCHIVE="$ROOT/tools/ares-cli-node-arm64.tar.gz"
 CLI="$MINIMAL"
 LAUNCH=0
 DRY_RUN=0
+CHECK_ONLY=0
 PACKAGE=''
 CLI_SOURCE='auto'
 TV_HOST='192.168.1.60'
@@ -19,12 +20,14 @@ SSH_TIMEOUT=12
 INSTALL_TIMEOUT=120
 usage() {
   cat <<'EOF'
-Usage: install-vodtv.sh [--ipk /absolute/path/file.ipk | --version X.Y.Z] [--launch] [--dry-run] [--cli auto|minimal|archive]
+Usage: install-vodtv.sh [--ipk /absolute/path/file.ipk | --version X.Y.Z] [--launch] [--dry-run] [--check-only] [--cli auto|minimal|archive]
 Default: install only, never launch or test on TV.
 --cli auto uses existing minimal CLI, falls back to official archive only when files are missing.
 The script never uninstalls apps, wakes or reboots the TV.
-Offline/sleeping TV: fast non-disruptive TCP preflight and actionable error.
-Exit codes: 20=TV unavailable, 21=SSH failed, 22=installer timeout, 23=installer failed.
+Offline/sleeping TV: fast non-disruptive TCP+SSH+read-only power-state preflight and actionable error.
+--check-only: perform device readiness checks, never install or launch (supply --version or --ipk).
+Power-state API must report Active; unavailable/standby -> exit before installation.
+Exit codes: 20=TV TCP unavailable, 21=SSH failed, 22=installer timeout, 23=installer failed, 24=TV not ready (power state).
 EOF
 }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
@@ -35,6 +38,7 @@ while (($#)); do
   --version) (($# >= 2)) || die 'Missing --version argument'; [[ "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || die 'Invalid version'; PACKAGE="$ROOT/packages/com.dc4i.vodtv_${2}_all.ipk"; shift 2;;
   --launch) LAUNCH=1; shift;;
   --dry-run) DRY_RUN=1; shift;;
+  --check-only) CHECK_ONLY=1; shift;;
   --cli) (($# >= 2)) || die 'Missing --cli argument'; CLI_SOURCE="$2"; shift 2;;
   -h|--help) usage; exit 0;;
   *) die "Unknown argument: $1";;
@@ -110,6 +114,52 @@ printf 'TV SSH port reachable. Checking authenticated connection.\n'
 # Existing Expect script validates SSH and reports REMOTE_SSH_EXIT 0.
 CHECK_OUTPUT="$(run_bounded "$SSH_TIMEOUT" 21 21 /usr/bin/expect "$ROOT/tv_ssh_authed.exp" 'echo TV_CONNECTION_OK' 2>&1)" || fail 21 "TV reachable but authenticated SSH failed or timed out. No installation attempted."
 [[ "$CHECK_OUTPUT" == *TV_CONNECTION_OK* && "$CHECK_OUTPUT" == *'REMOTE_SSH_EXIT 0'* ]] || fail 21 'TV SSH authentication did not confirm success. No installation attempted.'
+# SSH may remain reachable while LG webOS is in standby. Query power state
+# through the already-paired, read-only SSAP API before starting any installation.
+# A timeout or unsupported response means UNKNOWN, not proof of sleep.
+REMOTE_PY="$ROOT/.venv/bin/python3"
+REMOTE_CLI="$ROOT/source/lgtv.py"
+[[ -x "$REMOTE_PY" && -f "$REMOTE_CLI" ]] || fail 24 'LG power-state reader is missing. No installation attempted.'
+POWER_RESULT="$(/usr/bin/python3 - "$ROOT" <<'PY'
+import json, os, subprocess, sys
+root = sys.argv[1]
+cmd = [root + '/.venv/bin/python3', root + '/source/lgtv.py',
+       '--name', 'LG_OLED55G42LW', '--ssl', 'getPowerState']
+env = dict(os.environ, XDG_CONFIG_HOME=root + '/.config')
+try:
+    proc = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=4)
+except subprocess.TimeoutExpired:
+    print('POWER_STATE_TIMEOUT')
+    sys.exit(24)
+except OSError:
+    print('POWER_STATE_READER_ERROR')
+    sys.exit(24)
+state = None
+for line in proc.stdout.splitlines():
+    try:
+        item = json.loads(line)
+    except (ValueError, TypeError):
+        continue
+    payload = item.get('payload', {}) if isinstance(item, dict) else {}
+    if not isinstance(payload, dict):
+        continue
+    state = payload.get('state') or payload.get('powerState')
+    if state is not None:
+        break
+if not isinstance(state, str):
+    print('POWER_STATE_UNAVAILABLE')
+    sys.exit(24)
+state = state.strip()
+print('POWER_STATE=' + state)
+if state.casefold() != 'active':
+    sys.exit(24)
+PY
+)" || fail 24 "TV is not confirmed active ($POWER_RESULT). It may be sleeping or power-state API unavailable. No installation attempted."
+printf '%s\n' "$POWER_RESULT"
+if ((CHECK_ONLY)); then
+ printf 'CHECK_ONLY_OK: TV responds to SSH and reports active power state. Nothing installed or launched.\n'
+ exit 0
+fi
 printf 'TV SSH authenticated. Installing package (max %ss).\n' "$INSTALL_TIMEOUT"
 # No automatic retries. The installer has a hard deadline and no launch by default.
 run_bounded "$INSTALL_TIMEOUT" 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation failed or timed out. Check TV state and CLI diagnostics before retrying.'
