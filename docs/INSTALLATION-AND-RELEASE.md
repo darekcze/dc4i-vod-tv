@@ -1,6 +1,6 @@
 # DC4I VOD TV Installation and Release Procedure
 
-Status: historical installation procedure verified for version 1.2.4 on the real LG OLED55G42LW. The procedure has not yet been re-verified for package 1.2.19.
+Status (2026-10-26): canonical executable installer VERIFIED on the real LG OLED55G42LW by successful in-place installation of 1.2.20 and independent read-only appinfo verification. Earlier 1.2.4 / 1.2.19 reports below are historical evidence.
 
 ## Canonical machine and files
 
@@ -17,34 +17,29 @@ All paths below refer to the owner's Mac Pro.
 
 The private device configuration contains credentials. Never print it, copy it into a command, commit it, or include its values in logs or documentation.
 
-## Standard installation procedure
+## Standard installation procedure: scripts are canonical
 
-Use the official CLI archive and the private device configuration. Do not substitute the separate `webos-cli-minimal` CLI just because it is already expanded.
-
-Set the package path to the exact versioned IPK that was verified before installation:
+**DO NOT recreate manual webOS CLI commands.** Use the version-controlled [installer script](../scripts/install-vodtv.sh), deployed on Mac Pro as `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`. It uses Node 20, a locally extracted CLI, private device credentials and an SSAP power-state probe. No secrets are committed or logged.
 
 ```sh
-ROOT='/Volumes/AI-Hot/Services/LGWebOSRemote'
-IPK="$ROOT/packages/com.dc4i.vodtv_<VERSION>_all.ipk"
+S='/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh'
+# Normal install-only, no wake or launch:
+bash "$S" --version 1.2.19
 
-# Verify the package exists and record its checksum.
-test -f "$IPK" || { echo "IPK not found: $IPK"; exit 1; }
-shasum -a 256 "$IPK"
+# Owner-approved recovery from Always Ready, install-only:
+bash "$S" --ipk /absolute/path/com.dc4i.vodtv_1.2.20_all.ipk --wake-if-needed
 
-# Expand the documented official CLI into a temporary directory.
-mkdir -p /tmp/dc4i-ares-cli
-tar -xzf "$ROOT/tools/ares-cli-node-arm64.tar.gz" -C /tmp/dc4i-ares-cli
-export HOME="$ROOT/.ares-home"
-CLI='/tmp/dc4i-ares-cli/node_modules/@webos-tools/cli/bin'
-
-# Check device reachability/authentication before attempting installation.
-node "$CLI/ares-novacom.js" --device LG_OLED55G42LW --run 'id'
-
-# Install only the specified package.
-node "$CLI/ares-install.js" --device LG_OLED55G42LW "$IPK"
+# Safe checks, no TV navigation or launch:
+bash "$S" --version 1.2.19 --dry-run   # offline
+bash "$S" --check-only                  # read-only, no wake
+bash "$S" --ipk /absolute/path/com.dc4i.vodtv_1.2.20_all.ipk --verify-only
 ```
 
-Use the exact release package path, for example `$ROOT/packages/com.dc4i.vodtv_1.2.19_all.ipk`, not a guessed filename. Confirm the package checksum against the canonical release record before installation.
+`--wake-if-needed` authorizes a single WOL attempt using a verified ARP MAC, **only** when SSAP does not confirm Active. It does not send a Power-toggle, press Home/Back or launch an app. The lower-level [paired LG SSAP tool](../scripts/lg-ssap-probe.py) supports separately authorized `--action back` for an actual screen exit, but this is **not an automatic installer step**.
+
+`--cli auto` (default) uses a verified local CLI cache if available, or extracts the official CLI archive to local temporary storage and removes its newly created extraction afterward. **Never execute Node CLI modules directly from the SMB-mounted AI-Hot tree.** `--cli minimal` is an explicit diagnostic override only. `--cli archive` always performs a fresh local extraction. The IPK itself may remain on AI-Hot or another mounted drive.
+
+The installer validates package identity/version, performs bounded SSH and SSAP checks, reports stable nonzero error codes, terminates only its own timed-out processes, installs without launching by default, and verifies the installed version through read-only `appinfo.json`. Install command success alone is not enough for its final success report. A failed version verification does not authorize blindly retrying the install.
 
 ## Scope controls
 
@@ -87,12 +82,12 @@ The owner's Mac Pro now has one shared script at `/Volumes/AI-Hot/Services/LGWeb
 /bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --version 1.2.19 --dry-run
 ```
 
-`--cli auto` (default) uses the already-installed minimal CLI; `--cli archive` forces a temporary unpack of the official archived CLI. No automatic retry or tool switching after an installation failure. `--launch` is explicit and may disrupt viewing, so do not use it without owner authorization.
+`--cli auto` (default) uses validated local CLI files or creates a temporary local extraction; `--cli archive` forces a fresh temporary extraction. No automatic retry or tool switching after an installation failure. `--launch` is explicit and may disrupt viewing, so do not use it without owner authorization.
 
-**Evidence:** `bash -n` and `--dry-run` succeeded with both 1.2.19 and the locally present 1.2.20 package on 2026-10-26. **Live installation via this new wrapper has NOT been tested.** Historical successful direct CLI installation of 1.2.19 is separate evidence, not proof that this wrapper was used.
+**Evidence:** `bash -n` and `--dry-run` succeeded with both 1.2.19 and the locally present 1.2.20 package on 2026-10-26. At this historical checkpoint the wrapper had not yet been live-tested; superseded by the verified 1.2.20 deployment below. Historical successful direct CLI installation of 1.2.19 is separate evidence, not proof that this wrapper was used.
 
 
-## Sleeping-TV readiness regression: verified on Mac Pro, 2026-10-26
+## Historical sleeping-TV readiness regression (superseded), 2026-10-26
 
 Canonical executable: `scripts/install-vodtv.sh` in Git; deployed Mac Pro copy: `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`.
 
@@ -107,4 +102,35 @@ Verified on Mac Pro while user reported standby:
 - `/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --version 1.2.19 --dry-run`: exit 0, **2.25 seconds**, no TV contact; SHA-256 matches previously recorded release value
 - No app installation, launch, reboot, wake action, or TV UI test was performed.
 
-Interpretation: a power-state API timeout cannot distinguish standby from an unavailable API; fail-closed behavior prevents unexpected installations. **An Active-state response and actual installation with this updated script have NOT yet been verified**. If the power-state API does not return `Active` even while the owner confirms the TV is on, diagnose that reader rather than silently bypassing the safety gate.
+Interpretation: a power-state API timeout cannot distinguish standby from an unavailable API; fail-closed behavior prevents unexpected installations. This was the status of the earlier implementation and is superseded by the successful 1.2.20 installation with the paired SSAP probe and local CLI. If the power-state API does not return `Active` even while the owner confirms the TV is on, diagnose that reader rather than silently bypassing the safety gate.
+
+## Current verified release and Always Ready recovery (2026-10-26)
+
+- **Device:** LG OLED55G42LW, `com.dc4i.vodtv`.
+- **Before:** installed `1.2.19`, read from `/media/developer/apps/usr/palm/applications/com.dc4i.vodtv/appinfo.json` via authorized SSH.
+- **Candidate:** local development `com.dc4i.vodtv_1.2.20_all.ipk`, control metadata `Package: com.dc4i.vodtv`, `Version: 1.2.20`, SHA-256 `1b55b18bbcc7f05640e010714c7d002513abb6b6c5029da19c1315005811d0b3`.
+- **Execution:** Mac Pro `install-vodtv.sh --ipk <local-1.2.20-ipk> --wake-if-needed`, using the cached local CLI `/tmp/dc4i-ares-cli/node_modules/@webos-tools/cli/bin`.
+- **Result:** official installer printed `Success`, script reported `INSTALL_SUCCESS`, exit code `0` (approx. 14.19 s). Independent SSH readback and the new `--verify-only` command both confirmed `com.dc4i.vodtv` version **1.2.20**. **No application launch, playback testing, reboot or user-data reset.** This verifies installation only, not app-level runtime acceptance.
+- **Canonical Git scripts:** `scripts/install-vodtv.sh` and `scripts/lg-ssap-probe.py`; Mac Pro deployment at `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh` and `.../tools/lg_ssap_probe.py`.
+
+### Confirmed failure mechanisms and mitigations
+
+1. **LG Always Ready after the first Power Off:** device may still accept TCP 9922 and SSH commands, even when standard webOS interfaces are not yet ready. Port reachability alone is insufficient.
+2. **Stale wake hardware address:** the paired LGWebOSRemote configuration's MAC did not match the LAN ARP MAC for the same TV. A WOL packet using that stored MAC did not achieve observable readiness; WOL addressed to the ARP MAC enabled a successful paired WSS registration and the `getPowerState` response `Active`.
+3. **Legacy power-state reader:** `source/lgtv.py ... getPowerState` timed out in the tested standby state. The new standalone standard-library probe, `scripts/lg-ssap-probe.py`, reused the existing paired LG client key without re-pairing and successfully reported `Active`.
+4. **Always Ready screen exit:** with explicit authorization, the paired probe successfully sent the Back button via LG's pointer-input socket. Opening the pointer WSS while the primary SSAP WSS was still active timed out; first close the primary SSAP connection, then open the returned pointer socket and allow a brief flush before closing. This control action is not necessary for routine non-interactive installations and is never performed by default.
+5. **SMB-hosted Node runtime failure:** webOS CLI 3.2.6 executed from `/Volumes/AI-Hot/.../webos-cli-minimal/node_modules` stalled while loading its many network filesystem dependencies. A diagnostic Node process showed `U` wait state before reaching its SSH test. Direct `ssh2` on Mac Pro authenticated and ran `id` in about 540 ms once loaded. The *same* official CLI running from local `/tmp/dc4i-ares-cli` installed 1.2.20 successfully. **This was the decisive fix**, rather than merely changing `HOME`.
+6. **Access boundaries:** `luna-send-pub` was denied for power-state and screen-on methods on the developer user; this was not bypassed. The screen wake used the owner's already-paired SSAP/WebSocket control surface. No privilege escalation was performed.
+7. **Bounded failure:** an explicit `--allow-always-ready` troubleshooting attempt with the old SMB-loaded CLI timed out after 20 s, and another after 45 s, without changing the installed version. This unsuccessful bypass option was removed from the canonical script. The normal installer uses a bounded operation and does not blindly retry.
+
+### Verification checklist
+
+- `bash -n` for `install-vodtv.sh`: PASS
+- `python3 -m py_compile` for `lg_ssap_probe.py`: PASS
+- `--dry-run` with version 1.2.19: PASS, no TV contact
+- `--verify-only` with IPK 1.2.20: PASS, exact package ID and device version
+- `--check-only --wake-if-needed`: correctly rejected, preventing a nominally read-only check from waking the TV
+- Live install of 1.2.20: PASS via locally executed CLI and installed-version readback
+- Full two-stage TV Power Off, waking from deep standby and app UI behavior: **NOT TESTED** under this installation-only authorization
+
+Source on LG's Always Ready behavior: [LG support](https://www.lg.com/us/support/help-library/lg-tv-how-to-use-the-always-ready-function--20153870949064).
