@@ -70,3 +70,23 @@ If the connection check or installer stalls/fails:
 - **DEVICE TEST NOT AUTHORIZED:** installation-only scope; no app launch or interactive testing was performed.
 
 Historical evidence in `/Volumes/AI-Hot/Services/LGWebOSRemote/INSTALL-DC4I-VODTV.md` confirms version 1.2.4 was installed and launched successfully using this official CLI procedure. This historical evidence does not prove a future package is installed, and it does not count as verification of a later release.
+
+
+## Unified Mac Pro installer (2026-10-26)
+
+The owner's Mac Pro now has one shared script at `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`. It combines the preinstalled `webos-cli-minimal` path with the archive-based fallback, explicitly runs Node.js 20.19.4, reuses the private `.ares-home` configuration, checks the TV's SSH reachability, and installs an explicitly selected IPK. **Default is installation only; no launch, restart, wake-up or TV UI tests.** An optional `--launch` is required to open the app.
+
+```sh
+# Version already in the Mac Pro package directory:
+/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --version 1.2.19
+
+# Explicit absolute path to a locally built IPK:
+/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --ipk /absolute/path/com.dc4i.vodtv_1.2.20_all.ipk
+
+# Safe validation without contacting the TV:
+/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --version 1.2.19 --dry-run
+```
+
+`--cli auto` (default) uses the already-installed minimal CLI; `--cli archive` forces a temporary unpack of the official archived CLI. No automatic retry or tool switching after an installation failure. `--launch` is explicit and may disrupt viewing, so do not use it without owner authorization.
+
+**Evidence:** `bash -n` and `--dry-run` succeeded with both 1.2.19 and the locally present 1.2.20 package on 2026-10-26. **Live installation via this new wrapper has NOT been tested.** Historical successful direct CLI installation of 1.2.19 is separate evidence, not proof that this wrapper was used.
