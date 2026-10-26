@@ -16,7 +16,7 @@ PACKAGE=''
 DRY_RUN=0
 CHECK_ONLY=0
 LAUNCH=0
-ALLOW_ALWAYS_READY=0
+WAKE_IF_NEEDED=0
 CLI_TMP=''
 
 usage() {
@@ -26,13 +26,12 @@ Usage:
   install-vodtv.sh --version X.Y.Z [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --ipk /absolute/path/file.ipk [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --version X.Y.Z --dry-run
-  install-vodtv.sh --ipk /absolute/path/file.ipk --allow-always-ready
+  install-vodtv.sh --ipk /absolute/path/file.ipk --wake-if-needed
 Default: install only, never launch, wake, reboot or interact with TV UI.
+--wake-if-needed: explicitly allow ONE ARP-addressed Wake-on-LAN action
+  when paired SSAP does not report Active. No Power-toggle or Home key.
 --check-only: read-only TV readiness check; no IPK or installer involved.
 --dry-run: validate package and local tooling; no TV contact.
---allow-always-ready: explicit owner-approved single background install attempt
-  when power-state API is unavailable; SSH auth must still succeed.
-  A short (20s) installer deadline applies. Not valid with --launch.
 Known errors: exit 20=port unreachable, 21=SSH auth/timeout,
 22=install timeout, 23=install failure, 24=power state not confirmed Active.
 EOF
@@ -55,14 +54,14 @@ while (($#)); do
   --check-only) CHECK_ONLY=1; shift;;
   --dry-run) DRY_RUN=1; shift;;
   --launch) LAUNCH=1; shift;;
-  --allow-always-ready) ALLOW_ALWAYS_READY=1; shift;;
+  --wake-if-needed) WAKE_IF_NEEDED=1; shift;;
   -h|--help) usage; exit 0;;
   *) die "Unknown option: $1";;
  esac
 done
 
 [[ "$CLI_SOURCE" =~ ^(auto|minimal|archive)$ ]] || die 'Invalid --cli setting'
-if ((ALLOW_ALWAYS_READY && LAUNCH)); then die '--allow-always-ready cannot be used with --launch'; fi
+if ((WAKE_IF_NEEDED && DRY_RUN)); then die '--wake-if-needed cannot be used with --dry-run'; fi
 if ((CHECK_ONLY)); then
  ((DRY_RUN==0 && LAUNCH==0)) || die '--check-only cannot be combined with --dry-run or --launch'
 else
@@ -124,49 +123,20 @@ try:
 except OSError:
     sys.exit(1)
 PY
- printf 'TV SSH port reachable. Checking actual power state (read-only).\n'
- # SSH remains reachable on this LG even in standby. SSAP getPowerState is required.
+ printf 'TV SSH port reachable. Checking paired SSAP power state (read-only).\n'
+ local probe="$ROOT/tools/lg_ssap_probe.py"
+ [[ -f "$probe" ]] || fail 24 "Paired SSAP power probe is missing: $probe"
  local power_result
- power_result="$(/usr/bin/python3 - "$ROOT" <<'PY'
-import json, os, subprocess, sys
-root = sys.argv[1]
-cmd = [root+'/.venv/bin/python3',root+'/source/lgtv.py',
-       '--name','LG_OLED55G42LW','--ssl','getPowerState']
-env = dict(os.environ,XDG_CONFIG_HOME=root+'/.config')
-try:
-    proc=subprocess.run(cmd,env=env,capture_output=True,text=True,timeout=4)
-except subprocess.TimeoutExpired:
-    print('POWER_STATE_TIMEOUT');sys.exit(24)
-except OSError:
-    print('POWER_READER_UNAVAILABLE');sys.exit(24)
-state=None
-for line in proc.stdout.splitlines():
-    try:
-        message=json.loads(line)
-    except (TypeError,ValueError):
-        continue
-    payload=message.get('payload',{}) if isinstance(message,dict) else {}
-    if isinstance(payload,dict):
-        state=payload.get('state') or payload.get('powerState')
-        if state is not None:break
-if not isinstance(state,str):
-    print('POWER_STATE_UNKNOWN');sys.exit(24)
-print('POWER_STATE='+state.strip())
-if state.strip().casefold()!='active':
-    sys.exit(24)
-PY
- )" || {
-  if ((ALLOW_ALWAYS_READY)); then
-   printf 'POWER_UNCONFIRMED (%s). Explicit --allow-always-ready: trying one bounded, non-interactive installation via SSH.\n' "$power_result"
-  else
-   fail 24 "TV active state not confirmed ($power_result). It may be sleeping or power API unavailable. Installation skipped."
-  fi
- }
- if [[ "$power_result" == POWER_STATE=Active ]]; then
-  printf '%s\n' "$power_result"
- else
-  ((ALLOW_ALWAYS_READY)) || fail 24 "TV not confirmed active ($power_result). Installation skipped."
+ power_result="$(/usr/bin/python3 "$probe" --action state --timeout 2 2>&1)" || true
+ # Do not treat open TCP/SSH as proof of an awake TV.
+ if [[ "$power_result" != *'"state": "Active"'* ]] && ((WAKE_IF_NEEDED)); then
+  printf 'TV not confirmed Active. Trying one authorized Wake-on-LAN using verified LAN ARP MAC.\n'
+  power_result="$(/usr/bin/python3 "$probe" --wake-first --action state --timeout 3 2>&1)" || true
  fi
+ if [[ "$power_result" != *'"state": "Active"'* ]]; then
+  fail 24 "TV Active state not confirmed by paired SSAP ($power_result). Installation skipped. Wake with the remote if necessary."
+ fi
+ printf 'TV POWER_STATE=Active verified through paired SSAP.\n'
  printf 'Checking SSH authentication.\n'
  local ssh_result
  ssh_result="$(run_bounded 12 21 21 /usr/bin/expect "$ROOT/tv_ssh_authed.exp" 'echo TV_CONNECTION_OK' 2>&1)" || fail 21 'TV SSH authentication failed/timed out. Installation skipped.'
@@ -192,7 +162,7 @@ prepare_cli
 printf 'Package: %s\nCLI: %s\nNode: %s\n' "$PACKAGE" "$CLI" "$("$NODE" --version)"
 shasum -a 256 "$PACKAGE"
 INSTALL_DEADLINE=120
-if ((ALLOW_ALWAYS_READY)); then INSTALL_DEADLINE=20; fi
+if ((WAKE_IF_NEEDED)); then INSTALL_DEADLINE=45; fi
 printf 'Installing on %s (%s-second bound).\n' "$DEVICE" "$INSTALL_DEADLINE"
 run_bounded "$INSTALL_DEADLINE" 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation timed out or failed; inspect this result before retry.'
 printf 'INSTALL_SUCCESS\n'
