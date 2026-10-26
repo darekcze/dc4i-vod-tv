@@ -11,3 +11,8 @@
 8. Preview at 1920x1080 using a server bound to localhost, test remote navigation, PL/EN, root/nonroot settings and loading states. Do not claim real LG hardware testing based on Chrome alone.
 9. Deploy Cloudflare Pages project `lg-webos-repo` only after passing smoke tests; check `https://lg.darc.dev/`, `/api/apps.json`, app IPK SHA256 and logo. Avoid use of paid GitHub Actions; no paid model subagents or extra schedulers.
 10. Preserve all user-approved assets/decisions, create a rollback path and keep a bilingual English/Polish Git documentation mirror. Read source license and avoid unverified claims.
+
+
+## REUSE-VERIFIED-PROCEDURES-001: repeatable project operations
+
+Before repeating installation, build, deploy, configuration, migration, backup/recovery or test operations, find and follow the existing project runbook and evidence of prior successful use. Do not invent a new procedure or switch tooling without concrete evidence the documented path is stale/incompatible. Check current prerequisites and device/service state first. Honor scope limits exactly, especially installation-only requests that prohibit launch or on-device testing. If a known-good path fails, capture the error, diagnose rather than blindly retry, and update the canonical runbook only after a revised path is verified. Keep exact commands, locations, expected results, rollback, and VERIFIED/NOT VERIFIED status in the project repository. Never store secrets.
