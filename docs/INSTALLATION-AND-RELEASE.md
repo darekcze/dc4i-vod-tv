@@ -148,3 +148,11 @@ Owner switched LG OLED55G42LW off twice so the panel was black. Tested with the 
 - Updated script passed `bash -n`, and `--verify-only` reconfirmed installed version 1.2.20 (exit 0). **The new waiting loop has not itself been exercised by another double-Power-Off cycle**; the pre-fix observation validates why this mitigation is needed.
 
 This is an installation runbook, not a request to test application playback or disturb the TV.
+
+## Restore screen after installer wake (2026-10-26)
+
+Owner-approved policy: If `install-vodtv.sh --wake-if-needed` sends Wake-on-LAN to recover a sleeping LG, restore the black-screen state after the installation or after a failure. An already-active TV, on which the installer sends no wake packet, must be left untouched. This is built into the canonical installer cleanup trap and preserves the original install error status. Do not send a Power-toggle or launch the VOD application.
+
+The paired [LG SSAP helper](../scripts/lg-ssap-probe.py) supports `--action screen-off`, calling the existing LG `ssap://com.webos.service.tvpower/power/turnOffScreen` endpoint with `standbyMode: active`. A live call on the LG OLED55G42LW returned `SCREEN_OFF_RESPONSE {"returnValue": true}`, and the subsequent read-only `--action state` returned `"state": "Screen Off"`. This demonstrates an actual black panel, but does **not** establish that every deeper double-Power-Off behavior is equivalent. It deliberately targets the owner's requested visibly-off state using one command.
+
+Safety: The restore action occurs only if this invocation observed `WAKE_PACKET_SENT_TO_LAN_MAC`. Restore is bounded to 8 seconds and reports `TV_SCREEN_RESTORED` or a warning. No additional full application installation was performed solely to test the cleanup trigger: its logic has passed Bash syntax checks, but the complete wake-install-restore transaction remains to be tested in a subsequent authorized version installation. The TV was left in `Screen Off` according to the verified power-state API.
