@@ -134,3 +134,17 @@ Interpretation: a power-state API timeout cannot distinguish standby from an una
 - Full two-stage TV Power Off, waking from deep standby and app UI behavior: **NOT TESTED** under this installation-only authorization
 
 Source on LG's Always Ready behavior: [LG support](https://www.lg.com/us/support/help-library/lg-tv-how-to-use-the-always-ready-function--20153870949064).
+
+## Double Power Off recovery verification (2026-10-26)
+
+Owner switched LG OLED55G42LW off twice so the panel was black. Tested with the canonical Mac Pro installer and the already-paired LG SSAP/Wake-on-LAN helper.
+
+- Initial `install-vodtv.sh --version 1.2.19 --wake-if-needed` attempted one WOL, but immediately returned code 24 because paired SSAP was not yet ready (`websocket closed by TV`). **No installation occurred on that attempt.**
+- A follow-up read-only SSAP check reported `Active` shortly afterward.
+- Re-running the same existing installer installed **1.2.19** successfully (installer `Success`, exit 0, exact installed-version readback, about 16 s).
+- Restoring **1.2.20** with `--ipk /Users/czech/Documents/Codex/2026-10-26/task/vod-release/private/com.dc4i.vodtv_1.2.20_all.ipk --wake-if-needed` also succeeded (WOL recovery, installer `Success`, exit 0, installed-version readback, about 12 s).
+- Final installed version: **1.2.20**. No app launch, channel switching, restart or user-data reset.
+- Small improvement to the existing canonical installer: after one WOL, if SSAP still does not report `Active`, retry *only the read-only readiness check* up to three times with 2-second pauses. Never blindly retry installation. Preserve all existing functionality and CLI selection.
+- Updated script passed `bash -n`, and `--verify-only` reconfirmed installed version 1.2.20 (exit 0). **The new waiting loop has not itself been exercised by another double-Power-Off cycle**; the pre-fix observation validates why this mitigation is needed.
+
+This is an installation runbook, not a request to test application playback or disturb the TV.
