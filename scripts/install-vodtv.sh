@@ -217,7 +217,9 @@ if ((VERIFY_ONLY)); then
 fi
 
 if ((DRY_RUN)); then
- prepare_cli
+ verify_package_identity
+ [[ -x "$NODE" ]] || die "Node runtime missing: $NODE"
+ [[ -f "$ARCHIVE" || -f "$LOCAL_CLI/ares-install.js" || -f "$MINIMAL/ares-install.js" ]] || die 'No existing CLI/archive available'
  printf 'Package: %s\n' "$PACKAGE"
  shasum -a 256 "$PACKAGE"
  printf 'DRY_RUN_OK: no TV contact; launch requested: %s\n' "$LAUNCH"
@@ -243,6 +245,9 @@ verify_installed_version
 if ((LAUNCH)); then
  printf 'Explicit --launch requested; launching %s\n' "$APP_ID"
  run_bounded 30 22 23 "$NODE" "$CLI/ares-launch.js" --device "$DEVICE" "$APP_ID" || fail "$?" 'Launch failed.'
+ local_running="$(run_bounded 15 22 23 "$NODE" "$CLI/ares-launch.js" --device "$DEVICE" --running 2>&1)" || fail 23 'Launch returned success, but running-state query failed; do not blindly retry.'
+ [[ "$local_running" == *"$APP_ID"* ]] || fail 23 'Launch returned success, but application is not confirmed running.'
+ printf 'APP_RUNNING_VERIFIED package=%s\n' "$APP_ID"
 else
  printf 'Install-only completed; TV app not launched.\n'
 fi
