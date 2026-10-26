@@ -90,3 +90,21 @@ The owner's Mac Pro now has one shared script at `/Volumes/AI-Hot/Services/LGWeb
 `--cli auto` (default) uses the already-installed minimal CLI; `--cli archive` forces a temporary unpack of the official archived CLI. No automatic retry or tool switching after an installation failure. `--launch` is explicit and may disrupt viewing, so do not use it without owner authorization.
 
 **Evidence:** `bash -n` and `--dry-run` succeeded with both 1.2.19 and the locally present 1.2.20 package on 2026-10-26. **Live installation via this new wrapper has NOT been tested.** Historical successful direct CLI installation of 1.2.19 is separate evidence, not proof that this wrapper was used.
+
+
+## Sleeping-TV readiness regression: verified on Mac Pro, 2026-10-26
+
+Canonical executable: `scripts/install-vodtv.sh` in Git; deployed Mac Pro copy: `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`.
+
+The LG OLED55G42LW was reported by its owner to be sleeping. Its SSH port 9922 **still accepted TCP** (0.032 seconds), and an authenticated SSH echo also succeeded (approximately 0.8 seconds). Therefore, a successful TCP or SSH preflight **does not prove the TV is active**.
+
+The installer now provides a read-only `--check-only` mode and runs a bounded `getPowerState` SSAP query *before* SSH authentication, package hashing, CLI preparation, or installation. If an `Active` state cannot be confirmed within 4 seconds, it returns exit code 24 without installing or launching. No wake-on-LAN or screen control is used.
+
+Verified on Mac Pro while user reported standby:
+
+- `/bin/bash -n /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`: PASS
+- `/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --check-only`: exit 24, **4.32 seconds**, `POWER_STATE_TIMEOUT`, no installation
+- `/bin/bash /Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh --version 1.2.19 --dry-run`: exit 0, **2.25 seconds**, no TV contact; SHA-256 matches previously recorded release value
+- No app installation, launch, reboot, wake action, or TV UI test was performed.
+
+Interpretation: a power-state API timeout cannot distinguish standby from an unavailable API; fail-closed behavior prevents unexpected installations. **An Active-state response and actual installation with this updated script have NOT yet been verified**. If the power-state API does not return `Active` even while the owner confirms the TV is on, diagnose that reader rather than silently bypassing the safety gate.
