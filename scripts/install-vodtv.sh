@@ -16,6 +16,7 @@ CLI="$LOCAL_CLI"
 PACKAGE=''
 DRY_RUN=0
 CHECK_ONLY=0
+VERIFY_ONLY=0
 LAUNCH=0
 WAKE_IF_NEEDED=0
 CLI_TMP=''
@@ -24,6 +25,7 @@ usage() {
  cat <<'EOF'
 Usage:
   install-vodtv.sh --check-only
+  install-vodtv.sh --ipk /absolute/path/file.ipk --verify-only
   install-vodtv.sh --version X.Y.Z [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --ipk /absolute/path/file.ipk [--launch] [--cli auto|minimal|archive]
   install-vodtv.sh --version X.Y.Z --dry-run
@@ -35,6 +37,7 @@ Default: install only, never launch, wake, reboot or interact with TV UI.
 --wake-if-needed: explicitly allow ONE ARP-addressed Wake-on-LAN action
   when paired SSAP does not report Active. No Power-toggle or Home key.
 --check-only: read-only TV readiness check; no IPK or installer involved.
+--verify-only: verify IPK identity and installed appinfo over SSH, never install/launch.
 --dry-run: validate package and local tooling; no TV contact.
 Known errors: exit 20=port unreachable, 21=SSH auth/timeout,
 22=install timeout, 23=install failure, 24=power state not confirmed Active,
@@ -57,6 +60,7 @@ while (($#)); do
    PACKAGE="$2"; shift 2;;
   --cli) (($# >= 2)) || die 'Missing --cli value'; CLI_SOURCE="$2"; shift 2;;
   --check-only) CHECK_ONLY=1; shift;;
+  --verify-only) VERIFY_ONLY=1; shift;;
   --dry-run) DRY_RUN=1; shift;;
   --launch) LAUNCH=1; shift;;
   --wake-if-needed) WAKE_IF_NEEDED=1; shift;;
@@ -67,8 +71,9 @@ done
 
 [[ "$CLI_SOURCE" =~ ^(auto|minimal|archive)$ ]] || die 'Invalid --cli setting'
 if ((WAKE_IF_NEEDED && DRY_RUN)); then die '--wake-if-needed cannot be used with --dry-run'; fi
+if ((VERIFY_ONLY && (DRY_RUN || LAUNCH || WAKE_IF_NEEDED))); then die '--verify-only cannot be combined with --dry-run, --launch or --wake-if-needed'; fi
 if ((CHECK_ONLY)); then
- ((DRY_RUN==0 && LAUNCH==0)) || die '--check-only cannot be combined with --dry-run or --launch'
+ ((DRY_RUN==0 && LAUNCH==0 && VERIFY_ONLY==0)) || die '--check-only cannot be combined with --dry-run, --verify-only or --launch'
 else
  [[ -n "$PACKAGE" ]] || { usage; die 'Specify --version or --ipk'; }
  [[ "$PACKAGE" = /* && "$PACKAGE" == *.ipk ]] || die 'IPK must be an absolute .ipk path'
@@ -175,6 +180,13 @@ verify_installed_version() {
  fi
  printf 'INSTALLED_VERSION_VERIFIED package=%s version=%s\n' "$APP_ID" "$EXPECTED_VERSION"
 }
+
+if ((VERIFY_ONLY)); then
+ verify_package_identity
+ verify_installed_version
+ printf 'VERIFY_ONLY_OK: no install or launch performed.\n'
+ exit 0
+fi
 
 if ((DRY_RUN)); then
  prepare_cli
