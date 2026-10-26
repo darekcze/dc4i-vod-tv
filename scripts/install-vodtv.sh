@@ -149,6 +149,17 @@ PY
  if [[ "$power_result" != *'"state": "Active"'* ]] && ((WAKE_IF_NEEDED)); then
   printf 'TV not confirmed Active. Trying one authorized Wake-on-LAN using verified LAN ARP MAC.\n'
   power_result="$(/usr/bin/python3 "$probe" --wake-first --action state --timeout 3 2>&1)" || true
+  if [[ "$power_result" != *'"state": "Active"'* ]]; then
+   # A double Power Off can take a few seconds to recover; wait only for readiness.
+   for attempt in 1 2 3; do
+    sleep 2
+    power_result="$(/usr/bin/python3 "$probe" --action state --timeout 2 2>&1)" || true
+    if [[ "$power_result" == *'"state": "Active"'* ]]; then
+     printf 'TV became ready after Wake-on-LAN (check %s).\n' "$attempt"
+     break
+    fi
+   done
+  fi
  fi
  if [[ "$power_result" != *'"state": "Active"'* ]]; then
   fail 24 "TV Active state not confirmed by paired SSAP ($power_result). Installation skipped. Wake with the remote if necessary."
