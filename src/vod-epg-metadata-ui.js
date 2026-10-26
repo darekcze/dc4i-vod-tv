@@ -91,6 +91,7 @@
    });
   }
   return {guide:guide,timeline:timeline,describe:describe,renderDetails:renderDetails,
+   homeEvents:function(){var entry=cache.get(source);return entry.snapshot?entry.snapshot.events.map(function(e){return Object.assign({},e,{freshness:entry.status});}):[];},
    // Explicit adapter boundary for a locally supplied normalized snapshot. No public loader.
    acceptLocal:function(snapshot){var result=cache.put(snapshot);if(result.accepted)source=snapshot.source;return result;},
    clear:function(){source=null;cache.clear();}};
