@@ -46,7 +46,7 @@ The installer validates package identity/version, performs bounded SSH and SSAP 
 - Check whether the TV is reachable before starting. Do not infer that the TV is idle just because it is reachable.
 - When the owner requests **installation only**, do not launch the app, navigate the TV UI, restart the TV, or perform interactive/device-side tests. Stop after the installer reports success.
 - Only run `ares-launch`, `ares-launch --running`, installed-app listing, or other TV-side checks when the user explicitly authorizes that verification scope.
-- Do not uninstall the existing app before an in-place update unless the app identity or a documented migration requires it. App ID is `com.dc4i.vodtv`; legacy `com.dc4i.boringtv` is a different identity.
+- Never uninstall/reset for these updates; preserve playlists, profiles and history. App ID is `com.dc4i.vodtv`; legacy `com.dc4i.boringtv` is a different identity.
 - Keep temporary CLI expansion and large artifacts off the system disk wherever possible. The documented CLI extraction uses `/tmp`; remove it after the operation completes if no active process depends on it.
 
 ## Failure handling
@@ -156,3 +156,10 @@ Owner-approved policy: If `install-vodtv.sh --wake-if-needed` sends Wake-on-LAN 
 The paired [LG SSAP helper](../scripts/lg-ssap-probe.py) supports `--action screen-off`, calling the existing LG `ssap://com.webos.service.tvpower/power/turnOffScreen` endpoint with `standbyMode: active`. A live call on the LG OLED55G42LW returned `SCREEN_OFF_RESPONSE {"returnValue": true}`, and the subsequent read-only `--action state` returned `"state": "Screen Off"`. This demonstrates an actual black panel, but does **not** establish that every deeper double-Power-Off behavior is equivalent. It deliberately targets the owner's requested visibly-off state using one command.
 
 Safety: The restore action occurs only if this invocation observed `WAKE_PACKET_SENT_TO_LAN_MAC`. Restore is bounded to 8 seconds and reports `TV_SCREEN_RESTORED` or a warning. No additional full application installation was performed solely to test the cleanup trigger: its logic has passed Bash syntax checks, but the complete wake-install-restore transaction remains to be tested in a subsequent authorized version installation. The TV was left in `Screen Off` according to the verified power-state API.
+
+## Source/deployment sync and bounded validation
+Canonical source is `scripts/install-vodtv.sh`; the AI-Hot path is its deployed host copy. This branch ports only two host improvements: offline dry-run validates IPK identity/version without prepare_cli/HOME, and explicit launch checks running applications. Test with `python3 scripts/test_installer_contract.py`. Source and deployed copy SHA256 at sync: 74281565434b1365209de86ac2da1c7a7cf08719bb7a4b00bf23d4448766dcba. Host was not overwritten. These improvements are offline/mock-tested; explicit running verification remains NOT VERIFIED on hardware. Earlier successful 1.2.20 installation evidence remains attributable to its recorded revision.
+
+Actual installation still selects the existing private profile through HOME. A session forbidding that operation cannot invoke it directly or through a wrapper/another session. Full access does not remove session instructions. Dry-run is allowed independently and does not prove installation.
+
+Offline sync verification: `python3 scripts/test_installer_contract.py` — 3 PASS (valid/wrong-ID synthetic IPK, dry-run boundary, running/missing/query-error mocks); `bash -n scripts/install-vodtv.sh` and `git diff --check` PASS. No real CLI, HOME or TV call in tests. Synthetic package fixtures exist only in temporary test directories and are never installed.
