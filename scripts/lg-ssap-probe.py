@@ -134,7 +134,7 @@ def query(ws, request):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--action", choices=["state", "foreground", "screen-on", "back"], default="state")
+    parser.add_argument("--action", choices=["state", "foreground", "screen-on", "screen-off", "back"], default="state")
     parser.add_argument("--timeout", type=float, default=3)
     parser.add_argument("--wake-first", action="store_true")
     args = parser.parse_args()
@@ -168,6 +168,13 @@ def main():
             payload = response.get("payload", {})
             print("FOREGROUND_RESPONSE", json.dumps({k:payload.get(k) for k in ("returnValue","appId","windowId","processId","errorCode","errorText") if k in payload}), flush=True)
             return 0 if payload.get("returnValue") else 35
+        if args.action == "screen-off":
+            # Turn off only the panel, not TV power. This matches the owner's
+            # black-screen requirement without toggling through other states.
+            response = query(ws, {"id":"dc4i-screen-off-1","type":"request","uri":"ssap://com.webos.service.tvpower/power/turnOffScreen","payload":{"standbyMode":"active"}})
+            payload = response.get("payload", {})
+            print("SCREEN_OFF_RESPONSE", json.dumps({k:payload.get(k) for k in ("returnValue","errorCode","errorText") if k in payload}), flush=True)
+            return 0 if payload.get("returnValue") else 36
         if args.action == "screen-on":
             response = query(ws, {"id":"dc4i-screen-on-1","type":"request","uri":"ssap://com.webos.service.tvpower/power/turnOnScreen","payload":{"standbyMode":"active"}})
             payload = response.get("payload", {})
