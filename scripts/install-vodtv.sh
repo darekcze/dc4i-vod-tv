@@ -37,7 +37,8 @@ Default: install only, never launch, wake, reboot or interact with TV UI.
 --check-only: read-only TV readiness check; no IPK or installer involved.
 --dry-run: validate package and local tooling; no TV contact.
 Known errors: exit 20=port unreachable, 21=SSH auth/timeout,
-22=install timeout, 23=install failure, 24=power state not confirmed Active.
+22=install timeout, 23=install failure, 24=power state not confirmed Active,
+25=installed package metadata or read-only version verification failed.
 EOF
 }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
@@ -155,6 +156,26 @@ PY
  printf 'TV_READY\n'
 }
 
+
+verify_package_identity() {
+ local control_text pkg_id
+ control_text="$(/usr/bin/ar -p "$PACKAGE" control.tar.gz | tar -xzOf - control)" || fail 25 "Cannot read Debian IPK control metadata."
+ pkg_id="$(printf '%s\n' "$control_text" | /usr/bin/awk -F ': ' '$1=="Package" {print $2;exit}')"
+ EXPECTED_VERSION="$(printf '%s\n' "$control_text" | /usr/bin/awk -F ': ' '$1=="Version" {print $2;exit}')"
+ [[ "$pkg_id" == "$APP_ID" && "$EXPECTED_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail 25 "Incorrect IPK identity/version; expected $APP_ID."
+ printf 'IPK_IDENTITY_OK package=%s version=%s\n' "$pkg_id" "$EXPECTED_VERSION"
+}
+
+verify_installed_version() {
+ local remote_cmd verification
+ remote_cmd="grep -E '\"(id|version)\"' /media/developer/apps/usr/palm/applications/$APP_ID/appinfo.json"
+ verification="$(run_bounded 10 25 25 /usr/bin/expect "$ROOT/tv_ssh_authed.exp" "$remote_cmd" 2>&1)" || fail 25 "Install command passed, but post-install read-only appinfo verification failed."
+ if [[ "$verification" != *'REMOTE_SSH_EXIT 0'* || "$verification" != *"\"id\": \"$APP_ID\""* || "$verification" != *"\"version\": \"$EXPECTED_VERSION\""* ]]; then
+  fail 25 "Installer returned success but device appinfo does not confirm $APP_ID version $EXPECTED_VERSION. Do not blindly retry."
+ fi
+ printf 'INSTALLED_VERSION_VERIFIED package=%s version=%s\n' "$APP_ID" "$EXPECTED_VERSION"
+}
+
 if ((DRY_RUN)); then
  prepare_cli
  printf 'Package: %s\n' "$PACKAGE"
@@ -170,6 +191,7 @@ if ((CHECK_ONLY)); then
 fi
 
 prepare_cli
+verify_package_identity
 printf 'Package: %s\nCLI: %s\nNode: %s\n' "$PACKAGE" "$CLI" "$("$NODE" --version)"
 shasum -a 256 "$PACKAGE"
 INSTALL_DEADLINE=120
@@ -177,6 +199,7 @@ if ((WAKE_IF_NEEDED)); then INSTALL_DEADLINE=45; fi
 printf 'Installing on %s (%s-second bound).\n' "$DEVICE" "$INSTALL_DEADLINE"
 run_bounded "$INSTALL_DEADLINE" 22 23 "$NODE" "$CLI/ares-install.js" --device "$DEVICE" "$PACKAGE" || fail "$?" 'Installation timed out or failed; inspect this result before retry.'
 printf 'INSTALL_SUCCESS\n'
+verify_installed_version
 if ((LAUNCH)); then
  printf 'Explicit --launch requested; launching %s\n' "$APP_ID"
  run_bounded 30 22 23 "$NODE" "$CLI/ares-launch.js" --device "$DEVICE" "$APP_ID" || fail "$?" 'Launch failed.'
