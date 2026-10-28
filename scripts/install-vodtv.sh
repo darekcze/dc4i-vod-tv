@@ -39,7 +39,10 @@ Default: install only, never launch, wake, reboot or interact with TV UI.
   when paired SSAP does not report Active. No Power-toggle or Home key.
 --check-only: read-only TV readiness check; no IPK or installer involved.
 --verify-only: verify IPK identity and installed appinfo over SSH, never install/launch.
---dry-run: validate package and local tooling; no TV contact.
+--dry-run: validate package and local tooling; no TV contact or HOME override.
+Prerequisite: caller HOME contains .webos/tv/novacom-devices.json with the LG
+  device, plus .ssh/OLED55G42LW_webos_rsa (symlink to key on mounted AI-Hot).
+  Standard Mac Pro user profile was configured and verified on 2026-10-27.
 Known errors: exit 20=port unreachable, 21=SSH auth/timeout,
 22=install timeout, 23=install failure, 24=power state not confirmed Active,
 25=installed package metadata or read-only version verification failed.
@@ -103,8 +106,11 @@ trap cleanup EXIT
 
 prepare_cli() {
  [[ -x "$NODE" ]] || die "Node 20 runtime not available: $NODE"
- [[ -d "$ROOT/.ares-home" ]] || die 'Private CLI configuration is missing'
- export HOME="$ROOT/.ares-home"
+ # Official webOS CLI loads registry and SSH key from the caller's existing HOME.
+ # Configure Mac Pro's default profile once; never override HOME inside this script.
+ [[ -n "${HOME:-}" ]] || die 'HOME is missing; standard webOS CLI profile is unavailable'
+ [[ -r "$HOME/.webos/tv/novacom-devices.json" ]] || die 'Standard webOS CLI device registry is missing'
+ [[ -r "$HOME/.ssh/OLED55G42LW_webos_rsa" ]] || die 'Standard webOS CLI SSH key is missing (AI-Hot must be mounted)'
  if [[ "$CLI_SOURCE" == "minimal" ]]; then
   CLI="$MINIMAL"
   printf 'WARNING: explicit network-mount CLI may stall on SMB module loading.\n'
