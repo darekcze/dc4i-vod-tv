@@ -163,6 +163,7 @@ class TVClient:
         self.device = device
         self.timeout = timeout
         self.ws = None
+        self.pointer = None
         self.helper = runpy.run_path(str(self.root / 'tools/lg_ssap_probe.py'))
         config = json.loads((self.root / '.config/lgtv/config.json').read_text(encoding='utf-8'))
         selected = config.get(device, {})
@@ -210,9 +211,12 @@ class TVClient:
                     pass
 
     def close(self):
-        if self.ws is not None:
-            self._close_transport(self.ws)
-            self.ws = None
+        primary, pointer = self.ws, getattr(self, 'pointer', None)
+        self.ws = self.pointer = None
+        try:
+            self._close_transport(pointer)
+        finally:
+            self._close_transport(primary)
 
     def request(self, uri, payload=None):
         self.connect()
@@ -272,21 +276,32 @@ class TVClient:
             raise TVError('Keys must be 1 to 50 UP/DOWN/LEFT/RIGHT/ENTER/BACK/HOME actions')
         if not 0.1 <= interval <= 2:
             raise TVError('Key interval must be from 0.1 to 2 seconds')
-        body = self.request('ssap://com.webos.service.networkinput/getPointerInputSocket')
-        url = body.get('socketPath')
-        if not url:
-            raise TVError('TV did not provide its paired pointer socket')
-        parsed = validate_url(url, self.host, ('ws', 'wss'))
-        self.close()
-        pointer = self.helper['WS'](url_host=self.host, port=parsed.port or (3001 if parsed.scheme == 'wss' else 3000),
-                                    uri=parsed.path + ('?' + parsed.query if parsed.query else ''),
-                                    tls=parsed.scheme == 'wss', seconds=self.timeout)
+        pointer = getattr(self, 'pointer', None)
         try:
+            if pointer is None:
+                body = self.request('ssap://com.webos.service.networkinput/getPointerInputSocket')
+                url = body.get('socketPath')
+                if not url:
+                    raise TVError('TV did not provide its paired pointer socket')
+                parsed = validate_url(url, self.host, ('ws', 'wss'))
+                # Keep both connections for this client's lifetime. Retain a
+                # partial pointer object so a failed handshake can be cleaned up.
+                ws_type = self.helper['WS']
+                pointer = ws_type.__new__(ws_type)
+                ws_type.__init__(pointer, url_host=self.host,
+                                 port=parsed.port or (3001 if parsed.scheme == 'wss' else 3000),
+                                 uri=parsed.path + ('?' + parsed.query if parsed.query else ''),
+                                 tls=parsed.scheme == 'wss', seconds=self.timeout)
+                self.pointer = pointer
             for key in keys:
                 pointer.send('type:button\nname:' + key + '\n\n')
                 time.sleep(interval)
-        finally:
-            pointer.close()
+        except BaseException:
+            # A failed send may already have reached the TV. Discard this input
+            # connection, but never reconnect or replay keys within this call.
+            self.pointer = None
+            self._close_transport(pointer)
+            raise
         return {'time': stamp(), 'keys_sent': keys, 'interval_seconds': interval}
 
     def capture(self, output, app_slug, view, note='', expected_app_id=None):

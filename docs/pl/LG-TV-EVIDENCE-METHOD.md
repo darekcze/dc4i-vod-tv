@@ -6,7 +6,7 @@
 
 28.10.2026 istniejące sparowane połączenie SSAP z fizycznym LG OLED55G42LW zwróciło zrzut menu przez `ssap://tv/executeOneShot`. Zaobserwowany obraz miał format JPEG i wymiary 960 × 540 pikseli. Odczytano także listę zainstalowanych aplikacji i ustalono poniższe 19 natywnych ID z zakresu żądania. Te obserwacje potwierdzają dostępność ścieżki zrzutów i identyfikatorów na tym urządzeniu w danym momencie. Nie potwierdzają pełnego pokrycia menu, deep linków, odtwarzania ani bezpieczeństwa ponownego wykonania zapamiętanej sekwencji przycisków.
 
-Oryginalne obrazy, inwentarz, czasy i potwierdzenia zrzutów są prywatnymi dowodami projektu. Ten publiczny dokument zapisuje metodę i niepoufne mapowanie aplikacji. Nie zawiera końcowej deklaracji liczby potwierdzonych menu w trwającym audycie. Nowe skrypty publiczne i wrapper własnej sesji mają status **NIEZWERYFIKOWANE NA SPRZĘCIE**, dopóki nie przejdą własnego uprawnionego uruchomienia.
+Oryginalne obrazy, inwentarz, czasy i potwierdzenia zrzutów są prywatnymi dowodami projektu. Ten publiczny dokument zapisuje metodę i niepoufne mapowanie aplikacji. Nie zawiera końcowej deklaracji liczby potwierdzonych menu w trwającym audycie. Publiczny klient i runner planów opartych na obserwacji przeszły datowane sprawdzenie nawigacji i zrzutów na fizycznym TV; zaobserwowano też odzyskanie transferu po ponowieniu HTTP tego samego URI. Wrapper własnej sesji i launcher powtórek nadal mają status **NIEZWERYFIKOWANE NA SPRZĘCIE**. Dokładny zakres i ograniczenia opisuje procedura zrzutów.
 
 ## Zaobserwowane natywne identyfikatory
 

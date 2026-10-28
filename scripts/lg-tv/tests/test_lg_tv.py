@@ -37,7 +37,7 @@ class CaptureTests(unittest.TestCase):
     def connection_client(self, ws_type, query):
         client = lg_tv.TVClient.__new__(lg_tv.TVClient)
         client.host = '192.0.2.10'; client.device = 'test'; client.timeout = 1
-        client.ws = None; client.hello = {'type': 'register'}
+        client.ws = None; client.pointer = None; client.hello = {'type': 'register'}
         client.helper = {'WS': ws_type, 'query': query}
         return client
 
@@ -141,6 +141,160 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(commands.count('ssap://system.launcher/launch'), 1)
         self.assertEqual(len(commands), 2)
         self.assertEqual(len(transports), 2)
+        client.close()
+
+    def pointer_client(self, send_error=None, close_error=None, init_error=None):
+        transports, queries = [], []
+        class WS:
+            def __init__(self, **kwargs):
+                self.options = kwargs
+                self.is_pointer = 'uri' in kwargs
+                self.closed = False
+                self.sent = []
+                self.close_calls = 0
+                self.raw = MagicMock() if self.is_pointer else None
+                transports.append(self)
+                if self.is_pointer and init_error is not None:
+                    raise init_error
+            def send(self, message):
+                self.sent.append(message)
+                if self.is_pointer and send_error is not None:
+                    raise send_error
+            def close(self):
+                self.close_calls += 1
+                self.closed = True
+                if self.is_pointer and close_error is not None:
+                    raise close_error
+        def query(ws, request):
+            queries.append((ws, request))
+            if request.get('type') == 'register':
+                return {'type': 'registered'}
+            if request['uri'].endswith('/getPointerInputSocket'):
+                payload = {'socketPath': 'wss://192.0.2.10:3001/resources/input?session=example'}
+            elif request['uri'].endswith('/getPowerState'):
+                payload = {'state': 'Active'}
+            else:
+                payload = {'appId': 'test.app'}
+            return {'type': 'response', 'payload': payload}
+        return self.connection_client(WS, query), transports, queries
+
+    def test_keys_keep_primary_connection_for_following_status(self):
+        client, transports, queries = self.pointer_client()
+        with patch('lg_tv.time.sleep'):
+            result = client.keys(['UP', 'RIGHT'])
+            primary = client.ws
+            status = client.status()
+        self.assertEqual(result['keys_sent'], ['UP', 'RIGHT'])
+        self.assertEqual(status['foreground']['appId'], 'test.app')
+        self.assertEqual(len(transports), 2)
+        self.assertIs(primary, transports[0])
+        self.assertIs(client.ws, primary)
+        self.assertFalse(primary.closed)
+        self.assertIs(client.pointer, transports[1])
+        self.assertFalse(transports[1].closed)
+        self.assertEqual(transports[1].close_calls, 0)
+        self.assertTrue(transports[1].options['tls'])
+        self.assertEqual(transports[1].options['uri'], '/resources/input?session=example')
+        self.assertTrue(all(ws is primary for ws, request in queries))
+        self.assertEqual(sum(request.get('type') == 'register' for ws, request in queries), 1)
+        client.close()
+        self.assertTrue(primary.closed)
+        self.assertTrue(transports[1].closed)
+        self.assertEqual(transports[1].close_calls, 1)
+
+    def test_keys_send_failure_closes_pointer_without_replaying_keys(self):
+        client, transports, queries = self.pointer_client(send_error=TimeoutError('send may have reached TV'))
+        with patch('lg_tv.time.sleep'):
+            with self.assertRaises(TimeoutError):
+                client.keys(['UP', 'RIGHT'])
+        self.assertEqual(len(transports), 2)
+        self.assertEqual(transports[1].sent, ['type:button\nname:UP\n\n'])
+        self.assertEqual(transports[1].close_calls, 1)
+        self.assertTrue(transports[1].closed)
+        self.assertIsNone(client.pointer)
+        self.assertEqual(sum(request.get('uri', '').endswith('/getPointerInputSocket') for ws, request in queries), 1)
+        client.close()
+
+    def test_close_cleans_both_connections_when_pointer_close_fails(self):
+        client, transports, queries = self.pointer_client(close_error=OSError('pointer close failed'))
+        with patch('lg_tv.time.sleep'):
+            client.keys(['UP'])
+        client.close()
+        self.assertEqual(len(transports), 2)
+        self.assertEqual(transports[1].sent, ['type:button\nname:UP\n\n'])
+        self.assertEqual(transports[1].close_calls, 1)
+        transports[1].raw.close.assert_called_once()
+        self.assertTrue(transports[0].closed)
+        self.assertIsNone(client.ws)
+        self.assertIsNone(client.pointer)
+        self.assertEqual(sum(request.get('uri', '').endswith('/getPointerInputSocket') for ws, request in queries), 1)
+        client.close()
+        self.assertEqual(transports[0].close_calls, 1)
+        self.assertEqual(transports[1].close_calls, 1)
+
+    def test_multiple_key_batches_reuse_one_pointer_connection(self):
+        client, transports, queries = self.pointer_client()
+        with patch('lg_tv.time.sleep'):
+            client.keys(['BACK'])
+            client.status()
+            client.keys(['BACK'])
+            client.status()
+            client.keys(['LEFT'] * 5)
+        self.assertEqual(len(transports), 2)
+        self.assertEqual(transports[1].sent, ['type:button\nname:BACK\n\n'] * 2 + ['type:button\nname:LEFT\n\n'] * 5)
+        self.assertEqual(sum(request.get('type') == 'register' for ws, request in queries), 1)
+        self.assertEqual(sum(request.get('uri', '').endswith('/getPointerInputSocket') for ws, request in queries), 1)
+        self.assertEqual(transports[1].close_calls, 0)
+        client.close()
+
+    def test_failed_pointer_is_reopened_only_for_a_new_explicit_command(self):
+        client, transports, queries = self.pointer_client()
+        with patch('lg_tv.time.sleep'):
+            client.keys(['UP'])
+            failed_pointer = client.pointer
+            failed_pointer.send = Mock(side_effect=TimeoutError('send may have reached TV'))
+            with self.assertRaises(TimeoutError):
+                client.keys(['BACK', 'DOWN'])
+            self.assertEqual(len(transports), 2)
+            failed_pointer.send.assert_called_once_with('type:button\nname:BACK\n\n')
+            self.assertIsNone(client.pointer)
+            self.assertTrue(failed_pointer.closed)
+            self.assertFalse(transports[0].closed)
+            client.keys(['LEFT'])
+        self.assertEqual(len(transports), 3)
+        self.assertIs(client.pointer, transports[2])
+        self.assertEqual(transports[2].sent, ['type:button\nname:LEFT\n\n'])
+        self.assertEqual(sum(request.get('type') == 'register' for ws, request in queries), 1)
+        self.assertEqual(sum(request.get('uri', '').endswith('/getPointerInputSocket') for ws, request in queries), 2)
+        client.close()
+
+    def test_pointer_handshake_failure_closes_partial_socket_without_retry(self):
+        client, transports, queries = self.pointer_client(init_error=TimeoutError('pointer TLS timeout'))
+        with patch('lg_tv.time.sleep') as sleep:
+            with self.assertRaises(TimeoutError):
+                client.keys(['UP'])
+        self.assertEqual(len(transports), 2)
+        self.assertEqual(transports[1].sent, [])
+        self.assertTrue(transports[1].closed)
+        transports[1].raw.close.assert_called_once()
+        self.assertIsNone(client.pointer)
+        self.assertFalse(transports[0].closed)
+        self.assertEqual(sum(request.get('uri', '').endswith('/getPointerInputSocket') for ws, request in queries), 1)
+        sleep.assert_not_called()
+        client.close()
+
+    def test_primary_transport_failure_also_discards_cached_pointer(self):
+        client, transports, queries = self.pointer_client()
+        with patch('lg_tv.time.sleep'):
+            client.keys(['UP'])
+        client.helper['query'] = Mock(side_effect=TimeoutError('primary response timeout'))
+        with self.assertRaises(TimeoutError):
+            client.status()
+        client.helper['query'].assert_called_once()
+        self.assertIsNone(client.ws)
+        self.assertIsNone(client.pointer)
+        self.assertTrue(all(transport.closed for transport in transports))
+        self.assertEqual(transports[1].sent, ['type:button\nname:UP\n\n'])
         client.close()
 
     def test_cli_global_options_and_capture_contract(self):

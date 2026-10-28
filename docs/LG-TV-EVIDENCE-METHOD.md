@@ -6,7 +6,7 @@
 
 On 2026-10-28 an existing paired SSAP connection to a physical LG OLED55G42LW produced a menu screenshot through `ssap://tv/executeOneShot`. The observed image was JPEG, 960 × 540 pixels. The television's installed-application inventory was also read and the 19 requested native application IDs below were resolved. These observations establish that the capture route and these IDs were available on that device at that time. They do not establish complete menu coverage, deep-link support, playback support, or the safety of replaying a remembered button sequence.
 
-The original images, inventory, timestamps and capture receipts are private project evidence. This public document records the method and nonsecret app mapping. It intentionally makes no final claim about the number of verified menus in the ongoing audit. The new public scripts and owned-session wrapper remain **NOT VERIFIED ON HARDWARE** until their own authorized execution succeeds.
+The original images, inventory, timestamps and capture receipts are private project evidence. This public document records the method and nonsecret app mapping. It intentionally makes no final claim about the number of verified menus in the ongoing audit. The public client and observed-plan runner have passed a dated physical-TV navigation/capture check, and same-URI HTTP retry recovery was observed. The owned-session wrapper and repeat launcher remain **NOT VERIFIED ON HARDWARE**. See the capture runbook for the exact scope and limits.
 
 ## Observed native identifiers
 

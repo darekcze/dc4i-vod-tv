@@ -59,4 +59,8 @@ If a plan fails, the wrapper stops the run and attempts owned-session restoratio
 
 The original capture manifest remains intact. Apply reviews with the canonical client's `review` command, then generate a private atlas with `build_atlas.py`. Use `--language en` or `--language pl` and language-specific notes as needed.
 
-This launcher is **NOT VERIFIED ON HARDWARE** until its own authorized run succeeds. Offline validation verifies plan wiring and argument handling only.
+On 2026-10-28 an authorized physical-TV execution of the public client and `run_plan.py`, using explicit `--host`, completed six steps: three separate button batches interleaved with three captures and foreground checks. This exercises continued input across calls; it is not a general performance benchmark. Physical connection counts were not instrumented during that run; offline tests check reuse of one pointer connection.
+
+A separate live image transfer also recovered on the second GET of the same URI and recorded `download_attempts: 2` with a valid image. That confirms the observed transfer-recovery path, not the intended menu category.
+
+The owned-session wrapper `capture_session.py` and repeat-kit launcher remain **NOT VERIFIED ON HARDWARE**. Their 19-entry dry run validated 38 steps without TV contact or file creation. Full six-view collection still requires observed navigation and visual review.

@@ -6,7 +6,13 @@
 
 Use the executable tools in `scripts/lg-tv/` to inspect an existing paired LG webOS TV connection, collect menu screenshots, review their actual content, and generate a private UI atlas. The tools run on an authorized Mac with access to the television's LAN.
 
-The SSAP capture route and native application identification were exercised on a physical LG OLED55G42LW on 2026-10-28. This does not establish complete coverage of the six menus in every app. The public package, its explicit-host configuration, and the new session wrapper are **NOT VERIFIED ON HARDWARE** until their own authorized execution succeeds. Offline tests do not change that status.
+The SSAP capture route and native application identification were exercised on a physical LG OLED55G42LW on 2026-10-28. This does not establish complete coverage of the six menus in every app.
+
+On 2026-10-28 an authorized physical-TV execution of the public client and `run_plan.py`, using explicit `--host`, completed six steps: three separate button batches interleaved with three captures and foreground checks. This exercises continued input across calls; it is not a general performance benchmark. Physical connection counts were not instrumented during that run; offline tests check reuse of one pointer connection.
+
+A separate live image transfer also recovered on the second GET of the same URI and recorded `download_attempts: 2` with a valid image. That confirms the observed transfer-recovery path, not the intended menu category.
+
+The owned-session wrapper `capture_session.py` and repeat-kit launcher remain **NOT VERIFIED ON HARDWARE**. Their 19-entry dry run validated 38 steps without TV contact or file creation. Full six-view collection still requires observed navigation and visual review.
 
 This procedure is a synchronous local toolset. It creates no daemon, scheduler, separate job queue, or replacement for the project's AIOS operations.
 
@@ -61,6 +67,8 @@ python3 -B "$CAPTURE_TOOLS/lg_tv.py" --root "$CAPTURE_ROOT" --output "$CAPTURE_R
 These commands check the existing connection and retrieve current state/inventory; they do not launch apps. The inventory is saved privately in `installed-apps.json`. Compare requested apps with it before launching. The committed target registry is a dated discovery aid, not a promise that an app remains installed, supports the same menus, or accepts a deep link.
 
 The paired TLS connection uses the existing local configuration. Connection setup is retried at most three times for transport errors. An explicit pairing rejection stops immediately. A transport error after a command closes the socket without replaying the command, because the TV may already have applied it. Unreachable does not prove that the TV is asleep.
+
+The client keeps the primary SSAP connection and one validated pointer connection for its lifetime. Later button batches reuse that pointer; failed sends discard it without replay, and client cleanup closes both connections. Reconnection is only considered for a new explicit command.
 
 The image transfer has a separate bounded retry: after one successful `executeOneShot`, a timeout or reset/abort may repeat the HTTP GET once, using the same validated image URI after 0.6 seconds. Both attempts enforce the local TV host and redirect checks. HTTP response errors, connection refusal, invalid images and foreign redirects are not retried. The receipt records `download_attempts`; the SSAP capture and navigation commands are never replayed by this retry.
 
@@ -168,4 +176,4 @@ No app package or production service is changed by installing this source. Rollb
 python3 -B -m unittest discover -s scripts/lg-tv/tests -v
 ```
 
-The current public suite passes 61 offline tests, including single-SSAP-call image-transfer retry checks. This result does not establish that a second HTTP attempt has been observed on hardware. Tests use fake devices and temporary files. Public code, plans without private data, runbooks and app IDs may be versioned. Screenshots, profile/account data, original inventories, pairing files, run manifests, action/session logs and embedded-image atlases remain private.
+The current public suite passes 68 offline tests, including pointer reuse, cleanup and single-SSAP-call image-transfer retry checks. Hardware observations and their limits are described in the validation section above. Tests use fake devices and temporary files. Public code, plans without private data, runbooks and app IDs may be versioned. Screenshots, profile/account data, original inventories, pairing files, run manifests, action/session logs and embedded-image atlases remain private.

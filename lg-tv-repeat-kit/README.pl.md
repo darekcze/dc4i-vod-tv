@@ -59,4 +59,8 @@ Jeżeli plan zawiedzie, wrapper przerywa zbieranie i próbuje przywrócić włas
 
 Pierwotny manifest zrzutów pozostaje niezmieniony. Oceny zapisać poleceniem `review` kanonicznego klienta, następnie utworzyć prywatny atlas przez `build_atlas.py`. W razie potrzeby użyć `--language en` albo `--language pl` i notatek w odpowiednim języku.
 
-Launcher ma status **NIEZWERYFIKOWANY NA SPRZĘCIE**, dopóki nie przejdzie własnego uprawnionego uruchomienia. Walidacja offline potwierdza jedynie podłączenie planów i obsługę argumentów.
+28.10.2026 uprawnione wykonanie publicznego klienta i `run_plan.py` na fizycznym TV, z jawnym `--host`, zakończyło sześć kroków: trzy osobne partie przycisków przeplatane trzema zrzutami i kontrolami aktywnej aplikacji. Sprawdza to ciągłość wejścia między wywołaniami; nie jest ogólnym benchmarkiem wydajności. W tym uruchomieniu nie mierzono liczby fizycznych połączeń; testy offline sprawdzają ponowne użycie jednego połączenia pilota.
+
+Osobny rzeczywisty transfer obrazu powiódł się również przy drugim GET tego samego URI i zapisał `download_attempts: 2` wraz z prawidłowym obrazem. Potwierdza to zaobserwowaną ścieżkę odzyskania transferu, a nie zamierzoną kategorię menu.
+
+Wrapper własnej sesji `capture_session.py` i launcher zestawu powtórek nadal mają status **NIEZWERYFIKOWANE NA SPRZĘCIE**. Dry run 19 planów wejściowych sprawdził 38 kroków bez kontaktu z TV i tworzenia plików. Zebranie pełnych sześciu widoków nadal wymaga nawigacji opartej na obserwacji i oceny obrazów.

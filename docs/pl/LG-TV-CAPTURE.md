@@ -6,7 +6,13 @@
 
 Narzędzia wykonywalne w `scripts/lg-tv/` służą do sprawdzenia istniejącego sparowania telewizora LG webOS, zbierania zrzutów menu, oceny rzeczywistej zawartości obrazów oraz tworzenia prywatnego atlasu interfejsów. Uruchamia się je na uprawnionym Macu mającym dostęp do sieci lokalnej telewizora.
 
-Ścieżka zrzutów SSAP i identyfikacja aplikacji natywnych zostały sprawdzone na fizycznym LG OLED55G42LW 28.10.2026. Nie potwierdza to pełnego pokrycia sześciu menu w każdej aplikacji. Pakiet publiczny, jego konfiguracja wymagająca jawnego hosta oraz nowy wrapper sesji mają status **NIEZWERYFIKOWANE NA SPRZĘCIE**, dopóki nie przejdą własnego uprawnionego uruchomienia. Testy offline nie zmieniają tego statusu.
+Ścieżka zrzutów SSAP i identyfikacja aplikacji natywnych zostały sprawdzone na fizycznym LG OLED55G42LW 28.10.2026. Nie potwierdza to pełnego pokrycia sześciu menu w każdej aplikacji.
+
+28.10.2026 uprawnione wykonanie publicznego klienta i `run_plan.py` na fizycznym TV, z jawnym `--host`, zakończyło sześć kroków: trzy osobne partie przycisków przeplatane trzema zrzutami i kontrolami aktywnej aplikacji. Sprawdza to ciągłość wejścia między wywołaniami; nie jest ogólnym benchmarkiem wydajności. W tym uruchomieniu nie mierzono liczby fizycznych połączeń; testy offline sprawdzają ponowne użycie jednego połączenia pilota.
+
+Osobny rzeczywisty transfer obrazu powiódł się również przy drugim GET tego samego URI i zapisał `download_attempts: 2` wraz z prawidłowym obrazem. Potwierdza to zaobserwowaną ścieżkę odzyskania transferu, a nie zamierzoną kategorię menu.
+
+Wrapper własnej sesji `capture_session.py` i launcher zestawu powtórek nadal mają status **NIEZWERYFIKOWANE NA SPRZĘCIE**. Dry run 19 planów wejściowych sprawdził 38 kroków bez kontaktu z TV i tworzenia plików. Zebranie pełnych sześciu widoków nadal wymaga nawigacji opartej na obserwacji i oceny obrazów.
 
 Jest to synchroniczny zestaw narzędzi lokalnych. Nie tworzy demona, harmonogramu, osobnej kolejki zadań ani zamiennika istniejących operacji AIOS projektu.
 
@@ -61,6 +67,8 @@ python3 -B "$CAPTURE_TOOLS/lg_tv.py" --root "$CAPTURE_ROOT" --output "$CAPTURE_R
 Te polecenia sprawdzają istniejące połączenie i odczytują aktualny stan oraz listę aplikacji, bez ich uruchamiania. Inwentarz jest zapisywany prywatnie w `installed-apps.json`. Przed uruchamianiem porównać z nim żądane aplikacje. Zapisany w repozytorium rejestr celów to datowana pomoc w rozpoznawaniu ID, a nie obietnica, że aplikacja nadal jest zainstalowana, ma te same menu albo przyjmuje deep link.
 
 Sparowane połączenie TLS korzysta z istniejącej konfiguracji lokalnej. Przy błędach transportu zestawienie połączenia jest ponawiane najwyżej trzy razy. Jawne odrzucenie sparowania natychmiast kończy próbę. Błąd transportu po wysłaniu komendy zamyka socket bez ponownego wysłania komendy, ponieważ TV mógł już ją wykonać. Brak połączenia nie dowodzi uśpienia telewizora.
+
+Klient utrzymuje główne połączenie SSAP oraz jedno zweryfikowane połączenie pilota przez czas swojego działania. Kolejne partie przycisków korzystają z tego pilota; błąd wysyłania odrzuca go bez powtarzania wejścia, a sprzątanie klienta zamyka oba połączenia. Ponowne zestawienie jest rozważane dopiero dla nowej jawnej komendy.
 
 Transfer obrazu ma osobne ograniczone ponowienie: po jednym udanym `executeOneShot` timeout lub reset/przerwanie połączenia może spowodować jeden dodatkowy HTTP GET tego samego zweryfikowanego URI po 0,6 sekundy. Obie próby sprawdzają lokalny host TV i przekierowania. Błędy odpowiedzi HTTP, odmowa połączenia, nieprawidłowe obrazy i obce przekierowania nie są ponawiane. Receipt zapisuje `download_attempts`; ten mechanizm nigdy nie powtarza komendy zrzutu SSAP ani nawigacji.
 
@@ -168,4 +176,4 @@ Dodanie tych źródeł nie zmienia pakietu aplikacji ani usługi produkcyjnej. R
 python3 -B -m unittest discover -s scripts/lg-tv/tests -v
 ```
 
-Aktualny zestaw publiczny przechodzi 61 testów offline, w tym kontrolę ponowienia pobrania przy jednym wywołaniu SSAP. Ten wynik nie dowodzi zaobserwowania drugiej próby HTTP na sprzęcie. Testy korzystają ze sztucznych urządzeń i plików tymczasowych. Publiczny kod, plany bez prywatnych danych, instrukcje i ID aplikacji mogą być wersjonowane. Screenshoty, dane kont i profili, oryginalne inwentarze, pliki sparowania, manifesty uruchomień, logi akcji/sesji i atlasy z osadzonymi obrazami pozostają prywatne.
+Aktualny zestaw publiczny przechodzi 68 testów offline, w tym kontrolę ponownego użycia pilota, sprzątania i ponowienia pobrania przy jednym wywołaniu SSAP. Obserwacje sprzętowe i ich ograniczenia opisano wyżej w sekcji weryfikacji. Testy korzystają ze sztucznych urządzeń i plików tymczasowych. Publiczny kod, plany bez prywatnych danych, instrukcje i ID aplikacji mogą być wersjonowane. Screenshoty, dane kont i profili, oryginalne inwentarze, pliki sparowania, manifesty uruchomień, logi akcji/sesji i atlasy z osadzonymi obrazami pozostają prywatne.
