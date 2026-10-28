@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "app_slug": "skyshowtime",
+  "app_id": "com.skyshowtime.tv",
+  "steps": [
+    {
+      "launch": "com.skyshowtime.tv",
+      "wait": 12
+    },
+    {
+      "capture": "home",
+      "note": "Entry checkpoint only, pending visual review. May show profiles, a sign-in gate, loading, an error or a restored page; this is not verified home-menu coverage."
+    }
+  ]
+}
