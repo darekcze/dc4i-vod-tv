@@ -50,3 +50,7 @@ To release changes, build the app IPK, run test_vod_tv.py, run publish_vod_tv.py
 - Verified internal LG launch ID `com.smarterstvplayers.net` from the real TV; LG Store catalog number 1231221 is not a launch ID.
 - Native Stremio and Smarters app title handoff is best-effort; Stremio Web offers a separate official browser fallback for the selected title.
 - Details: [Native Player Integration](docs/NATIVE-PLAYER-INTEGRATION.md) / [Polski](docs/pl/NATIVE-PLAYER-INTEGRATION.md).
+
+## LG TV screenshot atlas and repeatable capture
+
+The [LG TV capture runbook](docs/LG-TV-CAPTURE.md) and its [Polish version](docs/pl/LG-TV-CAPTURE.md) describe the executable capture, session, review and atlas tools in `scripts/lg-tv/`. The [evidence method](docs/LG-TV-EVIDENCE-METHOD.md) records the observed native application IDs and separates physical-TV evidence from offline validation. Private screenshots, pairing configuration and account data stay outside this public repository.
