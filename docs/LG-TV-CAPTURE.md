@@ -62,6 +62,8 @@ These commands check the existing connection and retrieve current state/inventor
 
 The paired TLS connection uses the existing local configuration. Connection setup is retried at most three times for transport errors. An explicit pairing rejection stops immediately. A transport error after a command closes the socket without replaying the command, because the TV may already have applied it. Unreachable does not prove that the TV is asleep.
 
+The image transfer has a separate bounded retry: after one successful `executeOneShot`, a timeout or reset/abort may repeat the HTTP GET once, using the same validated image URI after 0.6 seconds. Both attempts enforce the local TV host and redirect checks. HTTP response errors, connection refusal, invalid images and foreign redirects are not retried. The receipt records `download_attempts`; the SSAP capture and navigation commands are never replayed by this retry.
+
 ## Manual observed navigation
 
 Use this mode while a human or assistant inspects screenshots between short batches. Start a session before enabling the display or changing the foreground app:
@@ -122,6 +124,16 @@ Use a fresh output run and session path for each execution. An existing receipt 
 
 The separate `lg_tv.py flow` format accepts only reviewed schema-1 replay recipes. Its `--resume` replays navigation from the initial launch and skips only existing capture writes with matching hashes. It does not resume at an arbitrary button position or certify image content. Inspect actual UI before retrying a timed-out mutation.
 
+## Quick entry checkpoint batch
+
+The [versioned repeat kit](../lg-tv-repeat-kit/README.md) supplies one entry plan for each of the 19 requested apps. From the repository root, collect a selected subset in a fresh private run:
+
+```bash
+python3 -B lg-tv-repeat-kit/repeat_streaming_entries.py --root "$CAPTURE_ROOT" --output "$PWD/private/lg-tv-captures/entry-001" --apps disneyplus,netflix
+```
+
+Add `--dry-run` for local validation; omit `--apps` to select all 19. The launcher uses the canonical session wrapper and its cleanup. An entry checkpoint may show profiles, sign-in, loading or a restored page; it is not confirmed home coverage. The six-view atlas still requires observed navigation and visual review.
+
 ## Review, reclassification and atlas
 
 Each image has an adjacent JSON receipt and an append-only `manifest.jsonl` entry. Retain the actual foreground ID, requested view, timezone-aware time, dimensions, SHA-256, display state and explicit capture return status.
@@ -156,4 +168,4 @@ No app package or production service is changed by installing this source. Rollb
 python3 -B -m unittest discover -s scripts/lg-tv/tests -v
 ```
 
-Tests use fake devices and temporary files. Public code, plans without private data, runbooks and app IDs may be versioned. Screenshots, profile/account data, original inventories, pairing files, run manifests, action/session logs and embedded-image atlases remain private.
+The current public suite passes 61 offline tests, including single-SSAP-call image-transfer retry checks. This result does not establish that a second HTTP attempt has been observed on hardware. Tests use fake devices and temporary files. Public code, plans without private data, runbooks and app IDs may be versioned. Screenshots, profile/account data, original inventories, pairing files, run manifests, action/session logs and embedded-image atlases remain private.

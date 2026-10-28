@@ -7,7 +7,7 @@ import struct
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, Mock, call, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import lg_tv
@@ -207,8 +207,92 @@ class CaptureTests(unittest.TestCase):
             response.read.return_value = data
             receipt = client.capture(temp, 'testapp', 'home')
             self.assertIs(receipt['capture_return_value'], True)
+            self.assertEqual(receipt['download_attempts'], 1)
             saved = json.loads((Path(temp) / 'manifest.jsonl').read_text())
             self.assertIs(saved['capture_return_value'], True)
+            self.assertEqual(saved['download_attempts'], 1)
+
+    def download_client(self):
+        client = lg_tv.TVClient.__new__(lg_tv.TVClient)
+        client.host = '192.0.2.10'
+        client.status = Mock(return_value={'power': {'state': 'Active'}, 'foreground': {'appId': 'test.app'}})
+        client.request = Mock(return_value={'returnValue': True, 'imageUri': 'http://192.0.2.10/capture.jpg'})
+        return client
+
+    def download_response(self, final_url='http://192.0.2.10/capture.jpg'):
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = final_url
+        response.read.return_value = b'\x89PNG\r\n\x1a\n' + b'\x00\x00\x00\rIHDR' + struct.pack('>II', 960, 540)
+        return response
+
+    def test_capture_retries_same_uri_after_timeout_with_one_shot_and_same_host_redirect(self):
+        client = self.download_client()
+        uri = client.request.return_value['imageUri']
+        response = self.download_response('https://192.0.2.10:3001/redirected/capture.png')
+        with tempfile.TemporaryDirectory() as temp, patch('lg_tv.urllib.request.build_opener') as build, patch('lg_tv.time.sleep') as sleep:
+            opener = build.return_value
+            opener.open.side_effect = [lg_tv.urllib.error.URLError(TimeoutError('timed out')), response]
+            receipt = client.capture(temp, 'testapp', 'home')
+            self.assertEqual(opener.open.call_args_list, [call(uri, timeout=12), call(uri, timeout=12)])
+            client.request.assert_called_once_with('ssap://tv/executeOneShot')
+            sleep.assert_called_once_with(0.6)
+            self.assertEqual(receipt['download_attempts'], 2)
+            saved = json.loads((Path(temp) / 'manifest.jsonl').read_text())
+            self.assertEqual(saved['download_attempts'], 2)
+            redirect = next(handler for handler in build.call_args.args if isinstance(handler, lg_tv.SameTVRedirect))
+            redirected = redirect.redirect_request(lg_tv.urllib.request.Request(uri), None, 302, '', {}, response.geturl())
+            self.assertEqual(redirected.full_url, response.geturl())
+
+    def test_capture_retries_reset_during_read_and_closes_response(self):
+        client = self.download_client()
+        first, second = self.download_response(), self.download_response()
+        first.read.side_effect = ConnectionResetError('connection reset')
+        with tempfile.TemporaryDirectory() as temp, patch('lg_tv.urllib.request.build_opener') as build, patch('lg_tv.time.sleep'):
+            build.return_value.open.side_effect = [first, second]
+            receipt = client.capture(temp, 'testapp', 'home')
+            self.assertEqual(receipt['download_attempts'], 2)
+            first.__exit__.assert_called_once()
+            second.__exit__.assert_called_once()
+            client.request.assert_called_once_with('ssap://tv/executeOneShot')
+
+    def test_capture_stops_after_two_transfer_failures_without_new_one_shot(self):
+        client = self.download_client()
+        with tempfile.TemporaryDirectory() as temp, patch('lg_tv.urllib.request.build_opener') as build, patch('lg_tv.time.sleep') as sleep:
+            build.return_value.open.side_effect = lg_tv.urllib.error.URLError(TimeoutError('timed out'))
+            with self.assertRaises(lg_tv.urllib.error.URLError):
+                client.capture(temp, 'testapp', 'home')
+            self.assertEqual(build.return_value.open.call_count, 2)
+            sleep.assert_called_once_with(0.6)
+            client.request.assert_called_once_with('ssap://tv/executeOneShot')
+            self.assertFalse((Path(temp) / 'manifest.jsonl').exists())
+
+    def test_capture_does_not_retry_http_errors_or_unrelated_transport_errors(self):
+        uri = 'http://192.0.2.10/capture.jpg'
+        errors = [lg_tv.urllib.error.HTTPError(uri, code, 'HTTP error', {}, None) for code in (400, 401, 403, 500)]
+        errors.append(lg_tv.urllib.error.URLError(ConnectionRefusedError('refused')))
+        for error in errors:
+            with self.subTest(error=error), tempfile.TemporaryDirectory() as temp, patch('lg_tv.urllib.request.build_opener') as build, patch('lg_tv.time.sleep') as sleep:
+                client = self.download_client()
+                build.return_value.open.side_effect = error
+                with self.assertRaises(type(error)):
+                    client.capture(temp, 'testapp', 'home')
+                self.assertEqual(build.return_value.open.call_count, 1)
+                sleep.assert_not_called()
+                client.request.assert_called_once_with('ssap://tv/executeOneShot')
+                self.assertFalse((Path(temp) / 'manifest.jsonl').exists())
+
+    def test_capture_retry_rejects_foreign_final_url_before_reading(self):
+        client = self.download_client()
+        response = self.download_response('https://external.example/capture.jpg')
+        with tempfile.TemporaryDirectory() as temp, patch('lg_tv.urllib.request.build_opener') as build, patch('lg_tv.time.sleep'):
+            build.return_value.open.side_effect = [lg_tv.urllib.error.URLError(TimeoutError('timed out')), response]
+            with self.assertRaises(lg_tv.TVError):
+                client.capture(temp, 'testapp', 'home')
+            response.read.assert_not_called()
+            self.assertEqual(build.return_value.open.call_count, 2)
+            client.request.assert_called_once_with('ssap://tv/executeOneShot')
+            self.assertFalse((Path(temp) / 'manifest.jsonl').exists())
 
     def recipe(self):
         return {'schema_version': 1, 'reviewed': True, 'app_slug': 'testapp', 'app_id': 'test.app', 'steps': [

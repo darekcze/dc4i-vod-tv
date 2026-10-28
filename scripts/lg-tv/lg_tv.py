@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import datetime as dt
+import errno
 import hashlib
 import json
 import os
@@ -15,6 +16,7 @@ import ssl
 import struct
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
@@ -86,6 +88,17 @@ class SameTVRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         validate_url(newurl, self.host)
         return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def transient_image_download_error(error):
+    """Retry transport timeouts/resets only, never an HTTP response error."""
+    if isinstance(error, urllib.error.HTTPError):
+        return False
+    if isinstance(error, urllib.error.URLError):
+        error = error.reason
+    return isinstance(error, (TimeoutError, ConnectionResetError, ConnectionAbortedError)) or (
+        isinstance(error, OSError) and error.errno in (errno.ETIMEDOUT, errno.ECONNRESET, errno.ECONNABORTED)
+    )
 
 
 def image_info(data):
@@ -298,9 +311,18 @@ class TVClient:
             urllib.request.ProxyHandler({}), SameTVRedirect(self.host),
             urllib.request.HTTPSHandler(context=ssl._create_unverified_context()),
         )
-        with opener.open(uri, timeout=12) as response:
-            validate_url(response.geturl(), self.host)
-            data = response.read(MAX_IMAGE_BYTES + 1)
+        # Reuse the one-shot image URI. Retrying the SSAP command could capture
+        # a different UI state, so only this read-only HTTP transfer may repeat.
+        for download_attempts in (1, 2):
+            try:
+                with opener.open(uri, timeout=12) as response:
+                    validate_url(response.geturl(), self.host)
+                    data = response.read(MAX_IMAGE_BYTES + 1)
+                break
+            except OSError as error:
+                if download_attempts == 2 or not transient_image_download_error(error):
+                    raise
+                time.sleep(0.6)
         if len(data) > MAX_IMAGE_BYTES:
             raise TVError('Capture exceeded the 16 MiB size limit')
         extension, width, height = image_info(data)
@@ -315,7 +337,7 @@ class TVClient:
                    'expected_app_id': expected_app_id, 'power_state': state, 'file': relative.as_posix(),
                    'width': width, 'height': height, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(),
                    'visual_status': 'unreviewed', 'note': note, 'method': 'ssap://tv/executeOneShot',
-                   'capture_return_value': body['returnValue']}
+                   'capture_return_value': body['returnValue'], 'download_attempts': download_attempts}
         append_jsonl(Path(output) / 'manifest.jsonl', receipt)
         atomic_json(path.with_suffix('.json'), receipt)
         return {**receipt, 'absolute_file': str(path.resolve())}

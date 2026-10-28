@@ -62,6 +62,8 @@ Te polecenia sprawdzają istniejące połączenie i odczytują aktualny stan ora
 
 Sparowane połączenie TLS korzysta z istniejącej konfiguracji lokalnej. Przy błędach transportu zestawienie połączenia jest ponawiane najwyżej trzy razy. Jawne odrzucenie sparowania natychmiast kończy próbę. Błąd transportu po wysłaniu komendy zamyka socket bez ponownego wysłania komendy, ponieważ TV mógł już ją wykonać. Brak połączenia nie dowodzi uśpienia telewizora.
 
+Transfer obrazu ma osobne ograniczone ponowienie: po jednym udanym `executeOneShot` timeout lub reset/przerwanie połączenia może spowodować jeden dodatkowy HTTP GET tego samego zweryfikowanego URI po 0,6 sekundy. Obie próby sprawdzają lokalny host TV i przekierowania. Błędy odpowiedzi HTTP, odmowa połączenia, nieprawidłowe obrazy i obce przekierowania nie są ponawiane. Receipt zapisuje `download_attempts`; ten mechanizm nigdy nie powtarza komendy zrzutu SSAP ani nawigacji.
+
 ## Ręczna nawigacja oparta na obserwacji
 
 Ten tryb służy do pracy, w której człowiek lub asystent ogląda zrzuty między krótkimi partiami. Rozpocząć sesję przed włączeniem obrazu lub zmianą aplikacji na pierwszym planie:
@@ -122,6 +124,16 @@ Do każdego wykonania użyć nowego katalogu wyników i nowej ścieżki sesji. I
 
 Osobny format `lg_tv.py flow` przyjmuje wyłącznie sprawdzone przepisy schema 1. Jego `--resume` odtwarza nawigację od początkowego uruchomienia i pomija tylko zapis istniejących zrzutów o zgodnych hashach. Nie wznawia pracy od dowolnego przycisku i nie potwierdza zawartości obrazu. Przed powtórzeniem komendy po timeout obejrzeć rzeczywisty stan UI.
 
+## Szybka partia punktów kontrolnych po wejściu
+
+[Wersjonowany zestaw powtórek](../../lg-tv-repeat-kit/README.pl.md) zawiera po jednym planie wejściowym dla 19 żądanych aplikacji. Z głównego katalogu repozytorium zebrać wybrany podzbiór do nowego prywatnego katalogu:
+
+```bash
+python3 -B lg-tv-repeat-kit/repeat_streaming_entries.py --root "$CAPTURE_ROOT" --output "$PWD/private/lg-tv-captures/entry-001" --apps disneyplus,netflix
+```
+
+Dodać `--dry-run` do lokalnej walidacji; pominąć `--apps`, aby wybrać wszystkie 19 aplikacji. Launcher korzysta z kanonicznego wrappera sesji i jego sprzątania. Punkt kontrolny może pokazać profile, logowanie, ładowanie albo przywróconą podstronę; nie jest potwierdzeniem menu głównego. Atlas sześciu widoków nadal wymaga nawigacji opartej na obserwacji i oceny obrazów.
+
 ## Ocena, zmiana klasyfikacji i atlas
 
 Każdemu obrazowi towarzyszy JSON oraz dopisany rekord w `manifest.jsonl`. Zachować faktyczne ID aplikacji, zamówiony widok, czas ze strefą, wymiary, SHA-256, stan ekranu i jawny status wykonania zrzutu.
@@ -156,4 +168,4 @@ Dodanie tych źródeł nie zmienia pakietu aplikacji ani usługi produkcyjnej. R
 python3 -B -m unittest discover -s scripts/lg-tv/tests -v
 ```
 
-Testy korzystają ze sztucznych urządzeń i plików tymczasowych. Publiczny kod, plany bez prywatnych danych, instrukcje i ID aplikacji mogą być wersjonowane. Screenshoty, dane kont i profili, oryginalne inwentarze, pliki sparowania, manifesty uruchomień, logi akcji/sesji i atlasy z osadzonymi obrazami pozostają prywatne.
+Aktualny zestaw publiczny przechodzi 61 testów offline, w tym kontrolę ponowienia pobrania przy jednym wywołaniu SSAP. Ten wynik nie dowodzi zaobserwowania drugiej próby HTTP na sprzęcie. Testy korzystają ze sztucznych urządzeń i plików tymczasowych. Publiczny kod, plany bez prywatnych danych, instrukcje i ID aplikacji mogą być wersjonowane. Screenshoty, dane kont i profili, oryginalne inwentarze, pliki sparowania, manifesty uruchomień, logi akcji/sesji i atlasy z osadzonymi obrazami pozostają prywatne.
