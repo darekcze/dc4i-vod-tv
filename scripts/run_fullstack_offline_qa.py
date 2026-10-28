@@ -242,8 +242,8 @@ def run(fixture: Path, scratch: Path, receipt: Path, timeout: float) -> int:
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--fixture", type=Path, required=True, help="marked offline fixture directory")
-    p.add_argument("--scratch-root", type=Path, required=True, help="preexisting AI-Hot scratch directory")
-    p.add_argument("--receipt", type=Path, required=True, help="new machine-readable JSON evidence path")
+    p.add_argument("--scratch-root", type=Path, help="preexisting AI-Hot scratch directory")
+    p.add_argument("--receipt", type=Path, help="new machine-readable JSON evidence path")
     p.add_argument("--timeout", type=float, default=45)
     p.add_argument("--preflight-only", action="store_true")
     args = p.parse_args()
@@ -254,6 +254,8 @@ def main() -> int:
             source, candidate = verify_fixture(args.fixture)
             print(f"QA_PREFLIGHT_OK source={source[:12]} candidate={candidate[:12]}")
             return 0
+        if args.scratch_root is None or args.receipt is None:
+            raise QAError("Full test requires --scratch-root and --receipt")
         return run(args.fixture, args.scratch_root, args.receipt, args.timeout)
     except (QAError, OSError) as exc:
         print(f"OFFLINE_QA_BLOCKED: {type(exc).__name__}: {exc}", file=sys.stderr)
