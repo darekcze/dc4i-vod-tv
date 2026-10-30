@@ -4,6 +4,8 @@
 
 Canonical TV repository: https://lg.darc.dev/
 
+> **Release status, 2026-10-30:** The public Homebrew/Cloudflare Pages channel still serves **1.2.19**. The owner's LG OLED55G42LW has a separately installed **private 1.2.37** build verified via the device's own appinfo. **1.2.37 is not a public update**: upstream TheBoringTV has no declared redistribution license ([blocking issue #4](https://github.com/darekcze/dc4i-vod-tv/issues/4)). Do not point the public manifest at the private IPK or ask users to uninstall/downgrade. [Release evidence and publication gates](docs/releases/1.2.37-private-tv-publication-gate.md).
+
 Homebrew Channel expects JSON at the root URL. A browser-friendly project page is at https://lg.darc.dev/about.html.
 
 ## DC4I VOD TV 1.2.19
