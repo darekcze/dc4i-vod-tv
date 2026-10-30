@@ -4,6 +4,21 @@
  var TV=window.TV,modelAPI=window.DC4IGuideModel;
  if(!TV || !TV.xtream || !modelAPI)return;
  var tr=function(pl,en){return TV.S.uiLang==='en'?en:pl;};
+
+ /* CHANNEL_REMOTE_PURE_START: normalized webOS remote events, testable without TV. */
+ function remoteDirection(ev){
+  var code=Number(ev && (ev.keyCode||ev.which)||0);
+  var name=String(ev && (ev.key||ev.code)||'').toLowerCase();
+  if(code===427||code===33||name==='channelup'||name==='pageup')return 1;
+  if(code===428||code===34||name==='channeldown'||name==='pagedown')return -1;
+  return 0;
+ }
+ function wrapChannel(length,index,direction){
+  if(!length || !direction)return -1;
+  return ((index<0?(direction>0?-1:0):index)+direction+length)%length;
+ }
+ /* CHANNEL_REMOTE_PURE_END */
+
  var root=TV.el('main','dc4i-guide',
   '<header class="gd-head"><div><h1>'+tr('Przewodnik IPTV','IPTV Guide')+'</h1>'+
   '<div id="gd-provider" class="gd-provider"></div></div>'+
@@ -235,6 +250,25 @@
   if(persist!==false)storeValue('guideLastChannelV1',ch.id);
   showSelected();
  }
+ function stepChannel(direction,tune){
+  var list=channels();
+  if(!direction||!list.length)return false;
+  var current=selected?list.findIndex(function(ch){return ch.id===selected.id;}):-1;
+  var nextIndex=wrapChannel(list.length,current,direction);
+  if(nextIndex<0)return false;
+  var next=list[nextIndex];
+  page=Math.floor(nextIndex/pageSize);
+  selected=next;
+  renderChannels();showSelected();
+  pane='channels';channelIndex=nextIndex-page*pageSize;
+  if(tune){
+   if(!TV.xtream.guideWatch(next)){
+    TV.toast(tr('Nie można przełączyć kanału','Could not switch channel'));
+    return false;
+   }
+  }else chooseFocus();
+  return true;
+ }
  function nextPage(delta){
   var limit=Math.max(1,Math.ceil(channels().length/pageSize));
   var n=Math.max(0,Math.min(limit-1,page+delta));
@@ -305,6 +339,23 @@
   if(TV.view()==='guide')chooseFocus();
  }
  function suspend(){root.hidden=true;}
+ // Dedicated channel rocker: accept both webOS PageUp/Down and CEA/HbbTV codes.
+ // Only intercept while IPTV guide or actual Xtream playback is active.
+ // The TV firmware may reserve CH keys and never deliver a DOM event.
+ document.addEventListener('keydown',function(ev){
+  var direction=remoteDirection(ev);
+  if(!direction)return;
+  var activeGuide=TV.view()==='guide'&&!root.hidden;
+  var player=document.getElementById('dx-player');
+  var activePlayer=TV.view()==='xtream'&&player&&!player.hidden;
+  if(!activeGuide&&!activePlayer)return;
+  var input=ev.target;
+  if(input&&/^(INPUT|TEXTAREA|SELECT)$/.test(input.tagName))return;
+  if(stepChannel(direction,true)){
+   ev.preventDefault();
+   ev.stopImmediatePropagation();
+  }
+ },true);
  function navigate(k){
   var order=timelineVisible&&$('airings').querySelectorAll('.gd-airing.f').length?['header','groups','channels','timeline','actions']:['header','groups','channels','actions'];
   if(k===37||k===39){
@@ -367,6 +418,6 @@
  };
  TV.guide={resume:resume,suspend:suspend,refresh:function(){
   if(TV.view()==='guide')show();
- },key:navigate,model:function(){return model;}};
+ },key:navigate,step:stepChannel,model:function(){return model;}};
  setInterval(function(){if(TV.view()==='guide' && !root.hidden){showPrograms();if(pane==='timeline')chooseFocus();}},60000);
 })();
