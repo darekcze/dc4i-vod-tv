@@ -17,6 +17,13 @@ All paths below refer to the owner's Mac Pro.
 
 The private device configuration contains credentials. Never print it, copy it into a command, commit it, or include its values in logs or documentation.
 
+## Standard HOME compatibility (2026-10-28)
+
+On 2026-10-27 the owner's Mac Pro default profile at `/Users/czech` was configured with the existing LG device entry in `~/.webos/tv/novacom-devices.json` (mode 0600). The `~/.ssh/OLED55G42LW_webos_rsa` path is a symlink to the existing private key on mounted AI-Hot (not an additional private-key copy). The preexisting `.ares-home` profile remains intact as the private source/backup. Never publish the device registry or its secrets.
+
+The canonical installer no longer modifies `HOME` (Git commit `8ed1646`); webOS CLI uses the caller's standard profile and checks registry/key readability. This resolves the known Codex session restriction on changing `HOME` without circumventing it. The edited Mac Pro installer passed `bash -n`, the CLI recognized `LG_OLED55G42LW` with unmodified `HOME=/Users/czech`, and the version 1.2.19 `--dry-run` passed. **A new live TV installation using the HOME-free revision has not yet been verified.** Do not conflate previous live installation of 1.2.20 with acceptance of this revised invocation.
+
+
 ## Standard installation procedure: scripts are canonical
 
 **DO NOT recreate manual webOS CLI commands.** Use the version-controlled [installer script](../scripts/install-vodtv.sh), deployed on Mac Pro as `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`. It uses Node 20, a locally extracted CLI, private device credentials and an SSAP power-state probe. No secrets are committed or logged.
@@ -69,7 +76,7 @@ Historical evidence in `/Volumes/AI-Hot/Services/LGWebOSRemote/INSTALL-DC4I-VODT
 
 ## Unified Mac Pro installer (2026-10-26)
 
-The owner's Mac Pro now has one shared script at `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`. It combines the preinstalled `webos-cli-minimal` path with the archive-based fallback, explicitly runs Node.js 20.19.4, reuses the private `.ares-home` configuration, checks the TV's SSH reachability, and installs an explicitly selected IPK. **Default is installation only; no launch, restart, wake-up or TV UI tests.** An optional `--launch` is required to open the app.
+The owner's Mac Pro now has one shared script at `/Volumes/AI-Hot/Services/LGWebOSRemote/install-vodtv.sh`. It combines the preinstalled `webos-cli-minimal` path with the archive-based fallback, explicitly runs Node.js 20.19.4, uses the Mac Pro user's existing standard webOS CLI configuration (LG key linked to the private AI-Hot profile), checks the TV's SSH reachability, and installs an explicitly selected IPK. **Default is installation only; no launch, restart, wake-up or TV UI tests.** An optional `--launch` is required to open the app.
 
 ```sh
 # Version already in the Mac Pro package directory:
