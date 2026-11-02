@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "apps": [
+    {
+      "slug": "disneyplus",
+      "title": "Disney+",
+      "app_id": "com.disney.disneyplus-prod"
+    },
+    {
+      "slug": "netflix",
+      "title": "Netflix",
+      "app_id": "netflix"
+    },
+    {
+      "slug": "hbomax",
+      "title": "HBO Max",
+      "app_id": "com.wbd.stream"
+    },
+    {
+      "slug": "appletv",
+      "title": "Apple TV",
+      "app_id": "com.apple.appletv"
+    },
+    {
+      "slug": "player",
+      "title": "Player",
+      "app_id": "com.accedo.videa.tvn"
+    },
+    {
+      "slug": "stremio",
+      "title": "Stremio",
+      "app_id": "io.strem.tv"
+    },
+    {
+      "slug": "iptvsmartersplayer",
+      "title": "IPTV Smarters Player",
+      "app_id": "com.smarterstvplayers.net"
+    },
+    {
+      "slug": "smartiptv",
+      "title": "Smart IPTV",
+      "app_id": "siptv"
+    },
+    {
+      "slug": "primevideo",
+      "title": "Prime Video",
+      "app_id": "amazon"
+    },
+    {
+      "slug": "youtube",
+      "title": "YouTube AdFree",
+      "app_id": "youtube.leanback.v4"
+    },
+    {
+      "slug": "viki",
+      "title": "Rakuten Viki",
+      "app_id": "com.viki.lg"
+    },
+    {
+      "slug": "pilot",
+      "title": "WP Pilot",
+      "app_id": "pl.wp.pilot"
+    },
+    {
+      "slug": "skyshowtime",
+      "title": "SkyShowtime",
+      "app_id": "com.skyshowtime.tv"
+    },
+    {
+      "slug": "canalplus",
+      "title": "CANAL+",
+      "app_id": "canalplus"
+    },
+    {
+      "slug": "megogo",
+      "title": "MEGOGO",
+      "app_id": "megogo.hd"
+    },
+    {
+      "slug": "cda",
+      "title": "CDA",
+      "app_id": "pl.cda"
+    },
+    {
+      "slug": "sweettv",
+      "title": "SWEET.TV",
+      "app_id": "sweet.tv"
+    },
+    {
+      "slug": "rakutentv",
+      "title": "Rakuten TV",
+      "app_id": "ui30"
+    },
+    {
+      "slug": "lgchannels",
+      "title": "LG Channels",
+      "app_id": "com.webos.app.lgchannels"
+    }
+  ],
+  "verified_native_ids_on": "2026-10-28",
+  "notes": "Observed native IDs are discovery hints, not proof of present installation, menu coverage, deep links or playback. Recheck the live inventory before use."
+}
