@@ -38,14 +38,22 @@ class XmltvTests(unittest.TestCase):
 
     def test_duplicate_events_collapse_but_conflicting_channels_are_removed(self):
         row='<programme channel="x" start="20261025010000" stop="20261025020000"><title>A</title></programme>'
-        self.assertEqual(len(self.parse(('<tv>'+row+row+'</tv>').encode())['events']),1)
+        self.assertEqual(len(self.parse(('<tv><channel id="x"><display-name>X</display-name></channel>'+row+row+'</tv>').encode())['events']),1)
         data=('<tv><channel id="x"><display-name>One</display-name></channel><channel id="x"><display-name>Two</display-name></channel>'+row+'</tv>').encode()
         result=self.parse(data)
         self.assertEqual(result['channels'],[]);self.assertEqual(result['events'],[])
         self.assertEqual(result['diagnostics']['conflictingChannels'],1)
 
+    def test_orphan_programmes_are_skipped_and_counted(self):
+        declared='<channel id="known"><display-name>Known</display-name></channel>'
+        orphan='<programme channel="ghost" start="20261025010000" stop="20261025020000"><title>Orphan</title></programme>'
+        valid='<programme channel="known" start="20261025010000" stop="20261025020000"><title>Valid</title></programme>'
+        result=self.parse(('<tv>'+declared+orphan+valid+'</tv>').encode())
+        self.assertEqual([e['channelId'] for e in result['events']], ['known'])
+        self.assertEqual(result['diagnostics']['skipped'], 1)
+
     def test_spring_transition_duration(self):
-        result=self.parse(b'<tv><programme channel="x" start="20260329015000 +0100" stop="20260329031000 +0200"><title>A</title></programme></tv>')
+        result=self.parse(b'<tv><channel id="x"><display-name>X</display-name></channel><programme channel="x" start="20260329015000 +0100" stop="20260329031000 +0200"><title>A</title></programme></tv>')
         self.assertEqual(result['events'][0]['end']-result['events'][0]['start'],1200000)
 
     def test_malformed_entities_and_size_limit_fail_atomically(self):

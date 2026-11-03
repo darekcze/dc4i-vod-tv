@@ -30,12 +30,33 @@
     state==='error'?tr('Nie można pobrać EPG','Could not load EPG'):
     tr('EPG niedostępne dla tego kanału','EPG not available for this channel')};
   }
-  function timeline(channel,day){
+  function timeline(channel,day,provider,state){
    if(!Number.isInteger(day)||day< -5||day>4)throw Error('invalid day');
-   var from=clock()+day*86400000,entry=cache.get(source);
+   var from=clock()+day*86400000,to=from+86400000,entry=cache.get(source);
    var mapping=entry.snapshot&&channel&&model.mapChannel({epg_channel_id:channel.epgId,title:channel.title},entry.snapshot.channels);
-   return {from:from,to:from+86400000,label:entry.snapshot?label(entry):'',
-    events:mapping&&mapping.status==='mapped'?model.timeline(entry.snapshot,mapping.channelId,from,from+86400000):[]};
+   var local=mapping&&mapping.status==='mapped'?model.timeline(entry.snapshot,mapping.channelId,from,to):[];
+   if(local.length)return {from:from,to:to,label:label(entry),
+    status:tr('Lokalne metadane XMLTV','Local XMLTV metadata'),events:local};
+   // Existing Xtream guideEpg is already scoped to the selected channel.
+   // Copy only display metadata: never copy stream URLs, account fields or actions.
+   var items=[];
+   (Array.isArray(provider)?provider:[]).slice(0,2000).forEach(function(e){
+    if(!e||!e.time||typeof e.title!=='string'||!e.title.trim())return;
+    var start=Number(e.time.start),end=Number(e.time.end);
+    if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<=0||end<=start||start>=to||end<=from)return;
+    items.push({title:e.title.slice(0,500),description:typeof e.description==='string'?e.description.slice(0,2000):'',
+     start:start,end:end,playable:false,tracks:{audio:'unknown',subtitles:'unknown'},
+     provenance:{source:'xtream',kind:'provider'}});
+   });
+   items.sort(function(a,b){return a.start-b.start||a.end-b.end||a.title.localeCompare(b.title);});
+   items=items.slice(0,201); // 200 visible rows plus a truncation indicator.
+   var feedback=items.length?tr('Dane EPG dostawcy','Provider EPG'):
+    state==='loading'?tr('Pobieram program...','Loading programme...'):
+    state==='error'?tr('Nie można pobrać EPG','Could not load EPG'):
+    tr('Brak programu EPG w tym okresie','No EPG in this period');
+   return {from:from,to:to,status:feedback,events:items,
+    label:items.length?providerLabel():entry.snapshot&&mapping&&mapping.status==='mapped'?label(entry):
+     Array.isArray(provider)&&provider.length?providerLabel():''};
   }
   function describe(e){
    if(!e)return '';
