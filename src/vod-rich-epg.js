@@ -33,7 +33,8 @@ function sanitize(snapshot){
  });
  channels=channels.filter(function(c){return !conflicts[c.id];});
  snapshot.events.forEach(function(e){
-  if(!e || typeof e.channelId!=='string' || !e.channelId || e.channelId.length>200 || conflicts[e.channelId] ||
+  if(!e || typeof e.channelId!=='string' || !e.channelId || e.channelId.length>200 ||
+     !ids[e.channelId] || conflicts[e.channelId] ||
      !validTime(e.start)||!validTime(e.end)||e.end<=e.start||!bounded(e.title,500).trim()){partial=true;return;}
   var rating=e.rating && typeof e.rating.value==='string'?{
    value:bounded(e.rating.value,50),system:bounded(e.rating.system,100)||'unspecified',verified:false}:null;
