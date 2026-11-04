@@ -11,12 +11,13 @@ class El {
 }
 for(const providerState of ['success','empty','error','delayed']){
  let guide,root,focused,resolveProvider,clock=1792929600000,watched=0;
+ const keyEvents=[];const tuned=[];
  const timers=[],intervals=[];const TV={S:{uiLang:'en'},store:()=>null,el(tag,cls,html=''){const el=new El(cls);el.innerHTML=html;if(tag==='main')root=el;return el;},
-  xtream:{open(){},getLiveCategories:()=>[],getAccounts:()=>[{label:'fixture'}],ensureCatalog:async()=>[{id:'1',type:'live',title:'Channel',epgId:'a'}],
-   guideEpg:async()=>{if(providerState==='delayed')return new Promise(resolve=>{resolveProvider=resolve;});if(providerState==='error')throw Error('fixture');return providerState==='success'?[{title:'Provider',time:{start:clock,end:clock+10000}}]:[];},guideWatch(){watched++;return true;}},
+  xtream:{open(){},getLiveCategories:()=>[],getAccounts:()=>[{label:'fixture'}],ensureCatalog:async()=>[{id:'1',type:'live',title:'Channel',epgId:'a'},{id:'2',type:'live',title:'Next Channel',epgId:'b'},{id:'3',type:'live',title:'Third Channel',epgId:'c'}],
+   guideEpg:async()=>{if(providerState==='delayed')return new Promise(resolve=>{resolveProvider=resolve;});if(providerState==='error')throw Error('fixture');return providerState==='success'?[{title:'Provider',time:{start:clock,end:clock+10000}}]:[];},guideWatch(ch){watched++;tuned.push(ch.id);return true;}},
   addView(name,view){guide=view;},view:()=>'guide',rebuild(r,c){if(guide&&r!==undefined)focused=guide.nav()[r]?.[c||0];},closeView(){},toast(){}};
  TV.readMetadataStorage=k=>TV.store(k);
- const context={window:{TV},document:{body:new El(),createElement:()=>new El()},Date:class extends Date{static now(){return clock;}},setTimeout(fn){timers.push(fn);return timers.length;},clearTimeout(){},setInterval(fn){intervals.push(fn);},Number,JSON};
+ const context={window:{TV},document:{body:new El(),createElement:()=>new El(),getElementById:()=>null,addEventListener(type,fn,capture){if(type==='keydown'&&capture)keyEvents.push(fn);}},Date:class extends Date{static now(){return clock;}},setTimeout(fn){timers.push(fn);return timers.length;},clearTimeout(){},setInterval(fn){intervals.push(fn);},Number,JSON};
  for(const name of ['vod-guide-model.js','vod-rich-epg.js','vod-epg-metadata-ui.js','vod-channel-guide.js'])vm.runInNewContext(readFileSync('src/'+name,'utf8'),context);
  TV.epgMetadata.acceptLocal({schemaVersion:1,source:'synthetic',fetchedAt:clock,channels:[{id:'a',names:['Channel']}],events:[{channelId:'a',title:'Local programme',start:clock-100,end:clock+3600000}]});
  guide.show();await Promise.resolve();timers.forEach(fn=>fn());await Promise.resolve();await Promise.resolve();
@@ -39,5 +40,17 @@ for(const providerState of ['success','empty','error','delayed']){
  assert.equal(el('now').hidden,false);
  assert.ok(guide.nav()[4].every(x=>!x.hidden),'hidden day controls excluded from focus');
  el('watch').onok();assert.equal(watched,1,'existing channel playback retained');
+ assert.equal(keyEvents.length,1,'guide uses one captured remote handler');
+ function sendKey(keyCode,key){
+  let prevented=false,stopped=false;
+  keyEvents[0]({keyCode,key:key||'',target:{tagName:'DIV'},
+   preventDefault(){prevented=true;},stopImmediatePropagation(){stopped=true;}});
+  assert.ok(prevented&&stopped,'handled rocker prevents legacy PageUp/Down paging');
+ }
+ sendKey(427);assert.equal(tuned.at(-1),'2','CH+ tunes next channel');
+ sendKey(428);assert.equal(tuned.at(-1),'1','CH- tunes previous channel');
+ sendKey(34);assert.equal(tuned.at(-1),'3','PageDown alternate wraps to last');
+ sendKey(33);assert.equal(tuned.at(-1),'1','PageUp alternate wraps to first');
+ assert.equal(watched,5,'each rocker press invokes one and only one Xtream tune');
 }
-console.log('GUIDE_RUNTIME_PASS local+provider success/empty/error, timeline toggle/day/focus, channel playback');
+console.log('GUIDE_RUNTIME_PASS local+provider success/empty/error, timeline toggle/day/focus, playback, CH+/CH- wrap');
