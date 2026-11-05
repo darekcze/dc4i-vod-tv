@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Native Chrome DevTools smoke tests without Playwright or paid runners.
 import {spawn} from 'node:child_process';
+import {browserPath} from './browser_path.mjs';
+const chromePath = browserPath();
 import {readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {setTimeout as sleep} from 'node:timers/promises';
@@ -10,10 +12,10 @@ const workspace=join(root,'private','guide-ui-tests');
 const port=28779,debugPort=29249;
 mkdirSync(workspace,{recursive:true});
 const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',webroot],{stdio:'ignore'});
-const chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',[
+const chrome=spawn(chromePath,[
  '--headless=new','--disable-gpu','--no-first-run','--disable-extensions',
  '--no-default-browser-check','--disable-background-networking',
- '--user-data-dir='+join(workspace,'profile'),
+ '--user-data-dir='+join(workspace,'test-only-'+process.pid),
  '--remote-debugging-port='+debugPort,'--remote-allow-origins=*',
  '--window-size=1920,1080','http://127.0.0.1:'+port+'/'
 ],{stdio:'ignore'});
